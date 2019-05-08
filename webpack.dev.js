@@ -19,7 +19,7 @@ module.exports = merge(common, {
   devServer: {
     contentBase: __dirname,
     port: 3000,
-    publicPath: 'http://localhost:3000/',
+    publicPath: 'https://localhost',
     inline: true
   }
 })
