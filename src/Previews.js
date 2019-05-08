@@ -9,7 +9,7 @@ class Previews extends Component {
     let result = []
     for (const id in this.state) {
       const gallery = this.state[id][1]
-      result.push(<Preview src={gallery.folder} title={gallery.name} totalPages={gallery.totalPages} />)
+      result.push(<Preview src={gallery.id} title={gallery.name} totalPages={gallery.totalPages} />)
     }
     return (
       <div id='galleries'>

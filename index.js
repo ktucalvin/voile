@@ -18,4 +18,4 @@ app.use(serve('./dist'))
 app.use(mount('/g', serve('galleries')))
 
 https.createServer(certopts, app.callback())
-  .listen(443, () => console.log('Server listening on port 443'))
+  .listen(443, () => console.log('Server running at https://localhost/#/'))

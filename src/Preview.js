@@ -15,12 +15,11 @@ class Preview extends Component {
     const $galleries = document.getElementById('galleries')
     $reader.style.display = 'block'
     $galleries.style.display = 'none'
-    history.pushState({ isReading: false }, '', '')
-    ReactDOM.render(<Reader base={this.props.src} totalPages={this.props.totalPages} key={Math.random() * 10000} />, $reader)
+    ReactDOM.render(<Reader src={this.props.src} totalPages={this.props.totalPages} key={Math.random() * 10000} />, $reader)
   }
 
   render () {
-    const cover = this.props.src + '/1.jpg'
+    const cover = this.props.src + '/01.jpg'
     return (
       <div class='preview' onClick={this.openReader}>
         <img src={cover} />
