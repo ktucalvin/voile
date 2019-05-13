@@ -15,7 +15,7 @@ app.use(routes)
 
 app.use(serve('./dist'))
 
-app.use(mount('/g', serve('galleries')))
+app.use(mount('/g', serve(process.env.ARCHIVE_DIR)))
 
 https.createServer(certopts, app.callback())
   .listen(443, () => console.log('Server running at https://localhost/#/'))
