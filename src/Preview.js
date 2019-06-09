@@ -21,7 +21,7 @@ class Preview extends Component {
   render () {
     const cover = this.props.src + '/01.jpg'
     return (
-      <div class='preview' onClick={this.openReader}>
+      <div className='preview' onClick={this.openReader}>
         <img src={cover} />
         <span>{this.props.title}</span>
       </div>

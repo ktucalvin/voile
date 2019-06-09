@@ -1,6 +1,7 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
+import Paginator from './Paginator'
 
 class Reader extends Component {
   constructor (props) {
@@ -18,6 +19,7 @@ class Reader extends Component {
       this.currentPage > 1 ? this.currentPage-- : history.back()
     }
     this.setState(() => this.currentPage)
+    if (this.paginator) { this.paginator.setState({ page: this.currentPage }) }
   }
 
   render () {
@@ -26,7 +28,12 @@ class Reader extends Component {
     return (
       <>
         <img src={src} onClick={this.turnPage} />
-        <span>{this.currentPage} of {this.props.totalPages}</span>
+        <Paginator
+          totalPages={this.props.totalPages}
+          onPageChange={page => { this.currentPage = page; this.setState(() => this.currentPage) }}
+          onClick={() => console.log('clicked')}
+          ref={r => { this.paginator = r }}
+        />
       </>
     )
   }

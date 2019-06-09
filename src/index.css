@@ -88,3 +88,26 @@ main {
   color: #fff;
   font-size: 20px;
 }
+
+.paginator {
+  text-align: center;
+}
+
+.paginator button {
+  padding: 0.25em 1em;
+  margin-top: 1em;
+  color: #ddd;
+  cursor: pointer;
+  background-color: #212326;
+  border: none;
+  font-size: 1.2em;
+}
+
+.paginator button:hover {
+  background-color: #eb3b5a;
+}
+
+.paginator .currentPage {
+  color: #fff;
+  background-color: #fc427b;
+}
