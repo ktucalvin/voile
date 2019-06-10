@@ -74,6 +74,12 @@ main {
   background-color: #fc427b;
 }
 
+#reader {
+  display: block;
+  margin-top: 1em;
+  text-align: center;
+}
+
 #reader img {
   display: block;
   max-width: 90%;
@@ -87,6 +93,10 @@ main {
   text-align: center;
   color: #fff;
   font-size: 20px;
+}
+
+#reader a {
+  color: #fff;
 }
 
 .paginator {

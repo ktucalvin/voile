@@ -34,6 +34,7 @@ class Reader extends Component {
           onClick={() => console.log('clicked')}
           ref={r => { this.paginator = r }}
         />
+        <a href='/'>Back to galleries</a>
       </>
     )
   }
