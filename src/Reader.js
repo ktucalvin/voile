@@ -6,31 +6,34 @@ import Paginator from './Paginator'
 class Reader extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      page: 1
+    }
     this.turnPage = this.turnPage.bind(this)
-    this.currentPage = 1
     history.pushState({ isReading: true }, '', `${this.props.src}`)
   }
 
   turnPage (e) {
     const width = document.querySelectorAll('body')[0].clientWidth / 2
+    let page = this.state.page
     if (e.clientX > width) {
-      this.currentPage < this.props.totalPages ? this.currentPage++ : history.back()
+      page < this.props.totalPages ? page++ : history.back()
     } else {
-      this.currentPage > 1 ? this.currentPage-- : history.back()
+      page > 1 ? page-- : history.back()
     }
-    this.setState(() => this.currentPage)
-    if (this.paginator) { this.paginator.setState({ page: this.currentPage }) }
+    this.setState({ page })
+    if (this.paginator) { this.paginator.setState({ page }) }
   }
 
   render () {
     const id = this.props.src.slice(2)
-    const src = id + '/' + this.currentPage.toString().padStart(2, '0') + '.jpg'
+    const src = id + '/' + this.state.page.toString().padStart(2, '0') + '.jpg'
     return (
       <>
         <img src={src} onClick={this.turnPage} />
         <Paginator
           totalPages={this.props.totalPages}
-          onPageChange={page => { this.currentPage = page; this.setState(() => this.currentPage) }}
+          onPageChange={page => this.setState({ page })}
           onClick={() => console.log('clicked')}
           ref={r => { this.paginator = r }}
         />
