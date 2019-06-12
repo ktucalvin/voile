@@ -25,7 +25,7 @@ class Galleries extends Component {
     let result = []
     for (const entry of portion) {
       const gallery = entry[1]
-      result.push(<Preview key={gallery.id} src={gallery.id} title={gallery.name} totalPages={gallery.totalPages} />)
+      result.push(<Preview key={gallery.id} src={gallery.id} title={gallery.name} totalPages={gallery.totalPages} ext={gallery.ext} />)
     }
     return (
       <>

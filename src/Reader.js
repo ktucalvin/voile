@@ -27,7 +27,7 @@ class Reader extends Component {
 
   render () {
     const id = this.props.src.slice(2)
-    const src = id + '/' + this.state.page.toString().padStart(2, '0') + '.jpg'
+    const src = id + '/' + this.state.page + this.props.ext
     return (
       <>
         <img src={src} onClick={this.turnPage} />

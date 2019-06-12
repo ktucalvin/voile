@@ -67,7 +67,7 @@ main {
   background-color: #eb3b5a;
   transition: 0.4s;
   color: #fff;
-  max-width: 250px;
+  width: 250px;
 }
 
 .preview span:hover {
