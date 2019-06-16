@@ -9,19 +9,15 @@ class Paginator extends Component {
   constructor (props) {
     super(props)
     this.goToPage = this.goToPage.bind(this)
-    this.state = {
-      page: 1
-    }
   }
 
   goToPage (page) {
     document.activeElement.blur()
-    this.setState({ page })
     this.props.onPageChange(page)
   }
 
   render () {
-    const currentPage = this.state.page
+    const currentPage = this.props.page
     const offset = Math.floor(range / 2)
     let startPage = Math.max(1, currentPage - offset)
     let endPage = Math.min(this.props.totalPages, currentPage + offset)

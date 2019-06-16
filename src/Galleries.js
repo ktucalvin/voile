@@ -8,30 +8,34 @@ class Galleries extends Component {
   constructor (props) {
     super(props)
     this.changePage = this.changePage.bind(this)
+    this.state = {
+      page: 1
+    }
   }
 
   changePage (page) {
     fetch(`/api/registry/${page}`)
       .then(res => res.json())
       .then(registry => {
-        this.setState({ registry })
+        this.setState({ page, registry })
       })
   }
 
   render () {
-    if (!this.state) return null
+    if (!this.state.registry) return null
     const { registry } = this.state
-    const { portion } = registry
+    const { data } = registry
     let result = []
-    for (const entry of portion) {
-      const gallery = entry[1]
+    for (const gallery of data) {
       result.push(<Preview key={gallery.id} src={gallery.id} title={gallery.name} totalPages={gallery.totalPages} ext={gallery.ext} />)
     }
     return (
-      <>
-        {result}
-        <Paginator totalPages={registry.totalSize} onPageChange={this.changePage} />
-      </>
+      <main>
+        <div id='galleries'>
+          {result}
+          <Paginator page={this.state.page} totalPages={registry.totalSize} onPageChange={this.changePage} />
+        </div>
+      </main>
     )
   }
 

@@ -38,7 +38,7 @@ header {
 }
 
 main {
-  padding: 5% 10%;
+  padding: 2em 1em;
   padding-top: 3%;
 }
 
@@ -55,7 +55,7 @@ main {
 .preview img {
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 225px;
   height: auto;
 }
 
@@ -67,7 +67,7 @@ main {
   background-color: #eb3b5a;
   transition: 0.4s;
   color: #fff;
-  width: 250px;
+  width: 225px;
 }
 
 .preview span:hover {
@@ -96,6 +96,8 @@ main {
 }
 
 #reader a {
+  display: block;
+  margin-top: 1em;
   color: #fff;
 }
 

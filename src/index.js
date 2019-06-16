@@ -1,24 +1,10 @@
 'use strict'
 import ReactDOM from 'react-dom'
 import './index.css'
-import Galleries from './Galleries'
+import App from './App'
 const $ = q => document.querySelectorAll(q)
 
-ReactDOM.render(<Galleries />, $('#galleries')[0])
-
-window.onpopstate = event => {
-  const state = event.state
-  const $galleries = document.getElementById('galleries')
-  const $reader = document.getElementById('reader')
-  document.exitFullscreen().catch(() => {})
-  if (state && state.isReading) {
-    $reader.style.display = 'block'
-    $galleries.style.display = 'none'
-  } else {
-    $reader.style.display = 'none'
-    $galleries.style.display = 'block'
-  }
-}
+ReactDOM.render(<App />, $('body')[0])
 
 document.addEventListener('keyup', e => {
   const $page = $('#reader img')[0]
