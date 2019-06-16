@@ -7,16 +7,21 @@ import Paginator from './Paginator'
 class Galleries extends Component {
   constructor (props) {
     super(props)
-    this.changePage = this.changePage.bind(this)
-    this.state = {
-      page: 1
+    const queryPage = /\?p=(\d+)/.exec(this.props.location.search)
+    let page = 1
+    if (queryPage && queryPage[1] && parseInt(queryPage[1])) {
+      page = parseInt(queryPage[1])
     }
+
+    this.changePage = this.changePage.bind(this)
+    this.state = { page }
   }
 
   changePage (page) {
     fetch(`/api/registry/${page}`)
       .then(res => res.json())
       .then(registry => {
+        this.props.history.push(`?p=${page}`)
         this.setState({ page, registry })
       })
   }
@@ -25,6 +30,10 @@ class Galleries extends Component {
     if (!this.state.registry) return null
     const { registry } = this.state
     const { data } = registry
+    if (this.state.page > registry.totalSize) {
+      return (<span class='error'>The requested page exceeds the number of galleries available. Page must be between 1 and {registry.totalSize}.</span>)
+    }
+
     let result = []
     for (const gallery of data) {
       result.push(<Preview key={gallery.id} src={gallery.id} title={gallery.name} totalPages={gallery.totalPages} ext={gallery.ext} />)
@@ -40,7 +49,7 @@ class Galleries extends Component {
   }
 
   componentDidMount () {
-    fetch(`/api/registry/1`)
+    fetch(`/api/registry/${this.state.page}`)
       .then(res => res.json())
       .then(registry => {
         this.setState({ registry })

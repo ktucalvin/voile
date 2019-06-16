@@ -37,7 +37,7 @@ class Reader extends Component {
     if (!this.state) return null
     const page = this.props.match.params.page
     if (!parseInt(page) || page > this.state.totalPages || page < 1) {
-      return (<h3>That page could not be found</h3>)
+      return (<span class='error'>That page could not be found</span>)
     }
 
     const src = '/g/' + this.state.id + '/' + page + this.state.ext

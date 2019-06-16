@@ -123,3 +123,8 @@ main {
   color: #fff;
   background-color: #fc427b;
 }
+
+.error {
+  background-color: #e74c3c;
+  color: #fff;
+}
