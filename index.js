@@ -21,6 +21,8 @@ app.use(mount('/g', serve(process.env.ARCHIVE_DIR)))
 app.use(async ctx => {
   if (ctx.path.endsWith('bundle.js')) {
     await send(ctx, 'dist/bundle.js')
+  } else if (ctx.path.endsWith('main.css')) {
+    await send(ctx, 'dist/main.css')
   } else {
     await send(ctx, 'dist/index.html')
   }

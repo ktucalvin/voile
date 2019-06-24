@@ -42,8 +42,8 @@ class Galleries extends Component {
       <main>
         <div id='galleries'>
           {result}
-          <Paginator page={this.state.page} totalPages={registry.totalSize} onPageChange={this.changePage} />
         </div>
+        <Paginator page={this.state.page} totalPages={registry.totalSize} onPageChange={this.changePage} />
       </main>
     )
   }

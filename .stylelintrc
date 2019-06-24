@@ -1,6 +1,7 @@
 {
   "extends": "stylelint-config-recommended",
   rules: {
-    "color-hex-case": "lower"
+    "color-hex-case": "lower",
+    "no-descending-specificity": null
   }
 }
