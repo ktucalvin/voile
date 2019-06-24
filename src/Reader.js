@@ -8,6 +8,13 @@ class Reader extends Component {
   constructor (props) {
     super(props)
     this.turnPage = this.turnPage.bind(this)
+    document.addEventListener('keyup', e => {
+      if (e.key === 'ArrowLeft') {
+        this.turnPage({ clientX: 0 })
+      } else if (e.key === 'ArrowRight') {
+        this.turnPage({ clientX: 90000 })
+      }
+    })
   }
 
   turnPage (e) {
