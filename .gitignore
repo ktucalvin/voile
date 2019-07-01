@@ -3,3 +3,4 @@ galleries/
 dist/
 .env
 ecosystem.config.js
+imgcache/

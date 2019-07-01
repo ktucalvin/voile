@@ -16,7 +16,7 @@ app.use(routes)
 
 app.use(serve('./dist'))
 
-app.use(mount('/g', serve(process.env.ARCHIVE_DIR)))
+app.use(mount('/g', serve(process.env.ARCHIVE_DIR, { maxage: 86400 })))
 
 app.use(async ctx => {
   if (ctx.path.endsWith('bundle.js')) {

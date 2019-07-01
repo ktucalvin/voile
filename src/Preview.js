@@ -24,7 +24,7 @@ class Preview extends Component {
     const { ext } = this.props
     let src
     if (ext === '.jpg' || ext === '.png' || ext === '.jpeg') {
-      src = '/i/' + this.props.src + '/1?w=300' // slightly oversize to avoid excessive blurriness
+      src = '/i/' + this.props.src + '/1?w=250' // slightly oversize to avoid excessive blurriness
     } else {
       src = '/g/' + this.props.src + '/1' + ext
     }
