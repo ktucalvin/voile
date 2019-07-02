@@ -108,7 +108,7 @@ main {
 
 #reader img {
   display: block;
-  max-width: 90%;
+  max-width: 80%;
   height: auto;
   margin: 0 auto;
 }

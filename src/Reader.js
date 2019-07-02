@@ -47,7 +47,8 @@ class Reader extends Component {
       return (<span class='error'>That page could not be found</span>)
     }
 
-    const src = '/g/' + this.state.id + '/' + page + this.state.ext
+    const extension = this.state.ext || this.state.extdecoder[this.state.extstring.charAt(page - 1)]
+    const src = `/g/${this.state.id}/${page}.${extension}`
     return (
       <main>
         <div id='reader'>

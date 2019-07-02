@@ -36,7 +36,15 @@ class Galleries extends Component {
 
     let result = []
     for (const gallery of data) {
-      result.push(<Preview key={gallery.id} src={gallery.id} title={gallery.name} totalPages={gallery.totalPages} ext={gallery.ext} />)
+      result.push(
+        <Preview
+          key={gallery.id}
+          src={gallery.id}
+          title={gallery.name}
+          totalPages={gallery.totalPages}
+          ext={gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]}
+        />
+      )
     }
     return (
       <main>

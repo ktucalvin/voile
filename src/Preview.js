@@ -21,12 +21,12 @@ class Preview extends Component {
   }
 
   componentDidMount () {
-    const { ext } = this.props
+    let ext = '.' + this.props.ext
     let src
     if (ext === '.jpg' || ext === '.png' || ext === '.jpeg') {
-      src = '/i/' + this.props.src + '/1?w=250' // slightly oversize to avoid excessive blurriness
+      src = `/i/${this.props.src}/1?w=250` // slightly oversize to avoid excessive blurriness
     } else {
-      src = '/g/' + this.props.src + '/1' + ext
+      src = `/g/${this.props.src}/1${ext}`
     }
     const img = new Image()
     img.onload = () => {
