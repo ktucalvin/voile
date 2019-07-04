@@ -10,29 +10,30 @@ class Preview extends Component {
   }
 
   render () {
+    let { ext, src } = this.props
+    const attributes = {
+      style: { display: this.state.loaded ? 'flex' : 'none', alignItems: 'center' },
+      onLoad: () => this.setState({ loaded: true })
+    }
+    let thumbnail
+    if (['jpg', 'png', 'jpeg'].includes(ext)) {
+      thumbnail =
+        <picture {...attributes}>
+          <source srcset={`/i/${src}/1?w=250`} type='image/webp' />
+          <img src={`/i/${src}/1?w=250&format=jpeg`} />
+        </picture>
+    } else {
+      thumbnail = <img src={`/g/${src}/1.${this.props.ext}`} {...attributes} />
+    }
     return (
       <div className='preview'>
-        <Link to={`/g/${this.props.src}/1`}>
-          {this.state.src ? <img src={this.state.src} /> : <i class='loader' />}
+        <Link to={`/g/${src}/1`}>
+          {thumbnail}
+          {!this.state.loaded && <i class='loader' />}
           <span>{this.props.title}</span>
         </Link>
       </div>
     )
-  }
-
-  componentDidMount () {
-    let ext = '.' + this.props.ext
-    let src
-    if (ext === '.jpg' || ext === '.png' || ext === '.jpeg') {
-      src = `/i/${this.props.src}/1?w=250` // slightly oversize to avoid excessive blurriness
-    } else {
-      src = `/g/${this.props.src}/1${ext}`
-    }
-    const img = new Image()
-    img.onload = () => {
-      this.setState({ src })
-    }
-    img.src = src
   }
 }
 

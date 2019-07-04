@@ -15,8 +15,8 @@ html, body {
   border-radius: 50%;
   width: 3em;
   height: 3em;
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 3em;
+  margin-bottom: 3em;
   animation: loader 1s linear infinite;
 }
 
