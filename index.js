@@ -29,6 +29,8 @@ app.use(async ctx => {
     await send(ctx, 'dist/bundle.js', staticOpts)
   } else if (ctx.path.endsWith('main.css')) {
     await send(ctx, 'dist/main.css', staticOpts)
+  } else if (ctx.path === '/favicon.ico') {
+    ctx.status = 404
   } else {
     await send(ctx, 'dist/index.html', staticOpts)
   }

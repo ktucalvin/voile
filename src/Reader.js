@@ -28,9 +28,7 @@ class Reader extends Component {
       location.assign('/')
       return
     }
-
-    this.props.history.push('/g/' + this.state.id + '/' + page)
-    this.setState({ page })
+    this.props.history.push(`/g/${this.state.id}/${page}`)
   }
 
   componentDidMount () {
@@ -42,26 +40,36 @@ class Reader extends Component {
   render () {
     // If the gallery metadata was not loaded yet
     if (!this.state) return null
-    const page = this.props.match.params.page
-    if (!parseInt(page) || page > this.state.totalPages || page < 1) {
+    const page = parseInt(this.props.match.params.page)
+    if (!page || page > this.state.totalPages || page < 1) {
       return (<span class='error'>That page could not be found</span>)
     }
 
     const extension = this.state.ext || this.state.extdecoder[this.state.extstring.charAt(page - 1)]
     const src = `/g/${this.state.id}/${page}.${extension}`
+
     return (
       <main>
         <div id='reader'>
           <img src={src} onClick={this.turnPage} />
           <Paginator
-            page={parseInt(page)}
+            page={page}
             totalPages={this.state.totalPages}
-            onPageChange={page => this.props.history.push('/g/' + this.state.id + '/' + page)}
+            onPageChange={page => this.props.history.push(`/g/${this.state.id}/${page}`)}
           />
           <Link to='/'>Back to galleries</Link>
         </div>
       </main>
     )
+  }
+
+  componentDidUpdate () {
+    const page = parseInt(this.props.match.params.page)
+    if (page + 1 <= this.state.totalPages) {
+      const nextExtension = this.state.ext || this.state.extdecoder[this.state.extstring.charAt(page)]
+      const img = new Image()
+      img.src = `/g/${this.state.id}/${page + 1}.${nextExtension}`
+    }
   }
 }
 
