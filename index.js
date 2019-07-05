@@ -7,7 +7,7 @@ const mount = require('koa-mount')
 const send = require('koa-send')
 const conditional = require('koa-conditional-get')
 const etag = require('koa-etag')
-const routes = require('./lib/routes')
+const routes = require('./routes')
 const app = new Koa()
 const certopts = {
   key: process.env.SSL_KEY,
