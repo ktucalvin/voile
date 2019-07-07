@@ -1,6 +1,13 @@
+# Node/Library/Tools
 node_modules/
+ecosystem.config.js
+
+# Tests
+.nyc_output
+coverage/
+
+# Application
 galleries/
 dist/
-.env
-ecosystem.config.js
 imgcache/
+.env

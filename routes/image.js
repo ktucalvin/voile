@@ -89,7 +89,7 @@ function resizeImage (ctx) {
   })
 }
 
-router.get('/:gallery/:page', resizeImage)
+router.get('/i/:gallery/:page', resizeImage)
 
 module.exports = {
   routes: router.routes(),

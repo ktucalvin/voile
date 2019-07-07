@@ -5,8 +5,9 @@ const registry = require('../lib/registry')
 const router = new KoaRouter()
 
 function getRegistryInformation (ctx) {
-  let page = parseInt(ctx.params.page) || 1
-  if (!page) {
+  let { page } = ctx.params
+  if (!page) page = 1
+  if (!parseInt(page) || page < 1) {
     ctx.status = 400
     return
   }
@@ -29,7 +30,7 @@ function getRegistryInformation (ctx) {
 function getGalleryInformation (ctx) {
   const gallery = registry.get(ctx.params.id)
   if (!gallery) {
-    ctx.status = 400
+    ctx.status = 404
     return
   }
 

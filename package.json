@@ -6,6 +6,9 @@
   "private": true,
   "scripts": {
     "dev": "webpack --watch --config webpack.dev.js",
+    "test": "find . -not -path \"*node_modules*\" -name \"*test\" | xargs mocha",
+    "coverage": "find . -not -path \"*node_modules*\" -name \"*test\" | xargs nyc --reporter=html --reporter=text mocha",
+    "debug-test": "find . -not -path \"*node_modules*\" -name \"*test\" | xargs mocha --inspect-brk --timeout 999999",
     "build": "npm run clean && webpack --config webpack.prod.js",
     "clean": "rm -rf dist/"
   },
@@ -41,6 +44,13 @@
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "dirty-chai": "^2.0.1",
+    "mocha": "^6.1.4",
+    "mock-require": "^3.0.3",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0",
     "stylelint": "^10.0.1",
     "stylelint-config-recommended": "^2.2.0"
   }
