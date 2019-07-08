@@ -18,11 +18,15 @@ In the archive directory can be several folders, each their own gallery. Images 
 
 Run `npm install` to install dependencies
 
-Run `node index.js` to start the server. It should run at https://localhost unless the server was modified to not use https.
-
-Run `npm run dev` to have webpack continually rebuild the frontend files in `src/`
+Run `npm install -D` to install dev dependencies
 
 Run `npm run build` to build the files in `src` manually. The resulting bundle will show in `dist/`
+
+Run `node index.js` to start the server. It should run at https://localhost unless the server was modified to not use https.
+
+Run `npm prune` to remove dev dependencies
+
+Run `npm run dev` to have webpack continually rebuild the frontend files in `src/`
 
 ## License
 
