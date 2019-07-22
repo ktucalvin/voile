@@ -19,8 +19,8 @@ class Preview extends Component {
     if (['jpg', 'png', 'jpeg'].includes(ext)) {
       thumbnail =
         <picture {...attributes}>
-          <source srcset={`/i/${src}/1?w=250`} type='image/webp' />
-          <img src={`/i/${src}/1?w=250&format=jpeg`} />
+          <source srcset={`/i/${src}/1?w=200`} type='image/webp' />
+          <img src={`/i/${src}/1?w=200&format=jpeg`} />
         </picture>
     } else {
       thumbnail = <img src={`/g/${src}/1.${this.props.ext}`} {...attributes} />

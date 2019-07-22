@@ -53,14 +53,18 @@ header {
 
 main {
   padding: 2em 1em;
-  padding-top: 1%;
+  padding-top: 1.5%;
 }
 
 #galleries {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 175px);
+  justify-items: center;
   justify-content: center;
-  align-items: flex-end;
+  grid-row-gap: 1.25em;
+  grid-column-gap: 1.25em;
+  width: 90vw;
+  margin: 0 auto;
 }
 
 #galleries a {
@@ -70,30 +74,27 @@ main {
 .preview {
   display: flex;
   cursor: pointer;
-  margin: 0.65em;
-  align-self: stretch;
-  width: 200px;
+  width: 175px;
 }
 
 .preview a {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
 }
 
 .preview img {
-  width: 200px;
+  width: 175px;
   height: auto;
 }
 
 .preview span {
   flex: 1;
-  justify-content: center;
-  text-align: center;
   padding: 0.3em;
-  box-sizing: border-box;
+  text-align: center;
   background-color: #eb3b5a;
   transition: 0.4s;
   color: #fff;
+  font-size: 14px;
 }
 
 .preview span:hover {
