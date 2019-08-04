@@ -11,7 +11,7 @@ function getRegistryInformation (ctx) {
     ctx.status = 400
     return
   }
-  const range = 24 // range is galleries per page
+  const range = 25 // range is galleries per page
   const offset = range * (page - 1)
   let i = 0
   let data = []

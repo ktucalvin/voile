@@ -1,4 +1,4 @@
-# NHViewer
+# Voile
 
 SPA built with React on a Koa.js backend for serving comic books and other image galleries.
 

@@ -4,19 +4,27 @@ html, body {
   padding: 0;
   margin: 0;
   font-family: 'Lato', 'Helvetica', 'Segoe UI', Tahoma, Verdana, sans-serif;
-  background-color: #212326;
+  background-color: #121212;
   overflow-x: hidden;
 }
 
 .loader {
-  align-self: center;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 275px;
+}
+
+.loader:after {
+  content: ' ';
+  position: absolute;
+  top: calc(50% - 3em);
+  left: calc(50% - 1.5em);
   border: 3px solid #787878;
-  border-top: 3px solid #eb3b5a;
+  border-top: 3px solid #8e44ad;
   border-radius: 50%;
   width: 3em;
   height: 3em;
-  margin-top: 3em;
-  margin-bottom: 3em;
   animation: loader 1s linear infinite;
 }
 
@@ -26,10 +34,11 @@ html, body {
 }
 
 header {
-  background-color: #3b3d40;
+  background-color: #1e1e1e;
   width: 100vw;
   padding: 0.3em 1em;
   box-sizing: border-box;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
 }
 
 #logo {
@@ -39,16 +48,23 @@ header {
   text-decoration: none;
 }
 
-.app-logo {
-  color: #fc427b;
-  font-size: 28px;
+.app-name {
+  color: #fafafa;
+  font-size: 24px;
+  padding: 0 0.3em;
 }
 
-.app-name {
-  color: #eee;
-  font-size: 16px;
-  line-height: 16px;
-  padding-left: 0.3em;
+.app-name::first-letter {
+  color: #ba68c8;
+  letter-spacing: 0.07em;
+}
+
+.app-name::after {
+  content: ' ';
+  left: 0;
+  bottom: 0.1em;
+  border-bottom: 1px solid #ba68c8;
+  width: 0;
 }
 
 main {
@@ -58,9 +74,10 @@ main {
 
 #galleries {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 175px);
+  grid-template-columns: repeat(auto-fit, 225px);
   justify-items: center;
   justify-content: center;
+  align-items: flex-end;
   grid-row-gap: 1.25em;
   grid-column-gap: 1.25em;
   width: 90vw;
@@ -72,33 +89,39 @@ main {
 }
 
 .preview {
-  display: flex;
   cursor: pointer;
-  width: 175px;
+  width: 100%;
+  box-shadow: 1px 3px 5px #000;
+}
+
+.preview:hover span {
+  background-color: rgba(142, 68, 173, 0.8);
 }
 
 .preview a {
-  display: flex;
-  flex-direction: column;
+  display: block;
+  position: relative;
 }
 
 .preview img {
-  width: 175px;
+  width: 100%;
   height: auto;
+  max-height: 325px;
+  object-fit: cover;
 }
 
 .preview span {
-  flex: 1;
-  padding: 0.3em;
+  display: block;
+  padding: 0.2em;
   text-align: center;
-  background-color: #eb3b5a;
+  background-color: rgba(0, 0, 0, 0.5);
   transition: 0.4s;
   color: #fff;
   font-size: 14px;
-}
-
-.preview span:hover {
-  background-color: #fc427b;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #reader {
@@ -137,18 +160,18 @@ main {
   margin-top: 1em;
   color: #ddd;
   cursor: pointer;
-  background-color: #212326;
+  background-color: #121212;
   border: none;
   font-size: 1.2em;
 }
 
 .paginator button:hover {
-  background-color: #eb3b5a;
+  background-color: #ba68c8;
 }
 
 .paginator .currentPage {
   color: #fff;
-  background-color: #fc427b;
+  background-color: #8e44ad;
 }
 
 .error {

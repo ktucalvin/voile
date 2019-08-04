@@ -1,7 +1,7 @@
 {
-  "name": "nhviewer",
+  "name": "voile",
   "version": "0.1.0",
-  "description": "",
+  "description": "Image gallery and comic book reader",
   "main": "index.js",
   "private": true,
   "scripts": {
