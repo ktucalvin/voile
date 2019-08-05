@@ -13,7 +13,7 @@ const certopts = {
   key: process.env.SSL_KEY,
   cert: process.env.SSL_CERT
 }
-const staticOpts = { maxage: 86400000 } // 1 day
+const staticOpts = { maxage: 31536000000 } // 1 year
 
 app.use(conditional())
 app.use(etag())
@@ -25,14 +25,10 @@ app.use(serve('./dist', staticOpts))
 app.use(mount('/g', serve(process.env.ARCHIVE_DIR, staticOpts)))
 
 app.use(async ctx => {
-  if (ctx.path.endsWith('bundle.js')) {
-    await send(ctx, 'dist/bundle.js', staticOpts)
-  } else if (ctx.path.endsWith('main.css')) {
-    await send(ctx, 'dist/main.css', staticOpts)
-  } else if (ctx.path === '/favicon.ico') {
+  if (ctx.path === '/favicon.ico') {
     ctx.status = 404
   } else {
-    await send(ctx, 'dist/index.html', staticOpts)
+    await send(ctx, 'dist/index.html')
   }
 })
 

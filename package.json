@@ -9,8 +9,7 @@
     "test": "find . -not -path \"*node_modules*\" -name \"*test\" | xargs mocha",
     "coverage": "find . -not -path \"*node_modules*\" -name \"*test\" | xargs nyc --reporter=html --reporter=text mocha",
     "debug-test": "find . -not -path \"*node_modules*\" -name \"*test\" | xargs mocha --inspect-brk --timeout 999999",
-    "build": "npm run clean && webpack --config webpack.prod.js",
-    "clean": "rm -rf dist/"
+    "build": "webpack --config webpack.prod.js"
   },
   "keywords": [],
   "author": "ktucalvin",
@@ -33,6 +32,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
+    "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^2.1.1",
     "dirty-chai": "^2.0.1",
     "file-loader": "^3.0.1",
@@ -51,7 +51,6 @@
     "terser-webpack-plugin": "^1.4.1",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1"
   }
 }
