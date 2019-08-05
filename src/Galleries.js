@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import Preview from './Preview'
 import Paginator from './Paginator'
+const queryPageRegex = /\?p=(\d+)/
 
 class Galleries extends Component {
   constructor (props) {
@@ -11,7 +12,7 @@ class Galleries extends Component {
   }
 
   changePage (location = this.props.location.search) {
-    const queryPage = /\?p=(\d+)/.exec(location)
+    const queryPage = queryPageRegex.exec(location)
     const page = (queryPage && parseInt(queryPage[1])) || 1
     fetch(`/api/registry/${page}`)
       .then(res => res.json())
@@ -26,20 +27,13 @@ class Galleries extends Component {
         <span class='error'>
           The requested page exceeds the number of galleries available.
           Page must be between 1 and {registry.totalSize}.
-        </span>)
+        </span>
+      )
     }
 
     let result = []
     for (const gallery of registry.data) {
-      result.push(
-        <Preview
-          key={gallery.id}
-          src={gallery.id}
-          title={gallery.name}
-          totalPages={gallery.totalPages}
-          ext={gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]}
-        />
-      )
+      result.push(<Preview key={gallery.id} gallery={gallery} />)
     }
 
     return (

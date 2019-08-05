@@ -18,14 +18,14 @@ class Reader extends Component {
   }
 
   turnPage (e) {
-    const mid = document.querySelectorAll('body')[0].clientWidth / 2
+    const mid = document.querySelector('body').clientWidth / 2
     let page = this.props.match.params.page
     if (e.clientX > mid && page < this.state.totalPages) {
       page++
     } else if (e.clientX <= mid && page > 1) {
       page--
     } else {
-      location.assign('/')
+      this.props.history.push('/')
       return
     }
     this.props.history.push(`/g/${this.state.id}/${page}`)
@@ -38,7 +38,6 @@ class Reader extends Component {
   }
 
   render () {
-    // If the gallery metadata was not loaded yet
     if (!this.state) return null
     const page = parseInt(this.props.match.params.page)
     if (!page || page > this.state.totalPages || page < 1) {

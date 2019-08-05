@@ -10,7 +10,8 @@ class Preview extends Component {
   }
 
   render () {
-    let { ext, src } = this.props
+    let { gallery } = this.props
+    const ext = gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]
     const attributes = {
       style: { display: this.state.loaded ? 'flex' : 'none', alignItems: 'center' },
       onLoad: () => this.setState({ loaded: true })
@@ -19,18 +20,19 @@ class Preview extends Component {
     if (['jpg', 'png', 'jpeg'].includes(ext)) {
       thumbnail =
         <picture {...attributes}>
-          <source srcset={`/i/${src}/1?w=275`} type='image/webp' />
-          <img src={`/i/${src}/1?w=275&format=jpeg`} />
+          <source srcset={`/i/${gallery.id}/1?w=275`} type='image/webp' />
+          <img src={`/i/${gallery.id}/1?w=275&format=jpeg`} />
         </picture>
     } else {
-      thumbnail = <img src={`/g/${src}/1.${this.props.ext}`} {...attributes} />
+      thumbnail = <img src={`/g/${gallery.id}/1.${ext}`} {...attributes} />
     }
+
     return (
       <div className='preview'>
-        <Link to={`/g/${src}/1`}>
+        <Link to={`/g/${gallery.id}/1`}>
           {thumbnail}
           {!this.state.loaded && <i class='loader' />}
-          <span>{this.props.title}</span>
+          <span>{gallery.name}</span>
         </Link>
       </div>
     )
