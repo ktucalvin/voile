@@ -25,9 +25,7 @@ app.use(serve('./dist', staticOpts))
 app.use(mount('/g', serve(process.env.ARCHIVE_DIR, staticOpts)))
 
 app.use(async ctx => {
-  if (ctx.path === '/favicon.ico') {
-    ctx.status = 404
-  } else {
+  if (ctx.accepts('html')) {
     await send(ctx, 'dist/index.html')
   }
 })

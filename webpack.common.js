@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
@@ -23,7 +24,31 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin({
+      verbose: true,
+      cleanOnceBeforeBuildPatterns: [
+        '**/*',
+        '!android-chrome-*.png',
+        '!apple-touch-icon.png',
+        '!browserconfig.xml',
+        '!favicon*',
+        '!mstile-*.png',
+        '!safari-pinned-tab.svg',
+        '!site.webmanifest'
+      ],
+      cleanAfterEveryBuildPatterns: [
+        '!android-chrome-*.png',
+        '!apple-touch-icon.png',
+        '!browserconfig.xml',
+        '!favicon*',
+        '!mstile-*.png',
+        '!safari-pinned-tab.svg',
+        '!site.webmanifest'
+      ]
+    }),
+    new CopyWebpackPlugin([
+      { from: './src/favicon' }
+    ])
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
