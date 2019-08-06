@@ -41,7 +41,7 @@ class Reader extends Component {
     if (!this.state) return null
     const page = parseInt(this.props.match.params.page)
     if (!page || page > this.state.totalPages || page < 1) {
-      return (<span class='error'>That page could not be found</span>)
+      return (<span className='error'>That page could not be found</span>)
     }
 
     const extension = this.state.ext || this.state.extdecoder[this.state.extstring.charAt(page - 1)]

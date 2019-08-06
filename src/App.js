@@ -13,7 +13,7 @@ class App extends Component {
         <BrowserRouter>
           <header>
             <Link to='/' id='logo'>
-              <span class='app-name'><b>𝕍</b>oile</span>
+              <span className='app-name'><b>𝕍</b>oile</span>
             </Link>
           </header>
           <Route exact path='/' component={Galleries} />

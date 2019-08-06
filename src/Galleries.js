@@ -24,7 +24,7 @@ class Galleries extends Component {
     const { registry } = this.state
     if (this.state.page > registry.totalSize) {
       return (
-        <span class='error'>
+        <span className='error'>
           The requested page exceeds the number of galleries available.
           Page must be between 1 and {registry.totalSize}.
         </span>

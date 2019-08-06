@@ -20,7 +20,7 @@ class Preview extends Component {
     if (['jpg', 'png', 'jpeg'].includes(ext)) {
       thumbnail =
         <picture {...attributes}>
-          <source srcset={`/i/${gallery.id}/1?w=275`} type='image/webp' />
+          <source srcSet={`/i/${gallery.id}/1?w=275`} type='image/webp' />
           <img src={`/i/${gallery.id}/1?w=275&format=jpeg`} />
         </picture>
     } else {
@@ -31,7 +31,7 @@ class Preview extends Component {
       <div className='preview'>
         <Link to={`/g/${gallery.id}/1`}>
           {thumbnail}
-          {!this.state.loaded && <i class='loader' />}
+          {!this.state.loaded && <i className='loader' />}
           <span>{gallery.name}</span>
         </Link>
       </div>
