@@ -14,9 +14,11 @@ class Galleries extends Component {
   changePage (location = this.props.location.search) {
     const queryPage = queryPageRegex.exec(location)
     const page = (queryPage && parseInt(queryPage[1])) || 1
-    fetch(`/api/registry/${page}`)
+    this.fetchController = new AbortController()
+    fetch(`/api/registry/${page}`, { signal: this.fetchController.signal })
       .then(res => res.json())
       .then(registry => this.setState({ page, registry }))
+      .catch(err => { if (err.name !== 'AbortError') console.error(err) })
   }
 
   render () {
@@ -63,6 +65,7 @@ class Galleries extends Component {
 
   componentWillUnmount () {
     this.unlisten()
+    this.fetchController.abort()
   }
 }
 
