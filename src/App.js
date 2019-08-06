@@ -1,9 +1,11 @@
+'use strict'
+import './index.css'
+import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import Galleries from './Galleries'
 import Reader from './Reader'
 
-export default
 class App extends Component {
   render () {
     return (
@@ -21,3 +23,5 @@ class App extends Component {
     )
   }
 }
+
+export default hot(App)

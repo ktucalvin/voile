@@ -16,9 +16,13 @@
 </head>
 
 <body>
-  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
+    <div id="root"></div>
+  <% if(process.env.NODE_ENV !== 'development') { %>
+      <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+      <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+      <script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
+    <% }
+  %>
   <!-- beautify ignore:start -->
   <style>noscript{display:block;position:absolute;top:0;left:0;right:0;padding:1em;background-color:#e53935;color:#fff;font-family:Helvetica,Arial,sans-serif;font-weight:700;font-size:20px;text-align:center}</style>
   <!-- beautify ignore:end -->

@@ -1,4 +1,5 @@
 'use strict'
+const path = require('path')
 const merge = require('webpack-merge')
 const TerserPlugin = require('terser-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -40,7 +41,7 @@ module.exports = merge(common, {
       chunkFilename: '[id].[contenthash].css'
     }),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: 'src/index.ejs',
       minify: {
         collapseWhitespace: true,
         removeComments: true,
@@ -50,5 +51,15 @@ module.exports = merge(common, {
         useShortDoctype: true
       }
     })
-  ]
+  ],
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: 'https://localhost/',
+    filename: '[name].[contenthash].js'
+  },
+  externals: {
+    'react': 'React',
+    'react-dom': 'ReactDOM',
+    'react-router-dom': 'ReactRouterDOM'
+  }
 })

@@ -1,10 +1,9 @@
 'use strict'
-const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: ['./src/index.js'],
   module: {
     rules: [
       {
@@ -49,15 +48,5 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: './src/favicon' }
     ])
-  ],
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: 'https://localhost',
-    filename: '[name].[contenthash].js'
-  },
-  externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM',
-    'react-router-dom': 'ReactRouterDOM'
-  }
+  ]
 }

@@ -26,7 +26,7 @@ Run `node index.js` to start the server. It should run at https://localhost unle
 
 Run `npm prune` to remove dev dependencies
 
-Run `npm run dev` to have webpack continually rebuild the frontend files in `src/`
+Run `npm run dev` to start a development server with HMR preconfigured
 
 ## License
 
