@@ -7,14 +7,21 @@ import Paginator from './Paginator'
 class Reader extends Component {
   constructor (props) {
     super(props)
+    this.handleKeyUp = this.handleKeyUp.bind(this)
     this.turnPage = this.turnPage.bind(this)
-    document.addEventListener('keyup', e => {
-      if (e.key === 'ArrowLeft') {
-        this.turnPage({ clientX: 0 })
-      } else if (e.key === 'ArrowRight') {
-        this.turnPage({ clientX: 90000 })
-      }
-    })
+  }
+
+  handleKeyUp (e) {
+    const $page = document.querySelector('#reader img')
+    if (e.key === 'ArrowLeft') {
+      this.turnPage({ clientX: 0 })
+    } else if (e.key === 'ArrowRight') {
+      this.turnPage({ clientX: 90000 })
+    } else if (e.key === 'f' && $page) {
+      $page.requestFullscreen()
+    } else if (e.key === 'Esc') {
+      document.exitFullscreen()
+    }
   }
 
   turnPage (e) {
@@ -32,6 +39,7 @@ class Reader extends Component {
   }
 
   componentDidMount () {
+    document.addEventListener('keyup', this.handleKeyUp)
     fetch(`/api/gallery/${this.props.match.params.id}`)
       .then(res => res.json())
       .then(gallery => this.setState(gallery))
@@ -69,6 +77,10 @@ class Reader extends Component {
       const img = new Image()
       img.src = `/g/${this.state.id}/${page + 1}.${nextExtension}`
     }
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('keyup', this.handleKeyUp)
   }
 }
 
