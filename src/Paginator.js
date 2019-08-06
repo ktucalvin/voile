@@ -35,16 +35,19 @@ class Paginator extends Component {
     const buttons = []
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(
-        <button onClick={() => this.goToPage(i)} className={i === currentPage ? 'currentPage' : ''}>{i}</button>
+        <button
+          key={i}
+          onClick={() => this.goToPage(i)}
+          className={i === currentPage ? 'currentPage' : ''}>{i}</button>
       )
     }
 
     if (startPage !== 1) {
-      buttons.unshift(<button className='to-first' onClick={() => this.goToPage(1)}>«</button>)
+      buttons.unshift(<button key='first' className='to-first' onClick={() => this.goToPage(1)}>«</button>)
     }
 
     if (endPage !== this.props.totalPages) {
-      buttons.push(<button className='to-last' onClick={() => this.goToPage(this.props.totalPages)}>»</button>)
+      buttons.push(<button key='last' className='to-last' onClick={() => this.goToPage(this.props.totalPages)}>»</button>)
     }
 
     return (
