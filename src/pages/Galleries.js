@@ -1,8 +1,8 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
-import Preview from './Preview'
-import Paginator from './Paginator'
+import Preview from '../components/Preview'
+import Paginator from '../components/Paginator'
 const queryPageRegex = /\?p=(\d+)/
 
 class Galleries extends Component {

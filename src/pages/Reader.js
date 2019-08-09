@@ -2,7 +2,7 @@
 'use strict'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Paginator from './Paginator'
+import Paginator from '../components/Paginator'
 
 class Reader extends Component {
   constructor (props) {

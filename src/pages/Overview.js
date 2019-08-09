@@ -2,7 +2,7 @@
 'use strict'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Thumbnail from './Thumbnail'
+import Thumbnail from '../components/Thumbnail'
 
 class Overview extends Component {
   constructor (props) {

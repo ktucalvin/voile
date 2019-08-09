@@ -3,9 +3,9 @@ import './index.css'
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import { BrowserRouter, Route, Link } from 'react-router-dom'
-import Galleries from './Galleries'
-import Overview from './Overview'
-import Reader from './Reader'
+import Galleries from './pages/Galleries'
+import Overview from './pages/Overview'
+import Reader from './pages/Reader'
 
 class App extends Component {
   render () {
