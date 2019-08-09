@@ -25,7 +25,7 @@ module.exports = merge(common, {
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: 'https://localhost/',
+    publicPath: '/',
     filename: '[name].[hash].js'
   }
 })
