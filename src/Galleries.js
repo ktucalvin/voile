@@ -39,7 +39,7 @@ class Galleries extends Component {
     }
 
     return (
-      <main>
+      <>
         <div id='galleries'>
           {result}
         </div>
@@ -48,7 +48,7 @@ class Galleries extends Component {
           totalPages={registry.totalSize}
           onPageChange={page => this.props.history.push(`?p=${page}`)}
         />
-      </main>
+      </>
     )
   }
 

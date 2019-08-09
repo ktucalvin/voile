@@ -41,6 +41,14 @@ header {
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
 }
 
+img {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
 #logo {
   display: inline-flex;
   align-items: center;
@@ -116,6 +124,7 @@ main {
   box-sizing: border-box;
 }
 
+#overview,
 #reader {
   display: block;
   margin-top: 1em;
@@ -127,11 +136,6 @@ main {
   max-width: 80%;
   height: auto;
   margin: 0 auto;
-  -webkit-touch-callout: none;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
 }
 
 #reader span {
@@ -142,10 +146,90 @@ main {
   font-size: 20px;
 }
 
+#overview a,
 #reader a {
   display: block;
   margin-top: 1em;
   color: #fff;
+}
+
+#overview {
+  color: #eee;
+  width: 80vw;
+  margin: 0 auto;
+}
+
+#overview .info {
+  display: grid;
+  grid-template-columns: minmax(0, 275px) minmax(0, 1fr);
+  margin: 0 auto;
+  background-color: #1e1e1e;
+  word-wrap: break-word;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.info div {
+  padding: 1.5em;
+}
+
+.info p {
+  margin: 0.35em auto;
+}
+
+.info p:first-child {
+  color: #fff;
+  font-size: 20px;
+  padding: 0.5em;
+  padding-top: 0;
+  border-bottom: 1px solid #8e44ad;
+}
+
+@media all and (max-width: 800px) {
+  .info img {
+    display: none;
+  }
+
+  #overview .info {
+    grid-template-columns: 100%;
+  }
+}
+
+#overview .thumbnails {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 200px);
+  justify-items: center;
+  justify-content: center;
+  align-items: flex-end;
+  grid-row-gap: 1.25em;
+  grid-column-gap: 1.25em;
+  margin: 0 auto;
+  margin-top: 1em;
+}
+
+.thumbnails img {
+  width: 200px;
+  height: auto;
+  max-height: 288px;
+  object-fit: cover;
+}
+
+button {
+  padding: 0.5em 1em;
+  margin: 2em 0;
+  margin-bottom: 0.5em;
+  border: 0;
+  background-color: #8e44ad;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  font-size: 14px;
+  transition: 0.5s;
+}
+
+button:active,
+button:focus,
+button:hover {
+  background-color: #ba68c8;
 }
 
 .paginator {
@@ -157,10 +241,11 @@ main {
   margin-top: 1em;
   color: #ddd;
   cursor: pointer;
-  background-color: #121212;
+  background-color: transparent;
   border: none;
   font-size: 1.2em;
   font-family: 'Lato', 'Helvetica', 'Segoe UI', Tahoma, Verdana, sans-serif;
+  transition: none;
 }
 
 .paginator button:hover {

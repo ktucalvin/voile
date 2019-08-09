@@ -32,7 +32,7 @@ class Reader extends Component {
     } else if (e.clientX <= mid && page > 1) {
       page--
     } else {
-      this.props.history.push('/')
+      this.props.history.push(`/g/${this.state.id}`)
       return
     }
     this.props.history.push(`/g/${this.state.id}/${page}`)
@@ -56,17 +56,15 @@ class Reader extends Component {
     const src = `/g/${this.state.id}/${page}.${extension}`
 
     return (
-      <main>
-        <div id='reader'>
-          <img src={src} onClick={this.turnPage} />
-          <Paginator
-            page={page}
-            totalPages={this.state.totalPages}
-            onPageChange={page => this.props.history.push(`/g/${this.state.id}/${page}`)}
-          />
-          <Link to='/'>Back to galleries</Link>
-        </div>
-      </main>
+      <div id='reader'>
+        <img src={src} onClick={this.turnPage} />
+        <Paginator
+          page={page}
+          totalPages={this.state.totalPages}
+          onPageChange={page => this.props.history.push(`/g/${this.state.id}/${page}`)}
+        />
+        <Link to={`/g/${this.state.id}`}>Back to overview</Link>
+      </div>
     )
   }
 
