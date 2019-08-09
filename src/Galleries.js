@@ -53,6 +53,7 @@ class Galleries extends Component {
   }
 
   componentDidMount () {
+    document.title = 'Voile'
     this.changePage()
     // Must pass new location immediately since it takes time before it is updated in this.props
     this.unlisten = this.props.history.listen(location => this.changePage(location.search))

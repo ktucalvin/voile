@@ -54,6 +54,7 @@ class Reader extends Component {
 
     const extension = this.state.ext || this.state.extdecoder[this.state.extstring.charAt(page - 1)]
     const src = `/g/${this.state.id}/${page}.${extension}`
+    document.title = `${this.state.name} (${page}/${this.state.totalPages})`
 
     return (
       <div id='reader'>

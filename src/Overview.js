@@ -14,7 +14,10 @@ class Overview extends Component {
   componentDidMount () {
     fetch(`/api/gallery/${this.props.match.params.id}`)
       .then(res => res.json())
-      .then(gallery => this.setState({ gallery }))
+      .then(gallery => {
+        document.title = gallery.name
+        this.setState({ gallery })
+      })
   }
 
   render () {
