@@ -166,9 +166,11 @@ main {
   background-color: #1e1e1e;
   word-wrap: break-word;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  text-align: left;
 }
 
-.info div {
+.info > div {
   padding: 1.5em;
   padding-top: 0.5em;
 }
@@ -183,6 +185,7 @@ main {
   padding: 0.5em;
   padding-top: 0;
   border-bottom: 1px solid #8e44ad;
+  text-align: center;
 }
 
 @media all and (max-width: 800px) {
@@ -261,4 +264,21 @@ button:hover {
 .error {
   background-color: #e74c3c;
   color: #fff;
+}
+
+.tagbox {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0.3em auto;
+  align-items: baseline;
+  font-size: 14px;
+}
+
+.chip {
+  display: inline-block;
+  color: #fff;
+  padding: 0.2em 0.8em;
+  margin: 0.2em;
+  border-radius: 12px;
+  text-transform: lowercase;
 }

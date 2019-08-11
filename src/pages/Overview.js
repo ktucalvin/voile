@@ -2,7 +2,9 @@
 'use strict'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import ThumbnailGrid from '../components/ThumbnailGrid'
 import Thumbnail from '../components/Thumbnail'
+import TagBox from '../components/TagBox'
 
 class Overview extends Component {
   constructor (props) {
@@ -24,19 +26,6 @@ class Overview extends Component {
     if (!this.state.gallery) return null
     const { gallery } = this.state
     const ext = gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]
-    const thumbProps = {
-      width: 200,
-      id: gallery.id,
-      ext
-    }
-    const thumbnails = []
-    for (let i = 1; i <= Math.min(this.state.maxThumbs, gallery.totalPages); i++) {
-      thumbnails.push(
-        <Link key={i} to={`/g/${gallery.id}/${i}`}>
-          <Thumbnail page={i} {...thumbProps} />
-        </Link>
-      )
-    }
 
     return (
       <div id='overview'>
@@ -46,16 +35,10 @@ class Overview extends Component {
             <p><b>{gallery.name}</b></p>
             {gallery.description && <p>{gallery.description}</p>}
             <p>Total pages: {gallery.totalPages}</p>
-            <span>Tags: {JSON.stringify(gallery.tags)}</span>
+            <TagBox tags={gallery.tags} />
           </div>
         </div>
-        <div className='thumbnails'>
-          {thumbnails}
-        </div>
-        {
-          this.state.maxThumbs <= gallery.totalPages &&
-          <button className='show-more' onClick={() => this.setState({ maxThumbs: this.state.maxThumbs + 35 })}>Show more</button>
-        }
+        <ThumbnailGrid gallery={gallery} />
         <Link to='/'>Back to galleries</Link>
       </div>
     )

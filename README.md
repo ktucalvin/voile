@@ -6,13 +6,23 @@ SPA built with React on a Koa.js backend for serving comic books and other image
 
 In a `.env` file specify an SSL_KEY, SSL_CERT, and ARCHIVE_DIR. SSL setup can be omitted by modifying `index.js` to use Node's `http` module instead of `https`.
 
-In the archive directory can be several folders, each their own gallery. Images must be named starting from 1, with no padding and consistent file extensions (i.e. 1.jpg, 2.jpg, ..., n.jpg). Each gallery folder must have a `metadata.json` in the following format:
+In the archive directory can be several folders, each their own gallery. Images must be named starting from 1, with no padding and consistent file extensions (i.e. 1.jpg, 2.jpg, ..., n.jpg). Each gallery folder must have a `metadata.json` in the following format. Properties ending with `?` are optional.
 
 ```
 {
     "id": "UNIQUE_ID",
     "totalPages": 10,
-    "name": "Name of gallery"
+    "name": "Gallery name",
+    "description?": "Gallery description"
+    "tags?": {
+        "language?": string[]
+        "category?": string[]
+        "group?": string[]
+        "artist?": string[]
+        "parody?": string[]
+        "character?": string[]
+        "content?": string[]
+    }
 }
 ```
 
