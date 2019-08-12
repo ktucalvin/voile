@@ -1,75 +1,79 @@
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import (css) url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
-html, body {
+@base: #121212;
+@textColor: #eee;
+@primary: #8e44ad;
+@accent: lighten(@primary, 10%);
+
+html,
+body {
   padding: 0;
   margin: 0;
+  color: @textColor;
+  background-color: @base;
+}
+
+body,
+input,
+textarea,
+button {
   font-family: 'Lato', 'Helvetica', 'Segoe UI', Tahoma, Verdana, sans-serif;
-  background-color: #121212;
-  overflow-x: hidden;
-}
-
-.loader {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 275px;
-}
-
-.loader:after {
-  content: ' ';
-  position: absolute;
-  top: calc(50% - 3em);
-  left: calc(50% - 1.5em);
-  border: 3px solid #787878;
-  border-top: 3px solid #8e44ad;
-  border-radius: 50%;
-  width: 3em;
-  height: 3em;
-  animation: loader 1s linear infinite;
-}
-
-@keyframes loader {
-  from { transform: rotate(0); }
-  to { transform: rotate(360deg); }
 }
 
 header {
   background-color: #1e1e1e;
-  width: 100vw;
+  width: 100%;
   padding: 0.3em 1em;
   box-sizing: border-box;
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
 
 img {
   -webkit-touch-callout: none;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-}
-
-#logo {
-  display: inline-flex;
-  align-items: center;
-  color: inherit;
-  text-decoration: none;
-}
-
-.app-name {
-  color: #eee;
-  font-size: 24px;
-  padding: 0 0.3em;
-}
-
-.app-name::first-letter {
-  color: #ba68c8;
-  letter-spacing: 0.05em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 main {
   padding: 2em 1em;
   padding-top: 1.5%;
+}
+
+button {
+  padding: 0.5em 1em;
+  margin: 2em 0;
+  margin-bottom: 0.5em;
+  border: 0;
+  background-color: @primary;
+  color: @textColor;
+  outline: none;
+  font-size: 14px;
+  transition: 0.5s;
+}
+
+button:active,
+button:focus,
+button:hover {
+  background-color: @accent;
+}
+
+span {
+  color: @textColor;
+}
+
+.app-name {
+  display: inline-block;
+  color: @textColor;
+  font-size: 24px;
+  padding: 0 0.3em;
+  text-decoration: none;
+}
+
+.app-name::first-letter {
+  color: @accent;
+  letter-spacing: 0.05em;
 }
 
 #galleries {
@@ -89,13 +93,12 @@ main {
 }
 
 .preview {
-  cursor: pointer;
   width: 100%;
   box-shadow: 1px 3px 5px #000;
 }
 
 .preview:hover span {
-  background-color: rgba(142, 68, 173, 0.8);
+  background-color: fade(@primary, 80%);
 }
 
 .preview a {
@@ -112,14 +115,13 @@ main {
 
 .preview span {
   display: block;
+  position: absolute;
+  bottom: 0;
   padding: 0.2em;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.5);
   transition: 0.4s;
-  color: #fff;
   font-size: 14px;
-  position: absolute;
-  bottom: 0;
   width: 100%;
   box-sizing: border-box;
 }
@@ -142,7 +144,6 @@ main {
   display: block;
   margin-top: 0.5em;
   text-align: center;
-  color: #fff;
   font-size: 20px;
 }
 
@@ -154,7 +155,6 @@ main {
 }
 
 #overview {
-  color: #eee;
   width: 80vw;
   margin: 0 auto;
 }
@@ -165,7 +165,7 @@ main {
   margin: 0 auto;
   background-color: #1e1e1e;
   word-wrap: break-word;
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
   font-size: 16px;
   text-align: left;
 }
@@ -180,25 +180,14 @@ main {
 }
 
 .info p:first-child {
-  color: #fff;
   font-size: 20px;
   padding: 0.5em;
   padding-top: 0;
-  border-bottom: 1px solid #8e44ad;
+  border-bottom: 1px solid @primary;
   text-align: center;
 }
 
-@media all and (max-width: 800px) {
-  .info img {
-    display: none;
-  }
-
-  #overview .info {
-    grid-template-columns: 100%;
-  }
-}
-
-#overview .thumbnails {
+.thumbnails {
   display: grid;
   grid-template-columns: repeat(auto-fit, 200px);
   justify-items: center;
@@ -217,25 +206,6 @@ main {
   object-fit: cover;
 }
 
-button {
-  padding: 0.5em 1em;
-  margin: 2em 0;
-  margin-bottom: 0.5em;
-  border: 0;
-  background-color: #8e44ad;
-  color: #fff;
-  cursor: pointer;
-  outline: none;
-  font-size: 14px;
-  transition: 0.5s;
-}
-
-button:active,
-button:focus,
-button:hover {
-  background-color: #ba68c8;
-}
-
 .paginator {
   text-align: center;
 }
@@ -243,27 +213,49 @@ button:hover {
 .paginator button {
   padding: 0.25em 1em;
   margin-top: 1em;
-  color: #ddd;
-  cursor: pointer;
-  background-color: transparent;
+  background-color: @base;
   border: none;
-  font-size: 1.2em;
-  font-family: 'Lato', 'Helvetica', 'Segoe UI', Tahoma, Verdana, sans-serif;
-  transition: none;
+  font-size: 20px;
 }
 
 .paginator button:hover {
-  background-color: #ba68c8;
+  background-color: @accent;
 }
 
 .paginator .currentPage {
-  color: #fff;
-  background-color: #8e44ad;
+  background-color: @primary;
 }
 
 .error {
-  background-color: #e74c3c;
-  color: #fff;
+  display: block;
+  text-align: center;
+  background-color: #e81123;
+  padding: 0.5em;
+}
+
+.loader {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 275px;
+}
+
+.loader::after {
+  content: ' ';
+  position: absolute;
+  top: calc(50% - 3em);
+  left: calc(50% - 1.5em);
+  border: 3px solid #787878;
+  border-top: 3px solid @primary;
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  animation: loader 1s linear infinite;
+}
+
+@keyframes loader {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
 }
 
 .tagbox {
@@ -276,9 +268,18 @@ button:hover {
 
 .chip {
   display: inline-block;
-  color: #fff;
   padding: 0.2em 0.8em;
   margin: 0.2em;
   border-radius: 12px;
   text-transform: lowercase;
+}
+
+@media all and (max-width: 800px) {
+  .info img {
+    display: none;
+  }
+
+  #overview .info {
+    grid-template-columns: 100%;
+  }
 }

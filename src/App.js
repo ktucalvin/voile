@@ -1,5 +1,4 @@
 'use strict'
-import './index.css'
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
 import { BrowserRouter, Route, Link } from 'react-router-dom'
@@ -13,7 +12,7 @@ class App extends Component {
       <>
         <BrowserRouter>
           <header>
-            <Link to='/' id='logo'>
+            <Link to='/'>
               <span className='app-name'><b>𝕍</b>oile</span>
             </Link>
           </header>
