@@ -16,7 +16,7 @@ class ThumbnailGrid extends Component {
     const { gallery } = this.props
     const ext = gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]
     const thumbProps = {
-      width: 200,
+      width: 300,
       id: gallery.id,
       ext
     }

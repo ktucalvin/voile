@@ -59,9 +59,9 @@ class Galleries extends Component {
     this.unlisten = this.props.history.listen(location => this.changePage(location.search))
   }
 
-  shouldComponentUpdate (prevProps) {
+  shouldComponentUpdate (nextProps) {
     // !== implies only location has changed, not that changePage fetched new data
-    return prevProps.location === this.props.location
+    return nextProps.location === this.props.location
   }
 
   componentWillUnmount () {

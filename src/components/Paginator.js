@@ -1,9 +1,7 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
-
-// Number of buttons to show at once
-const range = 6
+import withWidth from './WidthObserver'
 
 class Paginator extends Component {
   constructor (props) {
@@ -17,6 +15,12 @@ class Paginator extends Component {
   }
 
   render () {
+    let range = 2
+    if (this.props.width > 800) {
+      range = 6
+    } else if (this.props.width > 400) {
+      range = 4
+    }
     const currentPage = this.props.page
     const offset = Math.floor(range / 2)
     let startPage = Math.max(1, currentPage - offset)
@@ -43,11 +47,11 @@ class Paginator extends Component {
     }
 
     if (startPage !== 1) {
-      buttons.unshift(<button key='first' className='to-first' onClick={() => this.goToPage(1)}>«</button>)
+      buttons.unshift(<button key='first' onClick={() => this.goToPage(1)}>«</button>)
     }
 
     if (endPage !== this.props.totalPages) {
-      buttons.push(<button key='last' className='to-last' onClick={() => this.goToPage(this.props.totalPages)}>»</button>)
+      buttons.push(<button key='last' onClick={() => this.goToPage(this.props.totalPages)}>»</button>)
     }
 
     return (
@@ -58,4 +62,4 @@ class Paginator extends Component {
   }
 }
 
-export default Paginator
+export default withWidth(Paginator, [400, 800])
