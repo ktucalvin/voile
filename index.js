@@ -15,6 +15,14 @@ const certopts = {
 }
 const staticOpts = { maxage: 31536000000 } // 1 year
 
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    err.expose = false
+  }
+})
+
 app.use(conditional())
 app.use(etag())
 
