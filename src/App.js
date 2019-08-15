@@ -19,7 +19,7 @@ class App extends Component {
           <main>
             <Route exact path='/' component={Galleries} />
             <Route exact path='/g/:id/' component={Overview} />
-            <Route exact path='/g/:id/:page/' component={Reader} />
+            <Route path='/g/:id/:chapter/:page/' component={Reader} />
           </main>
         </BrowserRouter>
       </>

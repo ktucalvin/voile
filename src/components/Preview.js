@@ -8,7 +8,8 @@ import withWidth from './WidthObserver'
 class Preview extends Component {
   render () {
     let { gallery } = this.props
-    const ext = gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]
+    const chapter = gallery.chapters[1]
+    const ext = chapter.ext || chapter.extdecoder[chapter.extstring.charAt(0)]
     return (
       <div className='preview'>
         <Link to={`/g/${gallery.id}`}>

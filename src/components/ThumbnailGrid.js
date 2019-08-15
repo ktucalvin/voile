@@ -13,17 +13,18 @@ class ThumbnailGrid extends Component {
   }
 
   render () {
-    const { gallery } = this.props
-    const ext = gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]
+    const { gallery, chapter } = this.props
+    const ext = chapter.ext || chapter.extdecoder[chapter.extstring.charAt(0)]
     const thumbProps = {
       width: 300,
       id: gallery.id,
+      chapter: chapter.number,
       ext
     }
     const thumbnails = []
-    for (let i = 1; i <= Math.min(this.state.maxThumbs, gallery.totalPages); i++) {
+    for (let i = 1; i <= Math.min(this.state.maxThumbs, chapter.pages); i++) {
       thumbnails.push(
-        <Link key={i} to={`/g/${gallery.id}/${i}`}>
+        <Link key={`${chapter.number}-${i}`} to={`/g/${gallery.id}/${chapter.number}/${i}`}>
           <Thumbnail page={i} {...thumbProps} />
         </Link>
       )
@@ -34,7 +35,7 @@ class ThumbnailGrid extends Component {
           {thumbnails}
         </div>
         {
-          this.state.maxThumbs <= gallery.totalPages &&
+          this.state.maxThumbs <= chapter.pages &&
           <button onClick={() => this.setState({ maxThumbs: this.state.maxThumbs + 35 })}>Show more</button>
         }
       </>

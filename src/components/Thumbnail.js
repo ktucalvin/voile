@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 
 class Preview extends Component {
   render () {
-    const { width, id, ext, page = 1 } = this.props
+    const { width, id, ext, chapter = 1, page = 1 } = this.props
     const attributes = {
       style: { display: this.state ? 'flex' : 'none', alignItems: 'center' },
       onLoad: () => this.setState({ loaded: true })
@@ -13,8 +13,8 @@ class Preview extends Component {
       return (
         <>
           <picture {...attributes}>
-            <source srcSet={`/i/${id}/${page}?w=${width}`} type='image/webp' />
-            <img src={`/i/${id}/${page}?w=${width}&format=jpeg`} />
+            <source srcSet={`/i/${id}/${chapter}/${page}?w=${width}`} type='image/webp' />
+            <img src={`/i/${id}/${chapter}/${page}?w=${width}&format=jpeg`} />
           </picture>
           {!this.state && <i className='loader' />}
         </>
@@ -22,7 +22,7 @@ class Preview extends Component {
     }
     return (
       <>
-        <img src={`/g/${id}/${page}.${ext}`} {...attributes} />
+        <img src={`/g/${id}/${chapter}/${page}.${ext}`} {...attributes} />
         {!this.state && <i className='loader' />}
       </>
     )

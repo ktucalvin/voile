@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom'
 import ThumbnailGrid from '../components/ThumbnailGrid'
 import Thumbnail from '../components/Thumbnail'
 import TagBox from '../components/TagBox'
+import ChapterSelector from '../components/ChapterSelector'
 
 class Overview extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      maxThumbs: 35
+      maxThumbs: 35,
+      chapterNumber: 1
     }
   }
   componentDidMount () {
@@ -25,7 +27,10 @@ class Overview extends Component {
   render () {
     if (!this.state.gallery) return null
     const { gallery } = this.state
-    const ext = gallery.ext || gallery.extdecoder[gallery.extstring.charAt(0)]
+    const multiChapter = Object.keys(gallery.chapters).length > 1
+    const chapterData = gallery.chapters[this.state.chapterNumber]
+    chapterData.number = this.state.chapterNumber
+    const ext = chapterData.ext || chapterData.extdecoder[chapterData.extstring.charAt(0)]
 
     return (
       <div id='overview'>
@@ -37,8 +42,19 @@ class Overview extends Component {
             <p>Total pages: {gallery.totalPages}</p>
             <TagBox tags={gallery.tags} />
           </div>
+          {
+            multiChapter &&
+            <ChapterSelector
+              chapters={gallery.chapters}
+              changeChapter={c => this.setState({ chapterNumber: c })}
+            />
+          }
         </div>
-        <ThumbnailGrid gallery={gallery} />
+        {
+          multiChapter &&
+          <h4 style={{ textAlign: 'left' }}>{`Chapter ${this.state.chapterNumber} Preview:`}</h4>
+        }
+        <ThumbnailGrid gallery={gallery} chapter={chapterData} />
         <Link to='/'>Back to galleries</Link>
       </div>
     )

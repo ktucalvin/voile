@@ -7,12 +7,17 @@ const KoaRouter = require('koa-router')
 const router = new KoaRouter()
 
 function resizeImage (ctx) {
-  let { gallery, page } = ctx.params
+  let { gallery, chapter, page } = ctx.params
   let { w, h = 'auto', fit = 'cover', format = 'webp' } = ctx.request.query
   const width = parseInt(w)
   const height = parseInt(h)
   if (format === 'jpg') format = 'jpeg'
-  if (!gallery || !page || !parseInt(page) || !width || width < 1 || width > 2048) {
+  if (!gallery || !page || !parseInt(page) || !chapter) {
+    ctx.status = 400
+    return
+  }
+
+  if (!width || width < 1 || width > 2048) {
     ctx.status = 400
     return
   }
@@ -32,7 +37,7 @@ function resizeImage (ctx) {
     return
   }
 
-  const folder = path.join(process.env.ARCHIVE_DIR, ctx.params.gallery)
+  const folder = path.join(process.env.ARCHIVE_DIR, gallery, chapter)
 
   if (!fs.existsSync(folder)) {
     ctx.status = 404
@@ -56,7 +61,7 @@ function resizeImage (ctx) {
   // avoid writing default values for height/fit in filename
   const fileHeight = h === 'auto' ? '' : `x${height}`
   const fileFit = fit === 'cover' ? '' : `-${fit}`
-  const cachedFile = `./imgcache/${gallery}-${page}-${width}${fileHeight}${fileFit}.${format}`
+  const cachedFile = `./imgcache/${gallery}-C${chapter}P${page}-${width}${fileHeight}${fileFit}.${format}`
 
   // serve cached image if it exists
   if (fs.existsSync(cachedFile)) {
@@ -89,7 +94,7 @@ function resizeImage (ctx) {
   })
 }
 
-router.get('/i/:gallery/:page', resizeImage)
+router.get('/i/:gallery/:chapter/:page', resizeImage)
 
 module.exports = {
   routes: router.routes(),

@@ -26,8 +26,10 @@ class Reader extends Component {
 
   turnPage (e) {
     const mid = document.querySelector('body').clientWidth / 2
+    const chapterNumber = this.props.match.params.chapter
+    const chapterData = this.state.chapters[this.props.match.params.chapter]
     let page = this.props.match.params.page
-    if (e.clientX > mid && page < this.state.totalPages) {
+    if (e.clientX > mid && page < chapterData.pages) {
       page++
     } else if (e.clientX <= mid && page > 1) {
       page--
@@ -35,7 +37,7 @@ class Reader extends Component {
       this.props.history.push(`/g/${this.state.id}`)
       return
     }
-    this.props.history.push(`/g/${this.state.id}/${page}`)
+    this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)
   }
 
   componentDidMount () {
@@ -48,12 +50,14 @@ class Reader extends Component {
   render () {
     if (!this.state) return null
     const page = parseInt(this.props.match.params.page)
-    if (!page || page > this.state.totalPages || page < 1) {
+    const chapterNumber = this.props.match.params.chapter
+    const chapterData = this.state.chapters[chapterNumber]
+    if (!page || page > chapterData.totalPages || page < 1) {
       return (<span className='error'>That page could not be found</span>)
     }
 
-    const extension = this.state.ext || this.state.extdecoder[this.state.extstring.charAt(page - 1)]
-    const src = `/g/${this.state.id}/${page}.${extension}`
+    const ext = chapterData.ext || chapterData.extdecoder[chapterData.extstring.charAt(page - 1)]
+    const src = `/g/${this.state.id}/${chapterNumber}/${page}.${ext}`
     document.title = `${this.state.name} (${page}/${this.state.totalPages})`
 
     return (
@@ -61,7 +65,7 @@ class Reader extends Component {
         <img src={src} onClick={this.turnPage} />
         <Paginator
           page={page}
-          totalPages={this.state.totalPages}
+          totalPages={chapterData.pages}
           onPageChange={page => this.props.history.push(`/g/${this.state.id}/${page}`)}
         />
         <Link to={`/g/${this.state.id}`}>Back to overview</Link>
