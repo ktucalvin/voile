@@ -52,7 +52,7 @@ class Reader extends Component {
     const page = parseInt(this.props.match.params.page)
     const chapterNumber = this.props.match.params.chapter
     const chapterData = this.state.chapters[chapterNumber]
-    if (!page || page > chapterData.totalPages || page < 1) {
+    if (!page || page > chapterData.pages || page < 1) {
       return (<span className='error'>That page could not be found</span>)
     }
 
