@@ -12,7 +12,7 @@ function resizeImage (ctx) {
   const width = parseInt(w)
   const height = parseInt(h)
   if (format === 'jpg') format = 'jpeg'
-  if (!gallery || !page || !parseInt(page) || !chapter) {
+  if (!gallery || !page || !parseInt(page) || !chapter || !parseFloat(chapter)) {
     ctx.status = 400
     return
   }

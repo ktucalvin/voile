@@ -32,7 +32,7 @@ function testSharpOutput (assertionFn) {
   assertionFn()
 }
 
-describe('GET /i/:gallery/:page', function () {
+describe('GET /i/:gallery/:chapter/:page', function () {
   before(function () {
     mock('sharp', () => sharpMock)
     resizeImage = require('../image').resizeImage
@@ -48,6 +48,7 @@ describe('GET /i/:gallery/:page', function () {
     validCtx = {
       params: {
         gallery: 'TEST',
+        chapter: '1',
         page: '1'
       },
       request: {
@@ -81,17 +82,26 @@ describe('GET /i/:gallery/:page', function () {
   describe('responds with 400 when', function () {
     it('it does not receive gallery id', function () {
       ctx.params.page = '1'
+      ctx.params.chapter = '1'
+      expectStatusCode(400)
+    })
+
+    it('it does not receive chapter number', function () {
+      ctx.params.gallery = 'TEST'
+      ctx.params.page = '1'
       expectStatusCode(400)
     })
 
     it('it does not receive page number', function () {
       ctx.params.gallery = 'TEST'
+      ctx.params.chapter = '1'
       expectStatusCode(400)
     })
 
     it('it does not receive width', function () {
-      ctx.params.page = '1'
       ctx.params.gallery = 'TEST'
+      ctx.params.chapter = '1'
+      ctx.params.page = '1'
       expectStatusCode(400)
     })
 
@@ -100,9 +110,17 @@ describe('GET /i/:gallery/:page', function () {
       expectStatusCode(400)
     })
 
-    it('given non-numeric width', function () {
-      ctx.params.page = '1'
+    it('given non-float chapter', function () {
       ctx.params.gallery = 'TEST'
+      ctx.params.chapter = 'not a float'
+      ctx.params.page = '1'
+      expectStatusCode(400)
+    })
+
+    it('given non-numeric width', function () {
+      ctx.params.gallery = 'TEST'
+      ctx.params.chapter = '1'
+      ctx.params.page = '1'
       ctx.request.query.w = 'string'
       expectStatusCode(400)
     })
@@ -127,8 +145,9 @@ describe('GET /i/:gallery/:page', function () {
     })
 
     it('given width over 2048', function () {
-      ctx.params.page = '1'
       ctx.params.gallery = 'TEST'
+      ctx.params.chapter = '1'
+      ctx.params.page = '1'
       ctx.request.query.w = '2049'
       expectStatusCode(400)
     })
@@ -193,7 +212,7 @@ describe('GET /i/:gallery/:page', function () {
     Object.assign(ctx, validCtx)
     resizeImage(ctx)
     expect(ctx.body).to.equal('test passed')
-    expect(createReadStreamStub).to.be.calledWith('./imgcache/TEST-1-50.webp')
+    expect(createReadStreamStub).to.be.calledWith('./imgcache/TEST-C1P1-50.webp')
   })
 
   it('writes optional information in cached filename', function () {
@@ -204,7 +223,7 @@ describe('GET /i/:gallery/:page', function () {
     ctx.request.query.fit = 'fill'
     ctx.request.query.format = 'png'
     resizeImage(ctx)
-    expect(createReadStreamStub).to.be.calledWith('./imgcache/TEST-1-50x50-fill.png')
+    expect(createReadStreamStub).to.be.calledWith('./imgcache/TEST-C1P1-50x50-fill.png')
   })
 
   it('resizes image given only width', function () {
@@ -249,7 +268,7 @@ describe('GET /i/:gallery/:page', function () {
 
   it('creates cache folder if it doesn\'t exist', function (done) {
     existsSyncStub.callsFake(e => {
-      if (e.endsWith('TEST')) return true // does gallery exist?
+      if (e.endsWith('TEST/1')) return true // does gallery exist?
       if (e === './imgcache/TEST-1-50.webp') return false // does a cached file exist?
       if (e === './imgcache') return false // does the cache folder exist?
     })

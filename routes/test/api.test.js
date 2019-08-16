@@ -4,7 +4,7 @@ const { expect } = require('chai')
 const mock = require('mock-require')
 const fakeRegistry = new Map()
 
-for (let i = 0; i < 50; i++) {
+for (let i = 1; i <= 50; i++) {
   fakeRegistry.set(`TEST${i}`, {
     id: `TEST${i}`,
     totalPages: i,
@@ -39,14 +39,14 @@ describe('/api', function () {
     it('defaults to page 1 if page not specified', function () {
       getRegistryInformation(ctx)
       const firstEntry = ctx.body.data[0]
-      expect(firstEntry.id).to.equal('TEST0')
+      expect(firstEntry.id).to.equal('TEST1')
     })
 
     it('retrieves the specified page', function () {
       ctx.params.page = '2'
       getRegistryInformation(ctx)
       const firstEntry = ctx.body.data[0]
-      expect(firstEntry.id).to.equal('TEST24')
+      expect(firstEntry.id).to.equal('TEST26')
     })
   })
 
