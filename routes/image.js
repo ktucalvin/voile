@@ -55,7 +55,7 @@ function resizeImage (ctx) {
     return
   }
 
-  ctx.set('Cache-Control', 'max-age=86400')
+  ctx.set('Cache-Control', 'max-age=31536000000')
   ctx.set('Content-Type', `image/${format}`)
 
   // avoid writing default values for height/fit in filename

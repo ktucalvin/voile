@@ -21,9 +21,11 @@
     }
   },
   "dependencies": {
+    "compressible": "^2.0.17",
     "cross-env": "^5.2.0",
     "dotenv": "^8.0.0",
     "koa": "^2.7.0",
+    "koa-compress": "^3.0.0",
     "koa-conditional-get": "^2.0.0",
     "koa-etag": "^3.0.0",
     "koa-mount": "^4.0.0",

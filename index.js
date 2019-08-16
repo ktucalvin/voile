@@ -7,6 +7,8 @@ const mount = require('koa-mount')
 const send = require('koa-send')
 const conditional = require('koa-conditional-get')
 const etag = require('koa-etag')
+const compress = require('koa-compress')
+const compressible = require('compressible')
 const routes = require('./routes')
 const app = new Koa()
 const certopts = {
@@ -15,16 +17,15 @@ const certopts = {
 }
 const staticOpts = { maxage: 31536000000 } // 1 year
 
-app.use(async (ctx, next) => {
-  try {
-    await next()
-  } catch (err) {
-    err.expose = false
-  }
-})
+app.use(require('./lib/no-expose-errors'))
 
 app.use(conditional())
+
 app.use(etag())
+
+app.use(compress({
+  filter: type => !(/event-stream/i.test(type)) && compressible(type)
+}))
 
 app.use(routes)
 
