@@ -56,8 +56,7 @@ class Reader extends Component {
       return (<span className='error'>That page could not be found</span>)
     }
 
-    const ext = chapterData.ext || chapterData.extdecoder[chapterData.extstring.charAt(page - 1)]
-    const src = `/g/${this.state.id}/${chapterNumber}/${page}.${ext}`
+    const src = `/g/${this.state.id}/${chapterNumber}/${page}`
     document.title = `${this.state.name} (${page}/${this.state.totalPages})`
 
     return (
@@ -76,9 +75,8 @@ class Reader extends Component {
   componentDidUpdate () {
     const page = parseInt(this.props.match.params.page)
     if (page + 1 <= this.state.totalPages) {
-      const nextExtension = this.state.ext || this.state.extdecoder[this.state.extstring.charAt(page)]
       const img = new Image()
-      img.src = `/g/${this.state.id}/${page + 1}.${nextExtension}`
+      img.src = `/g/${this.state.id}/${page + 1}`
     }
   }
 

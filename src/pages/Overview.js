@@ -30,12 +30,11 @@ class Overview extends Component {
     const multiChapter = Object.keys(gallery.chapters).length > 1
     const chapterData = gallery.chapters[this.state.chapterNumber]
     chapterData.number = this.state.chapterNumber
-    const ext = chapterData.ext || chapterData.extdecoder[chapterData.extstring.charAt(0)]
 
     return (
       <div id='overview'>
         <div className='info'>
-          <Thumbnail width={275} id={gallery.id} ext={ext} />
+          <Thumbnail width={275} id={gallery.id} />
           <div>
             <p><b>{gallery.name}</b></p>
             {gallery.description && <p>{gallery.description}</p>}

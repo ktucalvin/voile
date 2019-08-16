@@ -15,7 +15,7 @@ const certopts = {
   key: process.env.SSL_KEY,
   cert: process.env.SSL_CERT
 }
-const staticOpts = { maxage: 31536000000 } // 1 year
+const staticOpts = require('./lib/static-options')
 
 app.use(require('./lib/no-expose-errors'))
 

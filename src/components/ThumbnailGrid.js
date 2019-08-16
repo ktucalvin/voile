@@ -14,12 +14,10 @@ class ThumbnailGrid extends Component {
 
   render () {
     const { gallery, chapter } = this.props
-    const ext = chapter.ext || chapter.extdecoder[chapter.extstring.charAt(0)]
     const thumbProps = {
       width: 300,
       id: gallery.id,
-      chapter: chapter.number,
-      ext
+      chapter: chapter.number
     }
     const thumbnails = []
     for (let i = 1; i <= Math.min(this.state.maxThumbs, chapter.pages); i++) {

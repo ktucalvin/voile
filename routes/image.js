@@ -3,10 +3,12 @@ require('dotenv').config()
 const fs = require('fs')
 const path = require('path')
 const sharp = require('sharp')
+const send = require('koa-send')
 const KoaRouter = require('koa-router')
+const staticOpts = require('../lib/static-options')
 const router = new KoaRouter()
 
-function resizeImage (ctx) {
+async function resizeImage (ctx) {
   let { gallery, chapter, page } = ctx.params
   let { w, h = 'auto', fit = 'cover', format = 'webp' } = ctx.request.query
   const width = parseInt(w)
@@ -51,11 +53,12 @@ function resizeImage (ctx) {
   }
 
   if (!image[0].endsWith('png') && !image[0].endsWith('jpg') && !image[0].endsWith('jpeg')) {
-    ctx.status = 415
+    const file = path.join(folder, page)
+    await send(ctx, file, staticOpts)
     return
   }
 
-  ctx.set('Cache-Control', 'max-age=31536000000')
+  ctx.set('Cache-Control', `max-age=${staticOpts.maxage}`)
   ctx.set('Content-Type', `image/${format}`)
 
   // avoid writing default values for height/fit in filename
