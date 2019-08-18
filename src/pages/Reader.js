@@ -50,8 +50,13 @@ class Reader extends Component {
   render () {
     if (!this.state) return null
     const page = parseInt(this.props.match.params.page)
-    const chapterNumber = this.props.match.params.chapter
+    const chapterNumber = parseFloat(this.props.match.params.chapter)
     const chapterData = this.state.chapters[chapterNumber]
+
+    if (!chapterNumber || chapterNumber > Object.keys(this.state.chapters).length || chapterNumber < 1) {
+      return (<span className='error'>That chapter could not be found</span>)
+    }
+
     if (!page || page > chapterData.pages || page < 1) {
       return (<span className='error'>That page could not be found</span>)
     }
