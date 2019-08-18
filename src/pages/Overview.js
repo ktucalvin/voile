@@ -38,7 +38,6 @@ class Overview extends Component {
           <div>
             <p><b>{gallery.name}</b></p>
             {gallery.description && <p>{gallery.description}</p>}
-            <p>Total pages: {gallery.totalPages}</p>
             <TagBox tags={gallery.tags} />
           </div>
           {
