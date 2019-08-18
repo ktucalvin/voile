@@ -17,10 +17,12 @@ class ChapterSelector extends Component {
   render () {
     let $chapters = []
     const chapterNumbers = Object.keys(this.props.chapters).sort((a, b) => parseFloat(a) - parseFloat(b))
-    for (const chapter of chapterNumbers) {
+    for (const number of chapterNumbers) {
+      const selected = number === this.state.selected ? 'selected-chapter' : undefined
+      const chapterName = this.props.chapters[number].name || `Chapter ${number}`
       $chapters.push(
-        <li key={chapter} onClick={() => this.handleClick(chapter)} className={chapter === this.state.selected ? 'selected-chapter' : ''}>
-          Chapter {chapter}
+        <li key={number} onClick={() => this.handleClick(number)} className={selected}>
+          {chapterName}
         </li>
       )
     }

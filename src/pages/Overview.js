@@ -50,7 +50,9 @@ class Overview extends Component {
         </div>
         {
           multiChapter &&
-          <h4 style={{ textAlign: 'left' }}>{`Chapter ${this.state.chapterNumber} Preview:`}</h4>
+          <h4 style={{ textAlign: 'left' }}>
+            {`${chapterData.name || `Chapter ${this.state.chapterNumber}`} Preview:`}
+          </h4>
         }
         <ThumbnailGrid gallery={gallery} chapter={chapterData} />
         <Link to='/'>Back to galleries</Link>
