@@ -62,7 +62,7 @@ class Reader extends Component {
     }
 
     const src = `/i/${this.state.id}/${chapterNumber}/${page}`
-    document.title = `${this.state.name} (${page}/${this.state.totalPages})`
+    document.title = `${this.state.name} Ch.${chapterNumber} (${page}/${chapterData.pages})`
 
     return (
       <div id='reader'>
