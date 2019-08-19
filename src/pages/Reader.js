@@ -52,8 +52,12 @@ class Reader extends Component {
     const page = parseInt(this.props.match.params.page)
     const chapterNumber = parseFloat(this.props.match.params.chapter)
     const chapterData = this.state.chapters[chapterNumber]
+    const chapters = Object.keys(this.state.chapters).map(parseFloat).sort((a, b) => a - b)
+    let index = chapters.indexOf(chapterNumber)
+    const nextChapter = chapters[index + 1]
+    const prevChapter = chapters[index - 1]
 
-    if (!chapterNumber || chapterNumber > Object.keys(this.state.chapters).length || chapterNumber < 1) {
+    if (!chapterNumber || !chapterData) {
       return (<span className='error'>That chapter could not be found</span>)
     }
 
@@ -72,6 +76,16 @@ class Reader extends Component {
           totalPages={chapterData.pages}
           onPageChange={page => this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)}
         />
+        {
+          page === 1 &&
+          prevChapter &&
+          <Link to={`/g/${this.state.id}/${prevChapter}/1`}>Previous Chapter</Link>
+        }
+        {
+          page === chapterData.pages &&
+          nextChapter &&
+          <Link to={`/g/${this.state.id}/${nextChapter}/1`}>Next Chapter</Link>
+        }
         <Link to={`/g/${this.state.id}`}>Back to overview</Link>
       </div>
     )
@@ -80,7 +94,8 @@ class Reader extends Component {
   componentDidUpdate () {
     const page = parseInt(this.props.match.params.page)
     const chapterNumber = parseFloat(this.props.match.params.chapter)
-    if (page + 1 <= this.state.chapters[chapterNumber].pages) {
+    const chapterData = this.state.chapters[chapterNumber]
+    if (chapterData && page + 1 <= chapterData.pages) {
       const img = new Image()
       img.src = `/i/${this.state.id}/${chapterNumber}/${page + 1}`
     }
