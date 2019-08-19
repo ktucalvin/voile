@@ -31,7 +31,7 @@ app.use(routes)
 
 app.use(serve('./dist', staticOpts))
 
-app.use(mount('/g', serve(process.env.ARCHIVE_DIR, staticOpts)))
+app.use(mount('/i', serve(process.env.ARCHIVE_DIR, staticOpts)))
 
 if (process.env.NODE_ENV === 'development') {
   ;(async () => {

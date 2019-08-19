@@ -61,7 +61,7 @@ class Reader extends Component {
       return (<span className='error'>That page could not be found</span>)
     }
 
-    const src = `/g/${this.state.id}/${chapterNumber}/${page}`
+    const src = `/i/${this.state.id}/${chapterNumber}/${page}`
     document.title = `${this.state.name} (${page}/${this.state.totalPages})`
 
     return (
@@ -70,7 +70,7 @@ class Reader extends Component {
         <Paginator
           page={page}
           totalPages={chapterData.pages}
-          onPageChange={page => this.props.history.push(`/g/${this.state.id}/${page}`)}
+          onPageChange={page => this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)}
         />
         <Link to={`/g/${this.state.id}`}>Back to overview</Link>
       </div>
@@ -79,9 +79,10 @@ class Reader extends Component {
 
   componentDidUpdate () {
     const page = parseInt(this.props.match.params.page)
-    if (page + 1 <= this.state.totalPages) {
+    const chapterNumber = parseFloat(this.props.match.params.chapter)
+    if (page + 1 <= this.state.chapters[chapterNumber].pages) {
       const img = new Image()
-      img.src = `/g/${this.state.id}/${page + 1}`
+      img.src = `/i/${this.state.id}/${chapterNumber}/${page + 1}`
     }
   }
 

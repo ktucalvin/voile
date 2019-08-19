@@ -97,7 +97,7 @@ async function resizeImage (ctx) {
   })
 }
 
-router.get('/i/:gallery/:chapter/:page', resizeImage)
+router.get('/api/img/:gallery/:chapter/:page', resizeImage)
 
 module.exports = {
   routes: router.routes(),

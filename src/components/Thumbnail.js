@@ -12,8 +12,8 @@ class Thumbnail extends Component {
     return (
       <>
         <picture {...attributes}>
-          <source srcSet={`/i/${id}/${chapter}/${page}?w=${width}`} type='image/webp' />
-          <img src={`/i/${id}/${chapter}/${page}?w=${width}&format=jpeg`} />
+          <source srcSet={`/api/img/${id}/${chapter}/${page}?w=${width}`} type='image/webp' />
+          <img src={`/api/img/${id}/${chapter}/${page}?w=${width}&format=jpeg`} />
         </picture>
         {!this.state && <i className='loader' />}
       </>
