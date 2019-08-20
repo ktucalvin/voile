@@ -29,15 +29,36 @@ class Reader extends Component {
     const chapterNumber = this.props.match.params.chapter
     const chapterData = this.state.chapters[this.props.match.params.chapter]
     let page = this.props.match.params.page
+
+    // Return early for page turn
     if (e.clientX > mid && page < chapterData.pages) {
       page++
+      this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)
+      return
     } else if (e.clientX <= mid && page > 1) {
       page--
-    } else {
-      this.props.history.push(`/g/${this.state.id}`)
+      this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)
       return
     }
-    this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)
+
+    // If we did not early return, then it may be time to change chapters
+    const chapters = Object.keys(this.state.chapters).map(parseFloat).sort((a, b) => a - b)
+    let index = chapters.indexOf(parseFloat(chapterNumber))
+    const nextChapter = chapters[index + 1]
+    const prevChapter = chapters[index - 1]
+
+    if (prevChapter && page === '1') {
+      const lastPage = this.state.chapters[prevChapter].pages
+      this.props.history.push(`/g/${this.state.id}/${prevChapter}/${lastPage}`)
+      return
+    }
+
+    if (nextChapter && page === chapterData.pages + '') {
+      this.props.history.push(`/g/${this.state.id}/${nextChapter}/1`)
+      return
+    }
+
+    this.props.history.push(`/g/${this.state.id}`)
   }
 
   componentDidMount () {
