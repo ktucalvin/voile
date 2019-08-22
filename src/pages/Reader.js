@@ -25,55 +25,61 @@ class Reader extends Component {
   }
 
   turnPage (e) {
+    const { gallery } = this.state
     const mid = document.querySelector('body').clientWidth / 2
     const chapterNumber = this.props.match.params.chapter
-    const chapterData = this.state.chapters[this.props.match.params.chapter]
+    const chapterData = gallery.chapters[this.props.match.params.chapter]
     let page = this.props.match.params.page
 
     // Return early for page turn
     if (e.clientX > mid && page < chapterData.pages) {
       page++
-      this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)
+      this.props.history.push(`/g/${gallery.id}/${chapterNumber}/${page}`)
       return
     } else if (e.clientX <= mid && page > 1) {
       page--
-      this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)
+      this.props.history.push(`/g/${gallery.id}/${chapterNumber}/${page}`)
       return
     }
 
     // If we did not early return, then it may be time to change chapters
-    const chapters = Object.keys(this.state.chapters).map(parseFloat).sort((a, b) => a - b)
+    const chapters = Object.keys(gallery.chapters).map(parseFloat).sort((a, b) => a - b)
     let index = chapters.indexOf(parseFloat(chapterNumber))
     const nextChapter = chapters[index + 1]
     const prevChapter = chapters[index - 1]
 
     if (prevChapter && page === '1') {
-      const lastPage = this.state.chapters[prevChapter].pages
-      this.props.history.push(`/g/${this.state.id}/${prevChapter}/${lastPage}`)
+      const lastPage = gallery.chapters[prevChapter].pages
+      this.props.history.push(`/g/${gallery.id}/${prevChapter}/${lastPage}`)
       return
     }
 
     if (nextChapter && page === chapterData.pages + '') {
-      this.props.history.push(`/g/${this.state.id}/${nextChapter}/1`)
+      this.props.history.push(`/g/${gallery.id}/${nextChapter}/1`)
       return
     }
 
-    this.props.history.push(`/g/${this.state.id}`)
+    this.props.history.push({ pathname: `/g/${gallery.id}`, state: gallery })
   }
 
   componentDidMount () {
     document.addEventListener('keyup', this.handleKeyUp)
-    fetch(`/api/gallery/${this.props.match.params.id}`)
-      .then(res => res.json())
-      .then(gallery => this.setState(gallery))
+    if (this.props.location.state) {
+      this.setState({ gallery: this.props.location.state })
+    } else {
+      fetch(`/api/gallery/${this.props.match.params.id}`)
+        .then(res => res.json())
+        .then(gallery => this.setState({ gallery }))
+    }
   }
 
   render () {
     if (!this.state) return null
+    const { gallery } = this.state
     const page = parseInt(this.props.match.params.page)
     const chapterNumber = parseFloat(this.props.match.params.chapter)
-    const chapterData = this.state.chapters[chapterNumber]
-    const chapters = Object.keys(this.state.chapters).map(parseFloat).sort((a, b) => a - b)
+    const chapterData = gallery.chapters[chapterNumber]
+    const chapters = Object.keys(gallery.chapters).map(parseFloat).sort((a, b) => a - b)
     let index = chapters.indexOf(chapterNumber)
     const nextChapter = chapters[index + 1]
     const prevChapter = chapters[index - 1]
@@ -86,8 +92,8 @@ class Reader extends Component {
       return (<span className='error'>That page could not be found</span>)
     }
 
-    const src = `/i/${this.state.id}/${chapterNumber}/${page}`
-    document.title = `${this.state.name} Ch.${chapterNumber} (${page}/${chapterData.pages})`
+    const src = `/i/${gallery.id}/${chapterNumber}/${page}`
+    document.title = `${gallery.name} Ch.${chapterNumber} (${page}/${chapterData.pages})`
 
     return (
       <div id='reader'>
@@ -95,30 +101,31 @@ class Reader extends Component {
         <Paginator
           page={page}
           totalPages={chapterData.pages}
-          onPageChange={page => this.props.history.push(`/g/${this.state.id}/${chapterNumber}/${page}`)}
+          onPageChange={page => this.props.history.push(`/g/${gallery.id}/${chapterNumber}/${page}`)}
         />
         {
           page === 1 &&
           prevChapter &&
-          <Link to={`/g/${this.state.id}/${prevChapter}/1`}>Previous Chapter</Link>
+          <Link to={`/g/${gallery.id}/${prevChapter}/1`}>Previous Chapter</Link>
         }
         {
           page === chapterData.pages &&
           nextChapter &&
-          <Link to={`/g/${this.state.id}/${nextChapter}/1`}>Next Chapter</Link>
+          <Link to={`/g/${gallery.id}/${nextChapter}/1`}>Next Chapter</Link>
         }
-        <Link to={`/g/${this.state.id}`}>Back to overview</Link>
+        <Link to={{ pathname: `/g/${gallery.id}`, state: gallery }}>Back to overview</Link>
       </div>
     )
   }
 
   componentDidUpdate () {
+    const { gallery } = this.state
     const page = parseInt(this.props.match.params.page)
     const chapterNumber = parseFloat(this.props.match.params.chapter)
-    const chapterData = this.state.chapters[chapterNumber]
+    const chapterData = gallery.chapters[chapterNumber]
     if (chapterData && page + 1 <= chapterData.pages) {
       const img = new Image()
-      img.src = `/i/${this.state.id}/${chapterNumber}/${page + 1}`
+      img.src = `/i/${gallery.id}/${chapterNumber}/${page + 1}`
     }
   }
 

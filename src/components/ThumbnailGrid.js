@@ -21,8 +21,13 @@ class ThumbnailGrid extends Component {
     }
     const thumbnails = []
     for (let i = 1; i <= Math.min(this.state.maxThumbs, chapter.pages); i++) {
+      const destination = {
+        pathname: `/g/${gallery.id}/${chapter.number}/${i}`,
+        state: gallery
+      }
+
       thumbnails.push(
-        <Link key={`${chapter.number}-${i}`} to={`/g/${gallery.id}/${chapter.number}/${i}`}>
+        <Link key={`${chapter.number}-${i}`} to={destination}>
           <Thumbnail page={i} {...thumbProps} />
         </Link>
       )
