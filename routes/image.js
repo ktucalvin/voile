@@ -1,12 +1,14 @@
 'use strict'
 require('dotenv').config()
-const fs = require('fs')
+const fsp = require('fs').promises
 const path = require('path')
 const sharp = require('sharp')
 const send = require('koa-send')
 const KoaRouter = require('koa-router')
 const staticOpts = require('../lib/static-options')
+const fsutils = require('../lib/fsutils')
 const router = new KoaRouter()
+const isResizable = /(jpg|jpeg|png)$/
 
 async function resizeImage (ctx) {
   let { gallery, chapter, page } = ctx.params
@@ -40,19 +42,22 @@ async function resizeImage (ctx) {
   }
 
   const folder = path.join(process.env.ARCHIVE_DIR, gallery, chapter)
+  let image
 
-  if (!fs.existsSync(folder)) {
+  try {
+    image = await fsp.readdir(folder)
+    image = image.filter(e => e.startsWith(page))[0]
+  } catch (err) {
     ctx.status = 404
     return
   }
 
-  let image = fs.readdirSync(folder).filter(e => e.startsWith(page))
-  if (!image.length) {
+  if (!image) {
     ctx.status = 404
     return
   }
 
-  if (!image[0].endsWith('png') && !image[0].endsWith('jpg') && !image[0].endsWith('jpeg')) {
+  if (!isResizable.test(image)) {
     const file = path.join(folder, page)
     await send(ctx, file, staticOpts)
     return
@@ -67,17 +72,17 @@ async function resizeImage (ctx) {
   const cachedFile = `./imgcache/${gallery}-C${chapter}P${page}-${width}${fileHeight}${fileFit}.${format}`
 
   // serve cached image if it exists
-  if (fs.existsSync(cachedFile)) {
-    ctx.body = fs.createReadStream(cachedFile)
+  try {
+    ctx.body = await fsutils.createReadStream(cachedFile)
     return
-  }
+  } catch (err) { }
 
-  // else resize on the fly
-  let result = sharp(path.join(folder, image[0]))
+  // If we couldn't serve it, then make a resized image file and serve that
+  let result = sharp(path.join(folder, image))
   if (height) {
-    result = result.resize(width, height, { fit })
+    result.resize(width, height, { fit })
   } else {
-    result = result.resize(width)
+    result.resize(width)
   }
 
   if (format === 'png') {
@@ -88,13 +93,8 @@ async function resizeImage (ctx) {
     ctx.body = result.webp()
   }
 
-  // force file write to be after network response otherwise a 500 internal server error occurs
-  setTimeout(() => {
-    if (!fs.existsSync('./imgcache')) {
-      fs.mkdirSync('./imgcache')
-    }
-    result.toFile(cachedFile, err => { if (err) console.log(err) })
-  })
+  await fsutils.ensureDir('./imgcache')
+  result.clone().toFile(cachedFile, err => { if (err) console.log(err) })
 }
 
 router.get('/api/img/:gallery/:chapter/:page', resizeImage)
