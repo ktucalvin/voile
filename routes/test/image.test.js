@@ -1,15 +1,17 @@
 'use strict'
 /* eslint-env mocha */
-const fs = require('fs')
+const fsp = require('fs').promises
 const mock = require('mock-require')
 const sinon = require('sinon')
 const chai = require('chai')
 chai.use(require('dirty-chai'))
 chai.use(require('sinon-chai'))
 const expect = chai.expect
+const fsutils = require('../../lib/fsutils')
 
 const sharpMock = {
-  resize: sinon.stub().callsFake(() => sharpMock),
+  resize: sinon.stub(),
+  clone: sinon.stub().callsFake(() => sharpMock),
   png: sinon.spy(),
   jpeg: sinon.spy(),
   webp: sinon.spy(),
@@ -18,23 +20,25 @@ const sharpMock = {
 
 let ctx, validCtx
 let resizeImage
-let existsSyncStub, readdirSyncStub, createReadStreamStub, mkdirSyncStub
+let createReadStreamStub, ensureDirStub, readdirStub
+let sendSpy = sinon.spy()
 
-function expectStatusCode (code) {
-  resizeImage(ctx)
+async function expectStatusCode (code) {
+  await resizeImage(ctx)
   expect(ctx.status).to.equal(code)
 }
 
-function testSharpOutput (assertionFn) {
-  existsSyncStub.callsFake(e => !e.includes('imgcache'))
-  readdirSyncStub.returns(['1.png'])
-  resizeImage(ctx)
+async function testSharpOutput (assertionFn) {
+  createReadStreamStub.throws() // fake inability to serve cached file
+  readdirStub.returns(['1.png'])
+  await resizeImage(ctx)
   assertionFn()
 }
 
-describe('GET /i/:gallery/:chapter/:page', function () {
+describe('GET /api/img/:gallery/:chapter/:page', function () {
   before(function () {
     mock('sharp', () => sharpMock)
+    mock('koa-send', sendSpy)
     resizeImage = require('../image').resizeImage
   })
 
@@ -52,27 +56,23 @@ describe('GET /i/:gallery/:chapter/:page', function () {
         page: '1'
       },
       request: {
-        query: {
-          w: '50'
-        }
+        query: { w: '50' }
       },
       set () {}
     }
-    existsSyncStub = sinon.stub(fs, 'existsSync')
-    readdirSyncStub = sinon.stub(fs, 'readdirSync')
-    createReadStreamStub = sinon.stub(fs, 'createReadStream')
-    mkdirSyncStub = sinon.stub(fs, 'mkdirSync')
+    createReadStreamStub = sinon.stub(fsutils, 'createReadStream')
+    ensureDirStub = sinon.stub(fsutils, 'ensureDir')
+    readdirStub = sinon.stub(fsp, 'readdir')
   })
 
   afterEach(function () {
-    existsSyncStub.restore()
-    readdirSyncStub.restore()
     createReadStreamStub.restore()
-    mkdirSyncStub.restore()
+    readdirStub.restore()
+    ensureDirStub.restore()
     for (const key in sharpMock) {
       sharpMock[key] = sinon.spy()
     }
-    sharpMock.resize = sinon.stub().callsFake(() => sharpMock)
+    sharpMock.clone = sinon.stub().callsFake(() => sharpMock)
   })
 
   after(function () {
@@ -80,204 +80,192 @@ describe('GET /i/:gallery/:chapter/:page', function () {
   })
 
   describe('responds with 400 when', function () {
-    it('it does not receive gallery id', function () {
+    it('it does not receive gallery id', async function () {
       ctx.params.page = '1'
       ctx.params.chapter = '1'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('it does not receive chapter number', function () {
+    it('it does not receive chapter number', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.page = '1'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('it does not receive page number', function () {
+    it('it does not receive page number', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.chapter = '1'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('it does not receive width', function () {
+    it('it does not receive width', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.chapter = '1'
       ctx.params.page = '1'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given non-numeric page', function () {
+    it('given non-numeric page', async function () {
       ctx.params.page = 'string'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given non-float chapter', function () {
+    it('given non-float chapter', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.chapter = 'not a float'
       ctx.params.page = '1'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given non-numeric width', function () {
+    it('given non-numeric width', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.chapter = '1'
       ctx.params.page = '1'
       ctx.request.query.w = 'string'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given non-numeric height', function () {
+    it('given non-numeric height', async function () {
       Object.assign(ctx, validCtx)
       ctx.request.query.h = 'string'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given width less than 1', function () {
+    it('given width less than 1', async function () {
       ctx.params.page = '1'
       ctx.params.gallery = 'TEST'
       ctx.request.query.w = '-5'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given height less than 1', function () {
+    it('given height less than 1', async function () {
       Object.assign(ctx, validCtx)
       ctx.request.query.h = '-5'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given width over 2048', function () {
+    it('given width over 2048', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.chapter = '1'
       ctx.params.page = '1'
       ctx.request.query.w = '2049'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given height over 2048', function () {
+    it('given height over 2048', async function () {
       ctx.params.page = '1'
       ctx.params.gallery = 'TEST'
       ctx.request.query.w = '50'
       ctx.request.query.h = '2049'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given invalid fit', function () {
+    it('given invalid fit', async function () {
       Object.assign(ctx, validCtx)
       ctx.request.query.fit = 'invalid'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
 
-    it('given invalid format', function () {
+    it('given invalid format', async function () {
       Object.assign(ctx, validCtx)
       ctx.request.query.format = 'invalid'
-      expectStatusCode(400)
+      await expectStatusCode(400)
     })
-  })
+  }) // End of simple ctx validation
 
-  it('responds with 404 if gallery doesn\'t exist', function () {
-    existsSyncStub.returns(false)
+  it('responds with 404 if gallery doesn\'t exist', async function () {
+    createReadStreamStub.throws()
     Object.assign(ctx, validCtx)
-    expectStatusCode(404)
+    await expectStatusCode(404)
   })
 
-  it('responds with 404 if page doesn\'t exist', function () {
-    existsSyncStub.returns(true)
-    readdirSyncStub.returns(['1', '2', '3', '4', '5'])
+  it('responds with 404 if page doesn\'t exist', async function () {
+    readdirStub.returns(['1', '2', '3', '4', '5'])
     Object.assign(ctx, validCtx)
     ctx.params.page = '7'
-    expectStatusCode(404)
+    await expectStatusCode(404)
   })
 
-  it('responds with 415 if image type cannot be resized', function () {
-    existsSyncStub.returns(true)
-    readdirSyncStub.returns(['1.gif'])
+  it('sends original image if it cannot be resized', async function () {
+    readdirStub.returns(['1.gif'])
     Object.assign(ctx, validCtx)
     ctx.params.page = '1'
-    expectStatusCode(415)
+    await resizeImage(ctx)
+    expect(sendSpy).to.be.called()
   })
 
-  it('replaces jpg with jpeg', function () {
-    existsSyncStub.returns(true)
-    readdirSyncStub.returns(['1.png'])
+  it('replaces jpg with jpeg', async function () {
+    readdirStub.returns(['1.png'])
     Object.assign(ctx, validCtx)
     ctx.request.query.format = 'jpg'
     ctx.set = sinon.spy()
-    resizeImage(ctx)
+    await resizeImage(ctx)
     expect(ctx.set).to.be.calledWithExactly('Content-Type', 'image/jpeg')
   })
 
-  it('serves cached file if it exists', function () {
-    existsSyncStub.returns(true)
-    readdirSyncStub.returns(['1.png'])
+  it('serves cached file if it exists', async function () {
+    readdirStub.returns(['1.png'])
     createReadStreamStub.returns('test passed')
     Object.assign(ctx, validCtx)
-    resizeImage(ctx)
+    await resizeImage(ctx)
     expect(ctx.body).to.equal('test passed')
     expect(createReadStreamStub).to.be.calledWith('./imgcache/TEST-C1P1-50.webp')
   })
 
-  it('writes optional information in cached filename', function () {
-    existsSyncStub.returns(true)
-    readdirSyncStub.returns(['1.png', '2.png'])
+  it('writes optional information in cached filename', async function () {
+    readdirStub.returns(['1.png', '2.png'])
     Object.assign(ctx, validCtx)
     ctx.request.query.h = '50'
     ctx.request.query.fit = 'fill'
     ctx.request.query.format = 'png'
-    resizeImage(ctx)
+    await resizeImage(ctx)
     expect(createReadStreamStub).to.be.calledWith('./imgcache/TEST-C1P1-50x50-fill.png')
   })
 
-  it('resizes image given only width', function () {
+  it('resizes image given only width', async function () {
     Object.assign(ctx, validCtx)
-    testSharpOutput(() => {
+    await testSharpOutput(() => {
       expect(sharpMock.resize).to.be.calledWithExactly(50)
     })
   })
 
-  it('resizes image given width and height', function () {
+  it('resizes image given width and height', async function () {
     Object.assign(ctx, validCtx)
     ctx.request.query.h = '150'
-    testSharpOutput(() => {
+    await testSharpOutput(() => {
       expect(sharpMock.resize).to.be.calledWithExactly(50, 150, { fit: 'cover' })
     })
   })
 
-  it('resizes image given width, height, and fit', function () {
+  it('resizes image given width, height, and fit', async function () {
     Object.assign(ctx, validCtx)
     ctx.request.query.h = '150'
     ctx.request.query.fit = 'outside'
-    testSharpOutput(() => {
+    await testSharpOutput(() => {
       expect(sharpMock.resize).to.be.calledWithExactly(50, 150, { fit: 'outside' })
     })
   })
 
-  it('outputs png if requested', function () {
+  it('outputs png if requested', async function () {
     Object.assign(ctx, validCtx)
     ctx.request.query.format = 'png'
-    testSharpOutput(() => {
+    await testSharpOutput(() => {
       expect(sharpMock.png).to.be.called()
     })
   })
 
-  it('outputs jpeg if requested', function () {
+  it('outputs jpeg if requested', async function () {
     Object.assign(ctx, validCtx)
     ctx.request.query.format = 'jpeg'
-    testSharpOutput(() => {
+    await testSharpOutput(() => {
       expect(sharpMock.jpeg).to.be.called()
     })
   })
 
-  it('creates cache folder if it doesn\'t exist', function (done) {
-    existsSyncStub.callsFake(e => {
-      if (e.endsWith('TEST/1')) return true // does gallery exist?
-      if (e === './imgcache/TEST-1-50.webp') return false // does a cached file exist?
-      if (e === './imgcache') return false // does the cache folder exist?
-    })
-    readdirSyncStub.returns(['1.png'])
+  it('creates cache folder if it doesn\'t exist', async function () {
     Object.assign(ctx, validCtx)
-    resizeImage(ctx)
-    setTimeout(() => {
-      expect(mkdirSyncStub).to.be.calledWith('./imgcache')
-      done()
+    await testSharpOutput(() => {
+      expect(ensureDirStub).to.be.called()
     })
   })
 })
