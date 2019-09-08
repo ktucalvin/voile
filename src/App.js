@@ -12,10 +12,13 @@ class App extends Component {
     super(props)
     this.state = {}
     this.updateQuery = this.updateQuery.bind(this)
+    this.searchTimeout = 0
   }
 
   updateQuery () {
-    this.setState({ query: document.getElementById('search').value })
+    clearTimeout(this.searchTimeout)
+    this.searchTimeout = setTimeout(() =>
+      this.setState({ query: document.getElementById('search').value }), 250)
   }
 
   render () {
