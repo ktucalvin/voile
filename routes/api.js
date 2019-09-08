@@ -1,6 +1,7 @@
 'use strict'
 require('dotenv').config()
 const KoaRouter = require('koa-router')
+const search = require('./search')
 const registry = require('../lib/registry')
 const router = new KoaRouter()
 
@@ -39,6 +40,7 @@ function getGalleryInformation (ctx) {
 
 router.get('/registry/:page', getRegistryInformation)
 router.get('/gallery/:id', getGalleryInformation)
+router.get('/search', search)
 
 module.exports = {
   routes: router.routes(),

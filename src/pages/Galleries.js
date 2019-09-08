@@ -1,21 +1,23 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
-const queryPageRegex = /\?p=(\d+)/
+const queryPageRegex = /[?&]p=(\d+)/
 
 class Galleries extends Component {
-  constructor (props) {
-    super(props)
-    this.changePage = this.changePage.bind(this)
-  }
-
-  changePage (location = this.props.location.search) {
-    const queryPage = queryPageRegex.exec(location)
-    const page = (queryPage && parseInt(queryPage[1])) || 1
+  changePage (page) {
     this.fetchController = new AbortController()
-    fetch(`/api/registry/${page}`, { signal: this.fetchController.signal })
+    if (!page) {
+      page = queryPageRegex.exec(location.search)
+      page = (page && parseInt(page[1])) || 1
+    }
+    const endpoint = this.props.query
+      ? `/api/search?s=${this.props.query}&p=${page}`
+      : `/api/registry/${page}`
+
+    fetch(endpoint, { signal: this.fetchController.signal })
       .then(res => res.json())
       .then(registry => this.setState({ page, registry }))
       .catch(err => { if (err.name !== 'AbortError') console.error(err) })
@@ -24,7 +26,11 @@ class Galleries extends Component {
   render () {
     if (!this.state) return null
     const { registry } = this.state
-    if (this.state.page > registry.totalSize) {
+    if (this.props.query && !registry.totalSize) {
+      return (<p className='search-results-header'>No results found.</p>)
+    }
+
+    if (this.state.page > registry.totalSize && registry.totalSize) {
       return (
         <span className='error'>
           The requested page exceeds the number of galleries available.
@@ -40,13 +46,19 @@ class Galleries extends Component {
 
     return (
       <>
+        {
+          this.props.query &&
+          <p className='search-results-header'>Search Results for: {this.props.query}</p>
+        }
         <div id='galleries'>
           {result}
         </div>
         <Paginator
           page={this.state.page}
           totalPages={registry.totalSize}
-          onPageChange={page => this.props.history.push(`?p=${page}`)}
+          onPageChange={page => this.props.query
+            ? this.changePage(page)
+            : this.props.history.push(`?p=${page}`)}
         />
       </>
     )
@@ -55,8 +67,13 @@ class Galleries extends Component {
   componentDidMount () {
     document.title = 'Voile'
     this.changePage()
-    // Must pass new location immediately since it takes time before it is updated in this.props
-    this.unlisten = this.props.history.listen(location => this.changePage(location.search))
+    this.unlisten = this.props.history.listen(() => this.changePage())
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.query !== this.props.query) {
+      this.props.query ? this.changePage(1) : this.changePage()
+    }
   }
 
   shouldComponentUpdate (nextProps) {
@@ -70,4 +87,4 @@ class Galleries extends Component {
   }
 }
 
-export default Galleries
+export default withRouter(Galleries)

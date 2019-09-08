@@ -22,11 +22,32 @@ button {
 }
 
 header {
+  display: flex;
+  align-items: center;
   background-color: #1e1e1e;
   width: 100%;
   padding: 0.3em 1em;
   box-sizing: border-box;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+header input[type='search'] {
+  margin: 0;
+  margin-left: auto;
+  padding: 0.3em;
+  background: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #aaa;
+  color: #fff;
+  font-size: 16px;
+  transition: 0.4s;
+}
+
+header input[type='search']:active,
+header input[type='search']:focus,
+header input[type='search']:hover, {
+  border-color: @primary;
 }
 
 img {
@@ -321,6 +342,11 @@ noscript {
   margin: 0.2em;
   border-radius: 12px;
   text-transform: lowercase;
+}
+
+.search-results-header {
+  text-align: center;
+  font-size: 20px;
 }
 
 @media all and (max-width: 800px) {
