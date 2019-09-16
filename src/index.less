@@ -266,6 +266,23 @@ noscript {
   border-top: 1px solid #aaa;
 }
 
+.chapter-selector li:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.chapter-selector button {
+  margin: 0;
+  background-color: transparent;
+  transition: none;
+}
+
+.chapter-selector button:hover,
+.chapter-selector button:focus,
+.chapter-selector button:active {
+  font-weight: bold;
+  border: 1px solid @primary;
+}
+
 .chapter-selector .selected-chapter {
   background-color: rgba(128, 128, 128, 0.15);
   border-top: 1px solid @primary;

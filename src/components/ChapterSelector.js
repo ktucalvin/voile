@@ -22,7 +22,9 @@ class ChapterSelector extends Component {
       const chapterName = this.props.chapters[number].name || `Chapter ${number}`
       $chapters.push(
         <li key={number} onClick={() => this.handleClick(number)} className={selected}>
-          {chapterName}
+          <button>
+            {chapterName}
+          </button>
         </li>
       )
     }
