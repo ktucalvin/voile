@@ -15,7 +15,7 @@ class ChapterSelector extends Component {
   }
 
   render () {
-    let $chapters = []
+    const $chapters = []
     const chapterNumbers = Object.keys(this.props.chapters).sort((a, b) => parseFloat(a) - parseFloat(b))
     for (const number of chapterNumbers) {
       const selected = number === this.state.selected ? 'selected-chapter' : undefined

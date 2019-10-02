@@ -8,15 +8,15 @@ class Reader extends Component {
   constructor (props) {
     super(props)
     this.handleKeyUp = this.handleKeyUp.bind(this)
-    this.turnPage = this.turnPage.bind(this)
+    this.handlePageChange = this.handlePageChange.bind(this)
   }
 
   handleKeyUp (e) {
     const $page = document.querySelector('#reader img')
     if (e.key === 'ArrowLeft') {
-      this.turnPage({ clientX: 0 })
+      this.handlePageChange({ clientX: 0 })
     } else if (e.key === 'ArrowRight') {
-      this.turnPage({ clientX: 90000 })
+      this.handlePageChange({ clientX: 90000 })
     } else if (e.key === 'f' && $page) {
       $page.requestFullscreen()
     } else if (e.key === 'Esc') {
@@ -24,7 +24,7 @@ class Reader extends Component {
     }
   }
 
-  turnPage (e) {
+  handlePageChange (e) {
     const { gallery } = this.state
     const mid = document.querySelector('body').clientWidth / 2
     const chapterNumber = this.props.match.params.chapter
@@ -44,7 +44,7 @@ class Reader extends Component {
 
     // If we did not early return, then it may be time to change chapters
     const chapters = Object.keys(gallery.chapters).map(parseFloat).sort((a, b) => a - b)
-    let index = chapters.indexOf(parseFloat(chapterNumber))
+    const index = chapters.indexOf(parseFloat(chapterNumber))
     const nextChapter = chapters[index + 1]
     const prevChapter = chapters[index - 1]
 
@@ -80,7 +80,7 @@ class Reader extends Component {
     const chapterNumber = parseFloat(this.props.match.params.chapter)
     const chapterData = gallery.chapters[chapterNumber]
     const chapters = Object.keys(gallery.chapters).map(parseFloat).sort((a, b) => a - b)
-    let index = chapters.indexOf(chapterNumber)
+    const index = chapters.indexOf(chapterNumber)
     const nextChapter = chapters[index + 1]
     const prevChapter = chapters[index - 1]
 
@@ -97,7 +97,7 @@ class Reader extends Component {
 
     return (
       <div id='reader'>
-        <img src={src} onClick={this.turnPage} />
+        <img src={src} onClick={this.handlePageChange} />
         <Paginator
           page={page}
           totalPages={chapterData.pages}
@@ -106,12 +106,12 @@ class Reader extends Component {
         {
           page === 1 &&
           prevChapter &&
-          <Link to={`/g/${gallery.id}/${prevChapter}/1`}>Previous Chapter</Link>
+            <Link to={`/g/${gallery.id}/${prevChapter}/1`}>Previous Chapter</Link>
         }
         {
           page === chapterData.pages &&
           nextChapter &&
-          <Link to={`/g/${gallery.id}/${nextChapter}/1`}>Next Chapter</Link>
+            <Link to={`/g/${gallery.id}/${nextChapter}/1`}>Next Chapter</Link>
         }
         <Link to={{ pathname: `/g/${gallery.id}`, state: gallery }}>Back to overview</Link>
       </div>

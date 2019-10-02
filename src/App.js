@@ -11,11 +11,11 @@ class App extends Component {
   constructor (props) {
     super(props)
     this.state = {}
-    this.updateQuery = this.updateQuery.bind(this)
+    this.handleQueryChange = this.handleQueryChange.bind(this)
     this.searchTimeout = 0
   }
 
-  updateQuery () {
+  handleQueryChange () {
     clearTimeout(this.searchTimeout)
     this.searchTimeout = setTimeout(() =>
       this.setState({ query: document.getElementById('search').value }), 250)
@@ -29,9 +29,7 @@ class App extends Component {
             <Link to='/'>
               <span className='app-name'><b>𝕍</b>oile</span>
             </Link>
-            <Route exact path='/' render={() =>
-              (<input id='search' type='search' placeholder='Search...' onChange={this.updateQuery} />)}
-            />
+            <Route exact path='/' render={() => (<input id='search' type='search' placeholder='Search...' onChange={this.handleQueryChange} />)} />
           </header>
           <main>
             <Route exact path='/' render={() => <Galleries query={this.state.query} />} />

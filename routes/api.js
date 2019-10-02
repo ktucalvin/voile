@@ -15,7 +15,7 @@ function getRegistryInformation (ctx) {
   const range = 25 // range is galleries per page
   const offset = range * (page - 1)
   let i = 0
-  let data = []
+  const data = []
   for (const gallery of registry.values()) {
     if (i >= offset && i < offset + range) {
       data.push(gallery)

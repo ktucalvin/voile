@@ -11,7 +11,7 @@ const router = new KoaRouter()
 const isResizable = /(jpg|jpeg|png)$/
 
 async function resizeImage (ctx) {
-  let { gallery, chapter, page } = ctx.params
+  const { gallery, chapter, page } = ctx.params
   let { w, h = 'auto', fit = 'cover', format = 'webp' } = ctx.request.query
   const width = parseInt(w)
   const height = parseInt(h)
@@ -78,7 +78,7 @@ async function resizeImage (ctx) {
   } catch (err) { }
 
   // If we couldn't serve it, then make a resized image file and serve that
-  let result = sharp(path.join(folder, image))
+  const result = sharp(path.join(folder, image))
   if (height) {
     result.resize(width, height, { fit })
   } else {

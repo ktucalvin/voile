@@ -39,7 +39,7 @@ class Galleries extends Component {
       )
     }
 
-    let result = []
+    const result = []
     for (const gallery of registry.data) {
       result.push(<Preview key={gallery.id} gallery={gallery} />)
     }
@@ -48,7 +48,7 @@ class Galleries extends Component {
       <>
         {
           this.props.query &&
-          <p className='search-results-header'>Search Results for: {this.props.query}</p>
+            <p className='search-results-header'>Search Results for: {this.props.query}</p>
         }
         <div id='galleries'>
           {result}

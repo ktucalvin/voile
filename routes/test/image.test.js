@@ -21,7 +21,7 @@ const sharpMock = {
 let ctx, validCtx
 let resizeImage
 let createReadStreamStub, ensureDirStub, readdirStub
-let sendSpy = sinon.spy()
+const sendSpy = sinon.spy()
 
 async function expectStatusCode (code) {
   await resizeImage(ctx)

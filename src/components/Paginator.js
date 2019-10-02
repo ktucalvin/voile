@@ -42,7 +42,10 @@ class Paginator extends Component {
         <button
           key={i}
           onClick={() => this.goToPage(i)}
-          className={i === currentPage ? 'currentPage' : ''}>{i}</button>
+          className={i === currentPage ? 'currentPage' : ''}
+        >
+          {i}
+        </button>
       )
     }
 

@@ -39,7 +39,7 @@ class ThumbnailGrid extends Component {
         </div>
         {
           this.state.maxThumbs <= chapter.pages &&
-          <button onClick={() => this.setState({ maxThumbs: this.state.maxThumbs + 35 })}>Show more</button>
+            <button onClick={() => this.setState({ maxThumbs: this.state.maxThumbs + 35 })}>Show more</button>
         }
       </>
     )

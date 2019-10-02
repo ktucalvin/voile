@@ -60,7 +60,7 @@ module.exports = merge(common, {
     filename: '[name].[contenthash].js'
   },
   externals: {
-    'react': 'React',
+    react: 'React',
     'react-dom': 'ReactDOM',
     'react-router-dom': 'ReactRouterDOM'
   }
