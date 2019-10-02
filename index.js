@@ -9,6 +9,7 @@ const conditional = require('koa-conditional-get')
 const etag = require('koa-etag')
 const compress = require('koa-compress')
 const compressible = require('compressible')
+const helmet = require('koa-helmet')
 const routes = require('./routes')
 const app = new Koa()
 const certopts = {
@@ -16,6 +17,8 @@ const certopts = {
   cert: process.env.SSL_CERT
 }
 const staticOpts = require('./lib/static-options')
+
+app.use(helmet())
 
 app.use(require('./lib/no-expose-errors'))
 
