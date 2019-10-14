@@ -4,10 +4,8 @@ const fsp = require('fs').promises
 const path = require('path')
 const sharp = require('sharp')
 const send = require('koa-send')
-const KoaRouter = require('koa-router')
 const staticOpts = require('../lib/static-options')
 const fsutils = require('../lib/fsutils')
-const router = new KoaRouter()
 const isResizable = /(jpg|jpeg|png)$/
 
 async function resizeImage (ctx) {
@@ -97,9 +95,6 @@ async function resizeImage (ctx) {
   result.clone().toFile(cachedFile, err => { if (err) console.log(err) })
 }
 
-router.get('/api/img/:gallery/:chapter/:page', resizeImage)
-
 module.exports = {
-  routes: router.routes(),
   resizeImage
 }

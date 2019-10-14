@@ -1,5 +1,4 @@
 'use strict'
-require('dotenv').config()
 const Fuse = require('fuse.js')
 const registry = require('../lib/registry')
 const fuseOpts = {
@@ -32,4 +31,4 @@ function search (ctx) {
   ctx.body = { totalSize: Math.ceil(results.length / range), data: results.slice(offset, offset + range) }
 }
 
-module.exports = search
+module.exports = { search }

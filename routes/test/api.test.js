@@ -16,7 +16,7 @@ describe('/api', function () {
   let ctx, getRegistryInformation, getGalleryInformation
   before(function () {
     mock('../../lib/registry', fakeRegistry)
-    const apis = require('../api')
+    const apis = require('../registry-lookup')
     getRegistryInformation = apis.getRegistryInformation
     getGalleryInformation = apis.getGalleryInformation
   })

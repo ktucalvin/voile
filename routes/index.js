@@ -1,12 +1,14 @@
 'use strict'
-require('dotenv').config()
 const KoaRouter = require('koa-router')
+const { getGalleryInformation, getRegistryInformation } = require('./registry-lookup')
+const { resizeImage } = require('./image')
+const { search } = require('./search')
 const router = new KoaRouter()
-const { routes: apiRoutes } = require('./api')
-const { routes: imageRoutes } = require('./image')
+router.prefix('/api')
 
-router.use('/api', apiRoutes)
-
-router.use(imageRoutes)
+router.get('/img/:gallery/:chapter/:page', resizeImage)
+router.get('/registry/:page', getRegistryInformation)
+router.get('/gallery/:id', getGalleryInformation)
+router.get('/search', search)
 
 module.exports = router.routes()
