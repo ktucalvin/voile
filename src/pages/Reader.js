@@ -9,6 +9,15 @@ class Reader extends Component {
     super(props)
     this.handleKeyUp = this.handleKeyUp.bind(this)
     this.handlePageChange = this.handlePageChange.bind(this)
+    this.getAdjacentChapters = this.getAdjacentChapters.bind(this)
+  }
+
+  getAdjacentChapters (chapterNumber) {
+    const chapters = Object.keys(this.state.gallery.chapters).map(parseFloat).sort((a, b) => a - b)
+    const index = chapters.indexOf(parseFloat(chapterNumber))
+    const nextChapter = chapters[index + 1]
+    const prevChapter = chapters[index - 1]
+    return [prevChapter, nextChapter]
   }
 
   handleKeyUp (e) {
@@ -43,10 +52,7 @@ class Reader extends Component {
     }
 
     // If we did not early return, then it may be time to change chapters
-    const chapters = Object.keys(gallery.chapters).map(parseFloat).sort((a, b) => a - b)
-    const index = chapters.indexOf(parseFloat(chapterNumber))
-    const nextChapter = chapters[index + 1]
-    const prevChapter = chapters[index - 1]
+    const [prevChapter, nextChapter] = this.getAdjacentChapters(chapterNumber)
 
     if (prevChapter && page === '1') {
       const lastPage = gallery.chapters[prevChapter].pages
@@ -79,10 +85,7 @@ class Reader extends Component {
     const page = parseInt(this.props.match.params.page)
     const chapterNumber = parseFloat(this.props.match.params.chapter)
     const chapterData = gallery.chapters[chapterNumber]
-    const chapters = Object.keys(gallery.chapters).map(parseFloat).sort((a, b) => a - b)
-    const index = chapters.indexOf(chapterNumber)
-    const nextChapter = chapters[index + 1]
-    const prevChapter = chapters[index - 1]
+    const [prevChapter, nextChapter] = this.getAdjacentChapters(chapterNumber)
 
     if (!chapterNumber || !chapterData) {
       return (<span className='error'>That chapter could not be found</span>)
