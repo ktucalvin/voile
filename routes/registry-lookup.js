@@ -34,7 +34,13 @@ function getGalleryInformation (ctx) {
   ctx.body = gallery
 }
 
+function getRandomGalleryId (ctx) {
+  const ids = Array.from(registry.keys())
+  ctx.body = ids[Math.floor(Math.random() * ids.length)]
+}
+
 module.exports = {
   getGalleryInformation,
-  getRegistryInformation
+  getRegistryInformation,
+  getRandomGalleryId
 }

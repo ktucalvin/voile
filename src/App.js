@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Link } from 'react-router-dom'
 import Galleries from './pages/Galleries'
 import Overview from './pages/Overview'
 import Reader from './pages/Reader'
+import NavBar from './components/NavBar'
 
 class App extends Component {
   constructor (props) {
@@ -29,6 +30,7 @@ class App extends Component {
             <Link to='/'>
               <span className='app-name'><b>𝕍</b>oile</span>
             </Link>
+            <NavBar />
             <Route exact path='/' render={() => (<input id='search' type='search' placeholder='Search...' onChange={this.handleQueryChange} />)} />
           </header>
           <main>
