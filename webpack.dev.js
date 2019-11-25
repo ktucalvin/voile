@@ -22,7 +22,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/index.ejs'
+      template: './client/index.ejs'
     })
   ],
   output: {

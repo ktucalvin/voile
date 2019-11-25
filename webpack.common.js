@@ -3,11 +3,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: ['./src/index.js'],
+  entry: ['./client/index.js'],
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: { presets: ['@babel/env'] }
@@ -46,7 +46,7 @@ module.exports = {
       ]
     }),
     new CopyWebpackPlugin([
-      { from: './src/favicon' }
+      { from: './client/favicon' }
     ])
   ]
 }

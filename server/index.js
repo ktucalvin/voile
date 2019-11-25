@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === 'development') {
   ;(async () => {
     const path = require('path')
     const koaWebpack = require('koa-webpack')
-    const config = require('./webpack.dev.js')
+    const config = require('../webpack.dev.js')
     const middleware = await koaWebpack({ config })
     app.use(middleware)
     app.use(async (ctx) => {

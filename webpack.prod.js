@@ -43,7 +43,7 @@ module.exports = merge(common, {
       chunkFilename: '[id].[contenthash].css'
     }),
     new HtmlWebpackPlugin({
-      template: 'src/index.ejs',
+      template: './client/index.ejs',
       minify: {
         collapseWhitespace: true,
         removeComments: true,
