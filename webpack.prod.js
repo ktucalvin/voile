@@ -9,6 +9,7 @@ const common = require('./webpack.common.js')
 
 module.exports = merge(common, {
   mode: 'production',
+  entry: ['./client/index.js'],
   module: {
     rules: [
       {

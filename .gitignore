@@ -8,6 +8,6 @@ coverage/
 
 # Application
 galleries/
-dist/
+dist
 imgcache/
 .env

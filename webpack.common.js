@@ -3,7 +3,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: ['./client/index.js'],
   module: {
     rules: [
       {
