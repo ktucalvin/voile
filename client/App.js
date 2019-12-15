@@ -2,11 +2,12 @@
 /* eslint-env browser */
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
-import { BrowserRouter, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 import Galleries from './pages/Galleries'
 import Overview from './pages/Overview'
 import Reader from './pages/Reader'
 import NavBar from './components/NavBar'
+import NotFound from './components/NotFound'
 
 class App extends Component {
   constructor (props) {
@@ -34,9 +35,12 @@ class App extends Component {
             <Route exact path='/' render={() => (<input id='search' type='search' placeholder='Search...' onChange={this.handleQueryChange} />)} />
           </header>
           <main>
-            <Route exact path='/' render={() => <Galleries query={this.state.query} />} />
-            <Route exact path='/g/:id/' component={Overview} />
-            <Route path='/g/:id/:chapter/:page/' component={Reader} />
+            <Switch>
+              <Route exact path='/' render={() => <Galleries query={this.state.query} />} />
+              <Route exact path='/g/:id/' component={Overview} />
+              <Route path='/g/:id/:chapter/:page/' component={Reader} />
+              <Route component={NotFound} />
+            </Switch>
           </main>
         </BrowserRouter>
       </>
