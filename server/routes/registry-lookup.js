@@ -36,7 +36,8 @@ function getGalleryInformation (ctx) {
 
 function getRandomGalleryId (ctx) {
   const ids = Array.from(registry.keys())
-  ctx.body = ids[Math.floor(Math.random() * ids.length)]
+  const randomIndex = Math.floor(Math.random() * ids.length)
+  ctx.redirect(`/g/${ids[randomIndex]}`)
 }
 
 module.exports = {

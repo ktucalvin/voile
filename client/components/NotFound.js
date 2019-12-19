@@ -2,7 +2,7 @@
 import React from 'react'
 
 export default () => (
-  <p class='notfound'>
+  <p className='notfound'>
     404 - Page not found.
   </p>
 )
