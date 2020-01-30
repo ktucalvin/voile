@@ -7,8 +7,26 @@ import Thumbnail from './Thumbnail'
 class ThumbnailGrid extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      maxThumbs: 35
+
+    this.lazyLoadThumbs = this.lazyLoadThumbs.bind(this)
+
+    this.observer = new IntersectionObserver(this.lazyLoadThumbs, {
+      rootMargin: '0px 0px 100px 0px'
+    })
+  }
+
+  lazyLoadThumbs (entries) {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        const $images = entry.target.children[0].children
+        for (const $img of $images) {
+          if (!$img.src) {
+            $img.srcset = $img.dataset.srcset
+            $img.src = $img.dataset.src
+          }
+        }
+        this.observer.unobserve(entry.target)
+      }
     }
   }
 
@@ -20,7 +38,7 @@ class ThumbnailGrid extends Component {
       chapter: chapter.number
     }
     const thumbnails = []
-    for (let i = 1; i <= Math.min(this.state.maxThumbs, chapter.pages); i++) {
+    for (let i = 1; i <= chapter.pages; i++) {
       const destination = {
         pathname: `/g/${gallery.id}/${chapter.number}/${i}`,
         state: gallery
@@ -28,20 +46,15 @@ class ThumbnailGrid extends Component {
 
       thumbnails.push(
         <Link key={`${chapter.number}-${i}`} to={destination}>
-          <Thumbnail page={i} {...thumbProps} />
+          <Thumbnail page={i} {...thumbProps} observer={this.observer} />
         </Link>
       )
     }
+
     return (
-      <>
-        <div className='thumbnails'>
-          {thumbnails}
-        </div>
-        {
-          this.state.maxThumbs <= chapter.pages &&
-            <button onClick={() => this.setState({ maxThumbs: this.state.maxThumbs + 35 })}>Show more</button>
-        }
-      </>
+      <div className='thumbnails'>
+        {thumbnails}
+      </div>
     )
   }
 }

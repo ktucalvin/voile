@@ -17,7 +17,7 @@ class Paginator extends Component {
   render () {
     let range = 2
     if (this.props.width > 800) {
-      range = 6
+      range = 8
     } else if (this.props.width > 400) {
       range = 4
     }
