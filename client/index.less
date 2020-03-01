@@ -257,20 +257,20 @@ noscript {
 
 .thumbnails {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 200px);
+  grid-template-columns: repeat(auto-fit, 250px);
   justify-items: center;
   justify-content: center;
   align-items: flex-end;
-  grid-row-gap: 1.25em;
-  grid-column-gap: 1.25em;
+  grid-row-gap: 0.75em;
+  grid-column-gap: 0.75em;
   margin: 0 auto;
   margin-top: 1em;
 }
 
 .thumbnails img {
-  width: 200px;
+  width: 250px;
   height: auto;
-  max-height: 288px;
+  max-height: 400px;
   object-fit: cover;
 }
 
@@ -282,7 +282,6 @@ noscript {
   padding: 0;
   max-height: calc((14px + 0.7em) * 7);
   width: 100%;
-  max-width: 800px;
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
