@@ -2,7 +2,7 @@
 /* eslint-env browser */
 import { hot } from 'react-hot-loader/root'
 import React, { Component } from 'react'
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Galleries from './pages/Galleries'
 import Overview from './pages/Overview'
 import Reader from './pages/Reader'
@@ -28,9 +28,9 @@ class App extends Component {
       <>
         <BrowserRouter>
           <header>
-            <Link to='/'>
+            <a href='/'>
               <span className='app-name'><b>𝕍</b>oile</span>
-            </Link>
+            </a>
             <NavBar />
             <Route exact path='/' render={() => (<input id='search' type='search' placeholder='Search...' onChange={this.handleQueryChange} />)} />
           </header>

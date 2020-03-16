@@ -1,43 +1,73 @@
 'use strict'
-const registry = require('../lib/registry')
+const { getDatabasePool } = require('../lib/db')
+const pool = getDatabasePool()
 
-function getRegistryInformation (ctx) {
-  let { page } = ctx.params
-  if (!page) page = 1
+async function getRegistryInformation (ctx) {
+  const { page = 1, length = 25 } = ctx.params // length is galleries per page
   if (!parseInt(page) || page < 1) {
     ctx.status = 400
     return
   }
-  const range = 25 // range is galleries per page
-  const offset = range * (page - 1)
-  let i = 0
-  const data = []
-  for (const gallery of registry.values()) {
-    if (i >= offset && i < offset + range) {
-      data.push(gallery)
-    }
 
-    if (i >= offset + range) break
-    i++
-  }
-  const totalSize = Math.ceil(registry.size / range)
-  ctx.body = { data, totalSize }
+  const offset = (parseInt(page) - 1) * parseInt(length)
+  let rows = await pool.query(
+    'SELECT * FROM galleries LIMIT ? OFFSET ?',
+    [length, offset]
+  )
+
+  rows = rows.map(row => {
+    return ({
+      id: row.gallery_id,
+      name: row.gallery_name
+    })
+  })
+
+  const galleryQuery = await pool.query('SELECT COUNT(*) as count FROM galleries')
+  const totalGalleries = galleryQuery[0].count
+
+  const totalSize = Math.floor(totalGalleries / length)
+  ctx.body = { data: rows, totalSize }
 }
 
-function getGalleryInformation (ctx) {
-  const gallery = registry.get(ctx.params.id)
-  if (!gallery) {
+async function getGalleryInformation (ctx) {
+  const rows = await pool.query(
+    'SELECT * FROM galleries NATURAL JOIN galleries_tags NATURAL JOIN tags NATURAL JOIN chapters WHERE gallery_id=?',
+    [ctx.params.id]
+  )
+
+  if (!rows.length) {
     ctx.status = 404
     return
+  }
+
+  const gallery = {
+    id: rows[0].gallery_id,
+    name: rows[0].gallery_name,
+    description: rows[0].description,
+    tags: {},
+    chapters: {}
+  }
+
+  for (const row of rows) {
+    if (gallery.tags[row.type]) {
+      gallery.tags[row.type].push(row.tag_name)
+    } else {
+      gallery.tags[row.type] = [row.tag_name]
+    }
+
+    gallery.chapters[row.chapter_number] = {
+      name: row.chapter_name,
+      pages: row.pages
+    }
   }
 
   ctx.body = gallery
 }
 
-function getRandomGalleryId (ctx) {
-  const ids = Array.from(registry.keys())
-  const randomIndex = Math.floor(Math.random() * ids.length)
-  ctx.redirect(`/g/${ids[randomIndex]}`)
+async function getRandomGalleryId (ctx) {
+  const rows = await pool.query('SELECT gallery_id FROM galleries ORDER BY RAND() LIMIT 1')
+  const id = rows[0].gallery_id
+  ctx.redirect(`/g/${id}`)
 }
 
 module.exports = {

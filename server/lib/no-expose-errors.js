@@ -4,7 +4,9 @@ module.exports = function () {
     try {
       await next()
     } catch (err) {
-      err.expose = false
+      if (process.env.NODE_ENV !== 'development') {
+        err.expose = false
+      }
     }
   }
 }

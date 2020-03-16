@@ -4,7 +4,7 @@ const fs = require('fs')
 module.exports = {
   ensureDir (path) {
     return new Promise((resolve, reject) => {
-      fs.mkdir(path, err =>
+      fs.mkdir(path, { recursive: true }, err =>
         (err && err.code !== 'EEXIST')
           ? reject(err)
           : resolve()

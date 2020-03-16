@@ -67,11 +67,12 @@ async function resizeImage (ctx) {
   // avoid writing default values for height/fit in filename
   const fileHeight = h === 'auto' ? '' : `x${height}`
   const fileFit = fit === 'cover' ? '' : `-${fit}`
-  const cachedFile = `./imgcache/${gallery}-C${chapter}P${page}-${width}${fileHeight}${fileFit}.${format}`
+  const cacheDir = path.join('./imgcache', process.env.DB_NAME)
+  const cacheFile = path.join(cacheDir, `${gallery}-C${chapter}P${page}-${width}${fileHeight}${fileFit}.${format}`)
 
   // serve cached image if it exists
   try {
-    ctx.body = await fsutils.createReadStream(cachedFile)
+    ctx.body = await fsutils.createReadStream(cacheFile)
     return
   } catch (err) { }
 
@@ -91,8 +92,8 @@ async function resizeImage (ctx) {
     ctx.body = result.webp()
   }
 
-  await fsutils.ensureDir('./imgcache')
-  result.clone().toFile(cachedFile, err => { if (err) console.log(err) })
+  await fsutils.ensureDir(cacheDir)
+  result.clone().toFile(cacheFile, err => { if (err) console.log(err) })
 }
 
 module.exports = {

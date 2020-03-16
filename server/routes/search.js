@@ -1,6 +1,8 @@
 'use strict'
 const Fuse = require('fuse.js')
-const registry = require('../lib/registry')
+const { getDatabasePool } = require('../lib/db')
+const pool = getDatabasePool()
+
 const fuseOpts = {
   shouldSort: true,
   threshold: 0.2,
@@ -20,10 +22,35 @@ const fuseOpts = {
   ]
 }
 
-const fuse = new Fuse(Array.from(registry.values()), fuseOpts)
+let fuse
+
+async function initializeSearch () {
+  console.log('Initializing search library...')
+  const registry = new Map()
+  const rows = await pool.query(
+    'SELECT * FROM galleries NATURAL JOIN galleries_tags NATURAL JOIN tags'
+  )
+
+  for (const row of rows) {
+    const name = row.gallery_name
+    const gallery = registry.get(name) || { name, id: row.gallery_id, tags: {} }
+    if (gallery.tags[row.type]) {
+      gallery.tags[row.type].push(row.tag_name)
+    } else {
+      gallery.tags[row.type] = [row.tag_name]
+    }
+    registry.set(name, gallery)
+  }
+
+  fuse = new Fuse(Array.from(registry.values()), fuseOpts)
+  console.log('Search initialized')
+}
 
 // Expecting query param to be ?s=somestring&p=page
 function search (ctx) {
+  if (!fuse) {
+    throw new Error('Fuse not initialized before searching')
+  }
   const range = 25
   const page = parseInt(ctx.query.p) || 1
   const offset = range * (page - 1)
@@ -31,4 +58,4 @@ function search (ctx) {
   ctx.body = { totalSize: Math.ceil(results.length / range), data: results.slice(offset, offset + range) }
 }
 
-module.exports = { search }
+module.exports = { initializeSearch, search }
