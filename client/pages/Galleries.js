@@ -10,14 +10,11 @@ class Galleries extends Component {
   changePage (page) {
     this.fetchController = new AbortController()
     if (!page) {
-      page = queryPageRegex.exec(location.search)
-      page = (page && parseInt(page[1])) || 1
+      const pg = queryPageRegex.exec(location.search)
+      page = (pg && parseInt(pg[1])) || 1
     }
-    const endpoint = this.props.query
-      ? `/api/search?s=${this.props.query}&p=${page}`
-      : `/api/registry/${page}`
 
-    fetch(endpoint, { signal: this.fetchController.signal })
+    fetch(`/api/registry/${page}`, { signal: this.fetchController.signal })
       .then(res => res.json())
       .then(registry => this.setState({ page, registry }))
       .catch(err => { if (err.name !== 'AbortError') console.error(err) })
@@ -26,15 +23,12 @@ class Galleries extends Component {
   render () {
     if (!this.state) return null
     const { registry } = this.state
-    if (this.props.query && !registry.totalSize) {
-      return (<p className='search-results-header'>No results found.</p>)
-    }
 
-    if (this.state.page > registry.totalSize && registry.totalSize) {
+    if (this.state.page > registry.totalSize && registry.totalSize != null) {
       return (
         <span className='error'>
           The requested page exceeds the number of galleries available.
-          Page must be between 1 and {registry.totalSize}.
+          {registry.totalSize === 1 ? ' There is only one page.' : ` Page must be between 1 and ${registry.totalSize}`}
         </span>
       )
     }
@@ -46,10 +40,6 @@ class Galleries extends Component {
 
     return (
       <>
-        {
-          this.props.query &&
-            <p className='search-results-header'>Search Results for: {this.props.query}</p>
-        }
         <div id='galleries'>
           {result}
         </div>

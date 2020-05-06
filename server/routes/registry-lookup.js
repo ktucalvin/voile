@@ -25,7 +25,7 @@ async function getRegistryInformation (ctx) {
   const galleryQuery = await pool.query('SELECT COUNT(*) as count FROM galleries')
   const totalGalleries = galleryQuery[0].count
 
-  const totalSize = Math.floor(totalGalleries / length)
+  const totalSize = Math.ceil(totalGalleries / length)
   ctx.body = { data: rows, totalSize }
 }
 

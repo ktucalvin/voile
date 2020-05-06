@@ -4,8 +4,13 @@ let pool
 
 async function initDatabase (dbOptions) {
   console.log(`Creating database pool for ${process.env.DB_NAME}...`)
-  pool = await mysql.createPool(dbOptions)
-  console.log('Pool initialized')
+  try {
+    pool = await mysql.createPool(dbOptions)
+    console.log('Pool initialized')
+  } catch (e) {
+    console.log('Failed to create database pool. Stack trace:')
+    console.log(e)
+  }
 }
 
 function getDatabasePool () {

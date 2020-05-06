@@ -62,3 +62,8 @@ initDatabase(dbOpts)
     https.createServer(certopts, app.callback())
       .listen(443, () => console.log(`Server running at ${url}`))
   })
+  .catch(err => {
+    console.log('Failed to start server due to error:')
+    console.log(err)
+    process.exit(1)
+  })

@@ -145,13 +145,12 @@ noscript {
 
 #galleries {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 225px);
+  grid-template-columns: repeat(auto-fit, 300px);
   justify-items: center;
   justify-content: center;
   align-items: flex-end;
   grid-row-gap: 1.25em;
   grid-column-gap: 1.25em;
-  width: 90vw;
   margin: 0 auto;
 }
 
@@ -176,7 +175,7 @@ noscript {
 .preview img {
   width: 100%;
   height: auto;
-  max-height: 325px;
+  max-height: 435px;
   object-fit: cover;
 }
 
@@ -212,6 +211,26 @@ noscript {
   margin-top: 0.5em;
   text-align: center;
   font-size: 20px;
+}
+
+#search-panel {
+  text-align: center;
+}
+
+#search-panel input[type='search'] {
+  color: #fff;
+  font-size: 18px;
+  background-color: #1f1f1f;
+  padding: 0.75em;
+  border: none;
+  border-bottom: 1px solid #aaa;
+  outline: none;
+}
+
+#search-panel input[type='search']:active,
+#search-panel input[type='search']:focus,
+#search-panel input[type='search']:hover, {
+  border-color: @primary;
 }
 
 #overview a,
