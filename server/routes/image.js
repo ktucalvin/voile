@@ -56,7 +56,7 @@ async function resizeImage (ctx) {
   }
 
   if (!isResizable.test(image)) {
-    const file = path.join(folder, page)
+    const file = path.relative(process.env.ARCHIVE_DIR, path.join(folder, page))
     await send(ctx, file, staticOpts)
     return
   }
