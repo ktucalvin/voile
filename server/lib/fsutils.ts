@@ -1,8 +1,7 @@
-'use strict'
-const fs = require('fs')
+import fs, { ReadStream } from 'fs'
 
-module.exports = {
-  ensureDir (path) {
+export class FsUtils {
+  static ensureDir (path: string): Promise<void> {
     return new Promise((resolve, reject) => {
       fs.mkdir(path, { recursive: true }, err =>
         (err && err.code !== 'EEXIST')
@@ -10,9 +9,9 @@ module.exports = {
           : resolve()
       )
     })
-  },
+  }
 
-  createReadStream (path) {
+  static createReadStream (path: string): Promise<ReadStream> {
     return new Promise((resolve, reject) => {
       const e = fs.createReadStream(path)
         .on('error', reject)

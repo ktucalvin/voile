@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["es2018"],
+    "outDir": "./server/build",
+    "target": "es2018",
+    "esModuleInterop": true
+  },
+  "include": [
+    "./server/**/*"
+  ]
+}

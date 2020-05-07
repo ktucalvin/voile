@@ -1,10 +1,9 @@
-'use strict'
-const KoaRouter = require('koa-router')
+import KoaRouter from 'koa-router'
+import { getGalleryInformation, getRegistryInformation, getRandomGalleryId } from './registry-lookup'
+import { resizeImage } from './image'
+import { initializeSearch, search } from './search'
 
-async function getRoutes () {
-  const { getGalleryInformation, getRegistryInformation, getRandomGalleryId } = require('./registry-lookup')
-  const { resizeImage } = require('./image')
-  const { initializeSearch, search } = require('./search')
+export async function getRoutes () {
   const router = new KoaRouter()
   router.prefix('/api')
 
@@ -18,5 +17,3 @@ async function getRoutes () {
 
   return router.routes()
 }
-
-module.exports = { getRoutes }

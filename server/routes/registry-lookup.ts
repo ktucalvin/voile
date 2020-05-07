@@ -1,8 +1,8 @@
-'use strict'
-const { getDatabasePool } = require('../lib/db')
-const pool = getDatabasePool()
+import { Context } from 'koa'
+import { getDatabasePool } from '../lib/db'
 
-async function getRegistryInformation (ctx) {
+async function getRegistryInformation (ctx: Context) {
+  const pool = getDatabasePool()
   const { page = 1, length = 25 } = ctx.params // length is galleries per page
   if (!parseInt(page) || page < 1) {
     ctx.status = 400
@@ -29,7 +29,8 @@ async function getRegistryInformation (ctx) {
   ctx.body = { data: rows, totalSize }
 }
 
-async function getGalleryInformation (ctx) {
+async function getGalleryInformation (ctx: Context) {
+  const pool = getDatabasePool()
   const rows = await pool.query(
     'SELECT * FROM galleries NATURAL JOIN galleries_tags NATURAL JOIN tags NATURAL JOIN chapters WHERE gallery_id=?',
     [ctx.params.id]
@@ -64,13 +65,14 @@ async function getGalleryInformation (ctx) {
   ctx.body = gallery
 }
 
-async function getRandomGalleryId (ctx) {
+async function getRandomGalleryId (ctx: Context) {
+  const pool = getDatabasePool()
   const rows = await pool.query('SELECT gallery_id FROM galleries ORDER BY RAND() LIMIT 1')
   const id = rows[0].gallery_id
   ctx.redirect(`/g/${id}`)
 }
 
-module.exports = {
+export {
   getGalleryInformation,
   getRegistryInformation,
   getRandomGalleryId

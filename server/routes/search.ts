@@ -1,7 +1,6 @@
-'use strict'
-const Fuse = require('fuse.js')
-const { getDatabasePool } = require('../lib/db')
-const pool = getDatabasePool()
+import Fuse from 'fuse.js'
+import { Context } from 'koa'
+import { getDatabasePool } from '../lib/db'
 
 const fuseOpts = {
   shouldSort: true,
@@ -22,10 +21,11 @@ const fuseOpts = {
   ]
 }
 
-let fuse
+let fuse: Fuse<string, Object>
 
 async function initializeSearch () {
   console.log('Initializing search library...')
+  const pool = getDatabasePool()
   const registry = new Map()
   const rows = await pool.query(
     'SELECT * FROM galleries NATURAL JOIN galleries_tags NATURAL JOIN tags'
@@ -47,7 +47,7 @@ async function initializeSearch () {
 }
 
 // Expecting query param to be ?s=somestring&p=page
-function search (ctx) {
+function search (ctx: Context) {
   if (!fuse) {
     throw new Error('Fuse not initialized before searching')
   }
@@ -58,4 +58,4 @@ function search (ctx) {
   ctx.body = { totalSize: Math.ceil(results.length / range), data: results.slice(offset, offset + range) }
 }
 
-module.exports = { initializeSearch, search }
+export { initializeSearch, search }

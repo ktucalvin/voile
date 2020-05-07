@@ -1,32 +1,27 @@
-'use strict'
-require('dotenv').config()
-const https = require('https')
-const Koa = require('koa')
-const serve = require('koa-static')
-const mount = require('koa-mount')
-const conditional = require('koa-conditional-get')
-const etag = require('koa-etag')
-const compress = require('koa-compress')
-const compressible = require('compressible')
-const helmet = require('koa-helmet')
-const { getRoutes } = require('./routes')
-const { initDatabase } = require('./lib/db')
-const staticOpts = require('./lib/static-options')
-const noExposeErrors = require('./lib/no-expose-errors')
-const serveIndexFallback = require('./lib/serve-index-fallback')
+import 'dotenv/config'
+import https from 'https'
+import Koa from 'koa'
+import serve from 'koa-static'
+import mount from 'koa-mount'
+import helmet from 'koa-helmet'
+import conditional from 'koa-conditional-get'
+import etag from 'koa-etag'
+import compress from 'koa-compress'
+import compressible from 'compressible'
+
+import { getRoutes } from './routes'
+import { initDatabase } from './lib/db'
+import staticOpts from './lib/static-options'
+import { noExposeErrors } from './lib/no-expose-errors'
+import { serveIndexFallback } from './lib/serve-index-fallback'
+
 const app = new Koa()
 const certopts = {
   key: process.env.SSL_KEY,
   cert: process.env.SSL_CERT
 }
 
-const dbOpts = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
-}
-
-let url
+let url: string
 
 async function setupMiddleware () {
   const routes = await getRoutes()
@@ -56,13 +51,13 @@ async function setupMiddleware () {
   app.use(serveIndexFallback())
 }
 
-initDatabase(dbOpts)
+initDatabase()
   .then(setupMiddleware)
   .then(() => {
     https.createServer(certopts, app.callback())
       .listen(443, () => console.log(`Server running at ${url}`))
   })
-  .catch(err => {
+  .catch((err: Error) => {
     console.log('Failed to start server due to error:')
     console.log(err)
     process.exit(1)

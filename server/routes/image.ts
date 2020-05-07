@@ -1,14 +1,14 @@
-'use strict'
-require('dotenv').config()
-const fsp = require('fs').promises
-const path = require('path')
-const sharp = require('sharp')
-const send = require('koa-send')
-const staticOpts = require('../lib/static-options')
-const fsutils = require('../lib/fsutils')
+import 'dotenv/config' // So env variables available in unit tests
+import { promises as fsp } from 'fs'
+import path from 'path'
+import sharp from 'sharp'
+import send from 'koa-send'
+import { Context } from 'koa'
+import staticOpts from '../lib/static-options'
+import { FsUtils } from '../lib/fsutils'
 const isResizable = /(jpg|jpeg|png)$/
 
-async function resizeImage (ctx) {
+export async function resizeImage (ctx: Context) {
   const { gallery, chapter, page } = ctx.params
   let { w, h = 'auto', fit = 'cover', format = 'webp' } = ctx.request.query
   const width = parseInt(w)
@@ -40,11 +40,11 @@ async function resizeImage (ctx) {
   }
 
   const folder = path.join(process.env.ARCHIVE_DIR, gallery, chapter)
-  let image
+  let image: string
 
   try {
-    image = await fsp.readdir(folder)
-    image = image.filter(e => e.startsWith(page))[0]
+    const images = await fsp.readdir(folder)
+    image = images.filter(e => e.startsWith(page))[0]
   } catch (err) {
     ctx.status = 404
     return
@@ -72,11 +72,11 @@ async function resizeImage (ctx) {
 
   // serve cached image if it exists
   try {
-    ctx.body = await fsutils.createReadStream(cacheFile)
+    ctx.body = await FsUtils.createReadStream(cacheFile)
     return
   } catch (err) { }
 
-  // If we couldn't serve it, then make a resized image file and serve that
+  // If it couldn't be served, then make a resized image file and serve that
   const result = sharp(path.join(folder, image))
   if (height) {
     result.resize(width, height, { fit })
@@ -92,10 +92,6 @@ async function resizeImage (ctx) {
     ctx.body = result.webp()
   }
 
-  await fsutils.ensureDir(cacheDir)
+  await FsUtils.ensureDir(cacheDir)
   result.clone().toFile(cacheFile, err => { if (err) console.log(err) })
-}
-
-module.exports = {
-  resizeImage
 }

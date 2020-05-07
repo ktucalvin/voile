@@ -1,6 +1,6 @@
-'use strict'
-module.exports = function () {
-  return async (ctx, next) => {
+import { Context, Next } from 'koa'
+export function noExposeErrors () {
+  return async (_unusedCtx: Context, next: Next) => {
     try {
       await next()
     } catch (err) {
