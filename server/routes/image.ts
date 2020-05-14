@@ -67,7 +67,7 @@ export async function resizeImage (ctx: Context) {
   // avoid writing default values for height/fit in filename
   const fileHeight = h === 'auto' ? '' : `x${height}`
   const fileFit = fit === 'cover' ? '' : `-${fit}`
-  const cacheDir = path.join('./imgcache', process.env.DB_NAME)
+  const cacheDir = path.join('./imgcache', process.env.TYPEORM_DATABASE)
   const cacheFile = path.join(cacheDir, `${gallery}-C${chapter}P${page}-${width}${fileHeight}${fileFit}.${format}`)
 
   // serve cached image if it exists

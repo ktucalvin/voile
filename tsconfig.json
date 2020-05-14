@@ -4,7 +4,9 @@
     "lib": ["es2018"],
     "outDir": "./server/build",
     "target": "es2018",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
   },
   "include": [
     "./server/**/*"

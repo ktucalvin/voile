@@ -38,9 +38,9 @@ function ensureDir (path) {
 ;(async function () {
   try {
     const pool = await mysql.createPool({
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME
+      user: process.env.TYPEORM_USERNAME,
+      password: process.env.TYPEORM_PASSWORD,
+      database: process.env.TYPEORM_DATABASE
     })
 
     for (const gallery of galleries) {

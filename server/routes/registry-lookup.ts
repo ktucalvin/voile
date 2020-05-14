@@ -1,78 +1,49 @@
 import { Context } from 'koa'
-import { getDatabasePool } from '../lib/db'
+import { getConnection } from 'typeorm'
+import { Gallery } from '../models/Gallery'
 
 async function getRegistryInformation (ctx: Context) {
-  const pool = getDatabasePool()
   const { page = 1, length = 25 } = ctx.params // length is galleries per page
-  if (!parseInt(page) || page < 1) {
+  if (!parseInt(page) || page < 1 || !parseInt(length) || length < 1) {
     ctx.status = 400
     return
   }
 
-  const offset = (parseInt(page) - 1) * parseInt(length)
-  let rows = await pool.query(
-    'SELECT * FROM galleries LIMIT ? OFFSET ?',
-    [length, offset]
-  )
+  const [galleries, count] = await getConnection()
+    .getRepository(Gallery)
+    .findAndCount({ skip: (page - 1) * length, take: length })
 
-  rows = rows.map(row => {
-    return ({
-      id: row.gallery_id,
-      name: row.gallery_name
-    })
-  })
+  const data = galleries.map(gallery => ({
+    id: gallery.galleryId,
+    name: gallery.galleryName
+  }))
 
-  const galleryQuery = await pool.query('SELECT COUNT(*) as count FROM galleries')
-  const totalGalleries = galleryQuery[0].count
-
-  const totalSize = Math.ceil(totalGalleries / length)
-  ctx.body = { data: rows, totalSize }
+  ctx.body = {
+    data,
+    totalSize: Math.ceil(count / length)
+  }
 }
 
 async function getGalleryInformation (ctx: Context) {
-  const pool = getDatabasePool()
-  const rows = await pool.query(
-    'SELECT * FROM galleries NATURAL JOIN galleries_tags NATURAL JOIN tags NATURAL JOIN chapters WHERE gallery_id=?',
-    [ctx.params.id]
-  )
-
-  if (!rows.length) {
-    ctx.status = 404
+  if (!parseInt(ctx.params.id)) {
+    ctx.status = 400
     return
   }
 
-  const gallery = {
-    id: rows[0].gallery_id,
-    name: rows[0].gallery_name,
-    description: rows[0].description,
-    tags: {},
-    chapters: {}
-  }
+  const gallery = await getConnection()
+    .getRepository(Gallery)
+    .findOne(ctx.params.id, { relations: ['tags', 'chapters'] })
 
-  for (const row of rows) {
-    if (gallery.tags[row.type]) {
-      gallery.tags[row.type].add(row.tag_name)
-    } else {
-      gallery.tags[row.type] = new Set().add(row.tag_name)
-    }
-
-    gallery.chapters[row.chapter_number] = {
-      name: row.chapter_name,
-      pages: row.pages
-    }
-  }
-
-  for (const type in gallery.tags) {
-    gallery.tags[type] = Array.from(gallery.tags[type])
-  }
-
-  ctx.body = gallery
+  ctx.body = gallery.toPlainGallery()
 }
 
 async function getRandomGalleryId (ctx: Context) {
-  const pool = getDatabasePool()
-  const rows = await pool.query('SELECT gallery_id FROM galleries ORDER BY RAND() LIMIT 1')
-  const id = rows[0].gallery_id
+  const { id } = await getConnection()
+    .createQueryBuilder(Gallery, 'gallery')
+    .select('gallery.gallery_id', 'id')
+    .orderBy('RAND()')
+    .getRawOne()
+
   ctx.redirect(`/g/${id}`)
 }
 

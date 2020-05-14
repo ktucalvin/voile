@@ -1,6 +1,8 @@
 import Fuse from 'fuse.js'
 import { Context } from 'koa'
-import { getDatabasePool } from '../lib/db'
+import { getConnection } from 'typeorm'
+import { Gallery } from '../models/Gallery'
+import { PlainGallery } from '../models/PlainGallery'
 
 const fuseOpts = {
   shouldSort: true,
@@ -21,29 +23,16 @@ const fuseOpts = {
   ]
 }
 
-let fuse: Fuse<string, Object>
+let fuse: Fuse<PlainGallery, Object>
 
 async function initializeSearch () {
   console.log('Initializing search library...')
   const start = Date.now()
-  const pool = getDatabasePool()
-  const registry = new Map()
-  const rows = await pool.query(
-    'SELECT * FROM galleries NATURAL JOIN galleries_tags NATURAL JOIN tags'
-  )
+  const galleries = await getConnection()
+    .getRepository(Gallery)
+    .find({ relations: ['tags'] })
 
-  for (const row of rows) {
-    const name = row.gallery_name
-    const gallery = registry.get(name) || { name, id: row.gallery_id, tags: {} }
-    if (gallery.tags[row.type]) {
-      gallery.tags[row.type].push(row.tag_name)
-    } else {
-      gallery.tags[row.type] = [row.tag_name]
-    }
-    registry.set(name, gallery)
-  }
-
-  fuse = new Fuse(Array.from(registry.values()), fuseOpts)
+  fuse = new Fuse(galleries.map(g => g.toPlainGallery()), fuseOpts)
   console.log(`Search library initialized in ${Date.now() - start}ms`)
 }
 

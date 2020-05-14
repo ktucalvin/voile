@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import 'reflect-metadata'
 import https from 'https'
 import Koa from 'koa'
 import serve from 'koa-static'
@@ -8,9 +9,8 @@ import conditional from 'koa-conditional-get'
 import etag from 'koa-etag'
 import compress from 'koa-compress'
 import compressible from 'compressible'
-
+import { createConnection } from 'typeorm'
 import { getRoutes } from './routes'
-import { initDatabase } from './lib/db'
 import staticOpts from './lib/static-options'
 import { noExposeErrors } from './lib/no-expose-errors'
 import { serveIndexFallback } from './lib/serve-index-fallback'
@@ -22,6 +22,14 @@ const certopts = {
 }
 
 let url: string
+let serverStart: number
+
+async function initDatabase () {
+  console.log('Creating database connections...')
+  serverStart = Date.now()
+  await createConnection()
+  console.log('Finished connecting to database')
+}
 
 async function setupMiddleware () {
   const routes = await getRoutes()
@@ -55,7 +63,7 @@ initDatabase()
   .then(setupMiddleware)
   .then(() => {
     https.createServer(certopts, app.callback())
-      .listen(443, () => console.log(`Server running at ${url}`))
+      .listen(443, () => console.log(`Server started in ${Date.now() - serverStart}ms and is now running at ${url}`))
   })
   .catch((err: Error) => {
     console.log('Failed to start server due to error:')
