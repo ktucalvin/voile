@@ -51,7 +51,7 @@ class Reader extends Component {
       return
     }
 
-    // If we did not early return, then it may be time to change chapters
+    // If page was not turned, then change chapters
     const [prevChapter, nextChapter] = this.getAdjacentChapters(chapterNumber)
 
     if (prevChapter && page === '1') {

@@ -1,11 +1,11 @@
 'use strict'
 require('dotenv').config()
 const path = require('path')
+const send = require('koa-send')
 const merge = require('webpack-merge')
 const common = require('./webpack.common.js')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { WebpackPluginServe } = require('webpack-plugin-serve')
-const serveIndexFallback = require('./server/lib/serve-index-fallback')
 
 const serve = new WebpackPluginServe({
   host: 'localhost',
@@ -27,7 +27,12 @@ const serve = new WebpackPluginServe({
       target: 'https://localhost/'
     }))
 
-    app.use(serveIndexFallback())
+    app.use(async (ctx, next) => {
+      if (ctx.accepts('html')) {
+        await send(ctx, path.join('dist/index.html'))
+        await next()
+      }
+    })
   }
 })
 

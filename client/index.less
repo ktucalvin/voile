@@ -34,7 +34,6 @@ header {
 
 header input[type='search'] {
   margin: 0;
-  margin-left: auto;
   padding: 0.3em;
   background: transparent;
   border: none;
@@ -49,6 +48,7 @@ header input[type='search']:active,
 header input[type='search']:focus,
 header input[type='search']:hover, {
   border-color: @primary;
+  background-color: lighten(#1e1e1e, 10%);
 }
 
 nav {
@@ -60,25 +60,41 @@ nav {
   align-items: center;
 }
 
+nav ul {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 nav li {
   display: inline-flex;
   align-items: center;
   height: 100%;
   background-color: #1e1e1e;
-  padding: 0 0.5em;
+  padding: 0 0.65em;
+  margin: 0 2px;
   cursor: pointer;
+}
+
+nav li:last-of-type {
+  padding: 0;
 }
 
 nav li:hover {
   background-color: lighten(#1e1e1e, 10%);
 }
 
-nav a {
-  color: @textColor;
+nav li:last-of-type:hover {
+  background-color: #1e1e1e;
 }
 
-nav a:hover {
-  color: @primary;
+nav a {
+  color: @textColor;
+  text-decoration: none;
+}
+
+nav li:hover a {
+  text-decoration: underline;
 }
 
 img {
@@ -187,7 +203,7 @@ noscript {
   text-align: center;
   background-color: rgba(0, 0, 0, 0.5);
   transition: 0.4s;
-  font-size: 14px;
+  font-size: 16px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -248,6 +264,7 @@ noscript {
 #overview .info {
   display: grid;
   grid-template-columns: minmax(0, 275px) minmax(0, 1fr);
+  column-gap: 1em;
   margin: 0 auto;
   background-color: #1e1e1e;
   word-wrap: break-word;
@@ -255,11 +272,6 @@ noscript {
   font-size: 16px;
   text-align: left;
   max-width: 1000px;
-}
-
-.info > div {
-  padding: 1.5em;
-  padding-top: 0.5em;
 }
 
 .info p {
@@ -272,6 +284,10 @@ noscript {
   padding-top: 0;
   border-bottom: 1px solid @primary;
   text-align: center;
+}
+
+.info img {
+  max-height: 400px;
 }
 
 .thumbnails {

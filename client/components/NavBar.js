@@ -14,19 +14,25 @@ class NavBar extends Component {
   render () {
     return (
       <nav>
-        <a href='/api/random'>Random</a>
-        <input
-          id='nav-search'
-          type='search'
-          placeholder='Search...'
-          ref={r => (this.search = r)}
-          onKeyUp={e => e.key === 'Enter' && this.gotoSearch()}
-        />
-        <button
-          style={{ margin: 0 }}
-          onClick={() => this.gotoSearch()}
-        >Q
-        </button>
+        <ul>
+          <li>
+            <a href='/api/random'>Random</a>
+          </li>
+          <li>
+            <input
+              id='nav-search'
+              type='search'
+              placeholder='Search...'
+              ref={r => (this.search = r)}
+              onKeyUp={e => e.key === 'Enter' && this.gotoSearch()}
+            />
+            <button
+              style={{ margin: 0 }}
+              onClick={() => this.gotoSearch()}
+            >Q
+            </button>
+          </li>
+        </ul>
       </nav>
     )
   }

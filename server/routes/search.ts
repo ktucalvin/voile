@@ -25,6 +25,7 @@ let fuse: Fuse<string, Object>
 
 async function initializeSearch () {
   console.log('Initializing search library...')
+  const start = Date.now()
   const pool = getDatabasePool()
   const registry = new Map()
   const rows = await pool.query(
@@ -43,7 +44,7 @@ async function initializeSearch () {
   }
 
   fuse = new Fuse(Array.from(registry.values()), fuseOpts)
-  console.log('Search initialized')
+  console.log(`Search library initialized in ${Date.now() - start}ms`)
 }
 
 // Expecting query param to be ?s=somestring&p=page

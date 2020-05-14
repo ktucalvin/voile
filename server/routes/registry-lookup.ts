@@ -51,15 +51,19 @@ async function getGalleryInformation (ctx: Context) {
 
   for (const row of rows) {
     if (gallery.tags[row.type]) {
-      gallery.tags[row.type].push(row.tag_name)
+      gallery.tags[row.type].add(row.tag_name)
     } else {
-      gallery.tags[row.type] = [row.tag_name]
+      gallery.tags[row.type] = new Set().add(row.tag_name)
     }
 
     gallery.chapters[row.chapter_number] = {
       name: row.chapter_name,
       pages: row.pages
     }
+  }
+
+  for (const type in gallery.tags) {
+    gallery.tags[type] = Array.from(gallery.tags[type])
   }
 
   ctx.body = gallery

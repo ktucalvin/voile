@@ -78,7 +78,7 @@ class SearchResults extends Component {
     return (
       <>
         <SearchPanel onSearch={this.handleQueryChange} />
-        <p className='search-results-header'>Search Results for: {this.state.query}</p>
+        <p className='search-results-header'>Search Results for: {this.state.query} ({registry.data.length})</p>
         <div id='galleries'>
           {result}
         </div>
