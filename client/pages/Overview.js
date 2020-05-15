@@ -43,8 +43,8 @@ class Overview extends Component {
           <Thumbnail width={275} id={gallery.id} />
           <div>
             <p><b>{gallery.name}</b></p>
-            {gallery.description && <p>{gallery.description}</p>}
             <TagBox tags={gallery.tags} />
+            {gallery.description && <p>{gallery.description}</p>}
           </div>
           {
             multiChapter &&

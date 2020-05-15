@@ -44,7 +44,7 @@ function search (ctx: Context) {
   const range = 25
   const page = parseInt(ctx.query.p) || 1
   const offset = range * (page - 1)
-  const results = fuse.search(ctx.query.s)
+  const results = fuse.search(ctx.query.s).map(e => e.item)
   ctx.body = { totalSize: Math.ceil(results.length / range), data: results.slice(offset, offset + range) }
 }
 
