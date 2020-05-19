@@ -6,6 +6,9 @@ ecosystem.config.js
 .nyc_output
 coverage/
 
+# Compiled Typescript
+server/build/
+
 # Application
 galleries/
 archive/

@@ -6,21 +6,26 @@
   "configurations": [
     {
       "type": "node",
+      "name": "Jest Tests",
       "request": "launch",
-      "name": "Launch Server",
-      "program": "${workspaceFolder}/server/index.js"
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": [
+        "--runInBand"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "skipFiles": [
+        "node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ]
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Mocha Tests",
-      "runtimeExecutable": "npm",
-      "args": [
-        "run",
-        "debug-test"
-      ],
-      "port": 9229,
-      "internalConsoleOptions": "openOnSessionStart"
-    }
+      "name": "Launch Server",
+      "program": "${workspaceFolder}/server/index.js"
+    },
   ]
 }

@@ -34,6 +34,11 @@ async function getGalleryInformation (ctx: Context) {
     .getRepository(Gallery)
     .findOne(ctx.params.id, { relations: ['tags', 'chapters'] })
 
+  if (!gallery) {
+    ctx.status = 404
+    return
+  }
+
   ctx.body = gallery.toPlainGallery()
 }
 
