@@ -1,11 +1,11 @@
 /* eslint-env jest */
 import { promises as fsp } from 'fs'
 import { Context } from 'koa'
-// import sharp from 'sharp'
 import send from 'koa-send'
 import { createMockContext } from '@shopify/jest-koa-mocks'
-import { resizeImage } from '../image'
+import dbConfig from '../../../../ormconfig'
 import { FsUtils } from '../../lib/fsutils'
+import { resizeImage } from '../image'
 jest.mock('koa-send')
 
 jest.mock('sharp', () => () => sharpMock)
@@ -199,7 +199,7 @@ describe('GET /api/img/:gallery/:chapter/:page', function () {
     Object.assign(ctx, validCtx)
     await resizeImage(ctx)
     expect(ctx.body).toEqual('test passed')
-    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${process.env.TYPEORM_DATABASE}/TEST-C1P1-50.webp`)
+    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${dbConfig.database}/TEST-C1P1-50.webp`)
   })
 
   it('writes optional information in cached filename', async function () {
@@ -209,7 +209,7 @@ describe('GET /api/img/:gallery/:chapter/:page', function () {
     ctx.request.query.fit = 'fill'
     ctx.request.query.format = 'png'
     await resizeImage(ctx)
-    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${process.env.TYPEORM_DATABASE}/TEST-C1P1-50x50-fill.png`)
+    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${dbConfig.database}/TEST-C1P1-50x50-fill.png`)
   })
 
   it('resizes image given only width', async function () {

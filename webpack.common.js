@@ -45,7 +45,7 @@ module.exports = {
       ]
     }),
     new CopyWebpackPlugin([
-      { from: './client/favicon' }
+      { from: './src/client/favicon' }
     ])
   ]
 }

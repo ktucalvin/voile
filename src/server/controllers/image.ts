@@ -4,6 +4,7 @@ import path from 'path'
 import sharp from 'sharp'
 import send from 'koa-send'
 import { Context } from 'koa'
+import dbConfig from '../../../ormconfig'
 import staticOpts from '../lib/static-options'
 import { FsUtils } from '../lib/fsutils'
 const isResizable = /(jpg|jpeg|png)$/
@@ -67,7 +68,7 @@ export async function resizeImage (ctx: Context) {
   // avoid writing default values for height/fit in filename
   const fileHeight = h === 'auto' ? '' : `x${height}`
   const fileFit = fit === 'cover' ? '' : `-${fit}`
-  const cacheDir = path.join('./imgcache', process.env.TYPEORM_DATABASE)
+  const cacheDir = path.join('./imgcache', dbConfig.database)
   const cacheFile = path.join(cacheDir, `${gallery}-C${chapter}P${page}-${width}${fileHeight}${fileFit}.${format}`)
 
   // serve cached image if it exists

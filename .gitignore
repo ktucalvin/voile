@@ -6,12 +6,11 @@ ecosystem.config.js
 .nyc_output
 coverage/
 
-# Compiled Typescript
-server/build/
-
 # Application
 galleries/
 archive/
-dist
+dist/client/
+dist/server
 imgcache/
 .env
+ormconfig.js

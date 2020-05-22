@@ -17,7 +17,7 @@ const serve = new WebpackPluginServe({
     key: process.env.SSL_KEY,
     cert: process.env.SSL_CERT
   },
-  static: path.join(__dirname, 'dist'),
+  static: path.join(__dirname, 'dist', 'client'),
   middleware: (app, builtins) => {
     app.use(builtins.proxy('/api', {
       target: 'https://localhost/'
@@ -29,7 +29,7 @@ const serve = new WebpackPluginServe({
 
     app.use(async (ctx, next) => {
       if (ctx.accepts('html')) {
-        await send(ctx, path.join('dist/index.html'))
+        await send(ctx, path.join('dist/client/index.html'))
         await next()
       }
     })
@@ -38,7 +38,7 @@ const serve = new WebpackPluginServe({
 
 module.exports = merge(common, {
   mode: 'development',
-  entry: ['./client/index.js', 'webpack-plugin-serve/client'],
+  entry: ['./src/client/index.js', 'webpack-plugin-serve/client'],
   devtool: 'inline-source-map',
   watch: true,
   module: {
@@ -57,11 +57,11 @@ module.exports = merge(common, {
   plugins: [
     serve,
     new HtmlWebpackPlugin({
-      template: './client/index.ejs'
+      template: './src/client/index.ejs'
     })
   ],
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist', 'client'),
     publicPath: '/',
     filename: '[name].[hash].js'
   }

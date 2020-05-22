@@ -53,7 +53,7 @@ async function setupMiddleware () {
     url = 'https://localhost:3000'
   } else {
     url = 'https://localhost/#/'
-    app.use(serve('./dist', staticOpts))
+    app.use(serve('./dist/client', staticOpts))
   }
 
   app.use(serveIndexFallback())

@@ -9,7 +9,7 @@ const common = require('./webpack.common.js')
 
 module.exports = merge(common, {
   mode: 'production',
-  entry: ['./client/index.js'],
+  entry: ['./src/client/index.js'],
   module: {
     rules: [
       {
@@ -44,7 +44,7 @@ module.exports = merge(common, {
       chunkFilename: '[id].[contenthash].css'
     }),
     new HtmlWebpackPlugin({
-      template: './client/index.ejs',
+      template: './src/client/index.ejs',
       minify: {
         collapseWhitespace: true,
         removeComments: true,
@@ -56,7 +56,7 @@ module.exports = merge(common, {
     })
   ],
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist', 'client'),
     publicPath: '/',
     filename: '[name].[contenthash].js'
   },

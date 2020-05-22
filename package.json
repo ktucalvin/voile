@@ -8,12 +8,15 @@
   "author": "ktucalvin",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development concurrently \"webpack --config webpack.dev.js\" \"ts-node ./server\"",
+    "dev": "cross-env NODE_ENV=development concurrently \"webpack --config webpack.dev.js\" \"ts-node ./src/server\"",
     "dev:client": "cross-env NODE_ENV=development webpack --config webpack.dev.js",
     "test": "jest",
     "coverage": "jest --coverage",
-    "build": "webpack --config webpack.prod.js",
-    "serve": "ts-node ./server",
+    "clean": "rimraf dist/client dist/server",
+    "build": "concurrently \"npm run build:client\" \"npm run build:server\"",
+    "build:client": "webpack --config webpack.prod.js",
+    "build:server": "tsc --listEmittedFiles",
+    "serve": "node ./dist/server",
     "prod": "npm run build && npm run serve"
   },
   "stylelint": {
@@ -95,6 +98,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
+    "rimraf": "^3.0.2",
     "sqlite3": "^4.2.0",
     "standardx": "^5.0.0",
     "style-loader": "^1.2.1",

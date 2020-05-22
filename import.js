@@ -3,6 +3,7 @@ require('dotenv').config()
 const fs = require('fs')
 const path = require('path')
 const mysql = require('promise-mysql')
+const dbConfig = require('./ormconfig')
 
 // Directory to import from
 const basedir = './galleries'
@@ -38,9 +39,9 @@ function ensureDir (path) {
 ;(async function () {
   try {
     const pool = await mysql.createPool({
-      user: process.env.TYPEORM_USERNAME,
-      password: process.env.TYPEORM_PASSWORD,
-      database: process.env.TYPEORM_DATABASE
+      user: dbConfig.user,
+      password: dbConfig.password,
+      database: dbConfig.database
     })
 
     for (const gallery of galleries) {

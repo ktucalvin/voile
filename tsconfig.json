@@ -2,14 +2,14 @@
   "compilerOptions": {
     "module": "commonjs",
     "lib": ["es2018"],
-    "outDir": "./server/build",
+    "outDir": "./dist/server",
     "target": "es2018",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
   },
   "include": [
-    "./server/**/*"
+    "./src/server/**/*"
   ],
   "exclude": [
     "**/*.test.ts"
