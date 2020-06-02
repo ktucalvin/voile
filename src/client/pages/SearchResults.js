@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
 import SearchPanel from '../components/SearchPanel'
+import FilterControls from '../components/FilterControls'
 const searchRegex = /[?&]s=([^&#]+)/
 const queryPageRegex = /[?&]p=(\d+)/
 
@@ -24,7 +25,7 @@ class SearchResults extends Component {
     }, 250)
   }
 
-  updateQuery (page) {
+  updateQuery (page, sortBy = 'id', orderBy = 'DESC') {
     this.fetchController = new AbortController()
     if (!page) {
       const pg = queryPageRegex.exec(location.search)
@@ -34,7 +35,7 @@ class SearchResults extends Component {
     const srch = searchRegex.exec(location.search)
     const query = (srch && srch[1])
 
-    const endpoint = `/api/search?s=${query || this.state.query}&p=${page}`
+    const endpoint = `/api/search?s=${query || this.state.query}&p=${page}&sort_by=${sortBy}&order_by=${orderBy}`
 
     fetch(endpoint, { signal: this.fetchController.signal })
       .then(res => res.json())
@@ -79,6 +80,7 @@ class SearchResults extends Component {
       <>
         <SearchPanel onSearch={this.handleQueryChange} />
         <p className='search-results-header'>Search Results for: {this.state.query} ({registry.data.length})</p>
+        <FilterControls onFilter={(sortBy, orderBy) => this.updateQuery(1, sortBy, orderBy)} />
         <div id='galleries'>
           {result}
         </div>

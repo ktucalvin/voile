@@ -4,17 +4,20 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
+import FilterControls from '../components/FilterControls'
 const queryPageRegex = /[?&]p=(\d+)/
 
 class Galleries extends Component {
-  changePage (page) {
+  changePage (page, sortBy = 'id', orderBy = 'DESC') {
     this.fetchController = new AbortController()
     if (!page) {
       const pg = queryPageRegex.exec(location.search)
       page = (pg && parseInt(pg[1])) || 1
     }
 
-    fetch(`/api/registry/${page}`, { signal: this.fetchController.signal })
+    const endpoint = `/api/galleries?p=${page}&sort_by=${sortBy}&order_by=${orderBy}`
+
+    fetch(endpoint, { signal: this.fetchController.signal })
       .then(res => res.json())
       .then(registry => this.setState({ page, registry }))
       .catch(err => { if (err.name !== 'AbortError') console.error(err) })
@@ -40,6 +43,7 @@ class Galleries extends Component {
 
     return (
       <>
+        <FilterControls onFilter={(sortBy, orderBy) => this.changePage(1, sortBy, orderBy)} />
         <div id='galleries'>
           {result}
         </div>

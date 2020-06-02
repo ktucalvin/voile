@@ -8,8 +8,8 @@ export async function getRoutes () {
   router.prefix('/api')
 
   router.get('/img/:gallery/:chapter/:page', resizeImage)
-  router.get('/registry/:page', getRegistryInformation)
-  router.get('/gallery/:id', getGalleryInformation)
+  router.get('/galleries', getRegistryInformation)
+  router.get('/galleries/:id', getGalleryInformation)
   router.get('/random', getRandomGalleryId)
   router.get('/search', search)
 

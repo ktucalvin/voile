@@ -41,11 +41,36 @@ function search (ctx: Context) {
   if (!fuse) {
     throw new Error('Fuse not initialized before searching')
   }
-  const range = 25
-  const page = parseInt(ctx.query.p) || 1
-  const offset = range * (page - 1)
+
+  const {
+    p: page = 1,
+    length = 25,
+    sort_by: sortBy = 'id',
+    order_by: orderBy = 'ASC'
+  } = ctx.query
+
+  if (!parseInt(page) || page < 1 || !parseInt(length) || length < 1) {
+    ctx.status = 400
+    return
+  }
+
+  const offset = length * (page - 1)
   const results = fuse.search(ctx.query.s).map(e => e.item)
-  ctx.body = { totalSize: Math.ceil(results.length / range), data: results.slice(offset, offset + range) }
+
+  const orderMultiplier = orderBy === 'ASC' ? 1 : -1
+
+  if (sortBy === 'views') {
+    results.sort((a, b) => (a.views - b.views) * orderMultiplier)
+  } else if (sortBy === 'id') {
+    results.sort((a, b) => (a.id - b.id) * orderMultiplier)
+  } else if (sortBy === 'name') {
+    results.sort((a, b) => a.name.localeCompare(b.name) * orderMultiplier)
+  } else {
+    ctx.status = 400
+    return
+  }
+
+  ctx.body = { totalSize: Math.ceil(results.length / length), data: results.slice(offset, offset + length) }
 }
 
 export { initializeSearch, search }

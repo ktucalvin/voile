@@ -9,7 +9,7 @@ coverage/
 # Application
 galleries/
 archive/
-dist/client/
+dist/client
 dist/server
 imgcache/
 .env

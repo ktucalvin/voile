@@ -2,7 +2,7 @@
 require('dotenv').config()
 const fs = require('fs')
 const path = require('path')
-const mysql = require('promise-mysql')
+const mysql = require('mysql2/promise')
 const dbConfig = require('./ormconfig')
 
 // Directory to import from
@@ -39,7 +39,7 @@ function ensureDir (path) {
 ;(async function () {
   try {
     const pool = await mysql.createPool({
-      user: dbConfig.user,
+      user: dbConfig.username,
       password: dbConfig.password,
       database: dbConfig.database
     })
@@ -50,7 +50,7 @@ function ensureDir (path) {
       const metadata = JSON.parse(raw)
       console.log(`Processing ${path.join(basedir, gallery)}`)
       const gid = (await pool.query(
-        'INSERT INTO galleries (gallery_name, description) VALUES (?, ?)',
+        'INSERT INTO galleries (gallery_name, description, views) VALUES (?, ?, 0)',
         [metadata.name, metadata.description]
       )).insertId
       console.log(`ID: ${gid}\tName: ${metadata.name}\tDesc? ${!!metadata.description}`)

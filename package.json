@@ -17,7 +17,7 @@
     "build:client": "webpack --config webpack.prod.js",
     "build:server": "tsc --listEmittedFiles",
     "serve": "node ./dist/server",
-    "prod": "npm run build && npm run serve"
+    "prod": "npm run clean && npm run build && npm run serve"
   },
   "stylelint": {
     "extends": "stylelint-config-standard",

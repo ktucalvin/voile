@@ -73,7 +73,7 @@ class Reader extends Component {
     if (this.props.location.state) {
       this.setState({ gallery: this.props.location.state })
     } else {
-      fetch(`/api/gallery/${this.props.match.params.id}`)
+      fetch(`/api/galleries/${this.props.match.params.id}`)
         .then(res => res.json())
         .then(gallery => this.setState({ gallery }))
     }

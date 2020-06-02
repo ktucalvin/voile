@@ -15,6 +15,10 @@ export class Gallery {
   @Column('varchar', { name: 'description', nullable: true, length: 1000 })
   description: string | null
 
+  @Column({ type: 'int', name: 'views', unsigned: true })
+  @Index('views_idx')
+  views: number
+
   @OneToMany(() => Chapter, (chapters) => chapters.gallery)
   chapters: Chapter[]
 
@@ -30,6 +34,7 @@ export class Gallery {
     const retval = {
       id: this.galleryId,
       name: this.galleryName,
+      views: this.views,
       description: this.description,
       chapters: {},
       tags: {}

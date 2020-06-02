@@ -7,6 +7,7 @@ export function noExposeErrors () {
       if (process.env.NODE_ENV !== 'development') {
         err.expose = false
       }
+      console.log(err)
     }
   }
 }

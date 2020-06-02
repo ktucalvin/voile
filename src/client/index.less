@@ -106,6 +106,18 @@ main {
   padding-top: 1.5%;
 }
 
+a {
+  color: @textColor;
+}
+
+a:hover {
+  color: @accent;
+}
+
+a:visited {
+  color: darken(@primary, 10%);
+}
+
 button {
   padding: 0.5em 1em;
   margin: 2em 0;
@@ -195,6 +207,10 @@ noscript {
   object-fit: cover;
 }
 
+.fit-contain .preview img {
+  object-fit: contain;
+}
+
 .preview span {
   display: block;
   position: absolute;
@@ -206,6 +222,58 @@ noscript {
   font-size: 16px;
   width: 100%;
   box-sizing: border-box;
+}
+
+#filter-controls {
+  display: flex;
+  align-items: center;
+  background-color: #1e1e1e;
+  padding: 0.5em;
+  margin: 0 5% 1em 5%;
+  border-radius: 5px;
+}
+
+#filter-controls button {
+  margin: 0;
+  background-color: lighten(#1e1e1e, 10%);
+  cursor: pointer;
+}
+
+#filter-controls button:hover,
+#filter-controls button:active,
+#filter-controls button:focus {
+  background-color: @primary;
+}
+
+.selector {
+  display: inline-block;
+  margin: 0 1em;
+}
+
+.selector select {
+  appearance: none;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid #aaa;
+  padding: 0.4em;
+  padding-right: 1.1em;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.selector select:active,
+.selector select:focus,
+.selector select:hover {
+  border-color: @primary;
+  background-color: lighten(#1e1e1e, 10%);
+  outline: none;
+}
+
+.select-arrow {
+  margin-left: -1.2em;
+  font-size: 10px;
 }
 
 #overview,

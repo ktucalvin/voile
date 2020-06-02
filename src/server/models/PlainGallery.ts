@@ -4,6 +4,7 @@
 export interface PlainGallery {
   id: number,
   name: string,
+  views: number,
   description: string | null,
   chapters: {
     [key: string]: {

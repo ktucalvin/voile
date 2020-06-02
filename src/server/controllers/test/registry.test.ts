@@ -17,6 +17,7 @@ describe('Registry Controller', function () {
       const g = new Gallery()
       g.galleryId = i
       g.galleryName = `Test gallery #${i}`
+      g.views = 0
       await getRepository(Gallery).insert(g)
     }
     const c = new Chapter()
@@ -36,15 +37,15 @@ describe('Registry Controller', function () {
     await dropDatabaseChanges()
   })
 
-  describe('GET /api/registry/:page', function () {
+  describe('GET /api/galleries', function () {
     it('responds with 400 given non-number', async function () {
-      ctx.params.page = 'string'
+      ctx.query.p = 'string'
       await getRegistryInformation(ctx)
       expect(ctx.status).toEqual(400)
     })
 
     it('responds with 400 given negative number', async function () {
-      ctx.params.page = '-1'
+      ctx.query.p = '-1'
       await getRegistryInformation(ctx)
       expect(ctx.status).toEqual(400)
     })
@@ -56,14 +57,14 @@ describe('Registry Controller', function () {
     })
 
     it('retrieves the specified page', async function () {
-      ctx.params.page = '2'
+      ctx.query.p = '2'
       await getRegistryInformation(ctx)
       const firstEntry = ctx.body.data[0]
       expect(firstEntry.id).toEqual(26)
     })
   })
 
-  describe('GET /api/gallery/:id', function () {
+  describe('GET /api/galleries/:id', function () {
     it('responds with 400 for non-integer id', async function () {
       ctx.params.id = 'astring'
       await getGalleryInformation(ctx)
