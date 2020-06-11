@@ -42,17 +42,22 @@ function search (ctx: Context) {
     throw new Error('Fuse not initialized before searching')
   }
 
-  const {
+  let {
     p: page = 1,
     length = 25,
     sort_by: sortBy = 'id',
-    order_by: orderBy = 'ASC'
+    order_by: orderBy = 'DESC'
   } = ctx.query
 
   if (!parseInt(page) || page < 1 || !parseInt(length) || length < 1) {
     ctx.status = 400
     return
   }
+
+  page = parseInt(page)
+  length = parseInt(length)
+  orderBy = orderBy.toUpperCase()
+  sortBy = sortBy.toLowerCase()
 
   const offset = length * (page - 1)
   const results = fuse.search(ctx.query.s).map(e => e.item)
@@ -70,7 +75,7 @@ function search (ctx: Context) {
     return
   }
 
-  ctx.body = { totalSize: Math.ceil(results.length / length), data: results.slice(offset, offset + length) }
+  ctx.body = { validResults: results.length, pages: Math.ceil(results.length / length), data: results.slice(offset, offset + length) }
 }
 
 export { initializeSearch, search }

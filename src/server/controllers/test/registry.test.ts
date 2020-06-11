@@ -6,7 +6,7 @@ import { Gallery } from '../../models/Gallery'
 import { Chapter } from '../../models/Chapter'
 import { PlainGallery } from '../../models/PlainGallery'
 import { createTestDatabase, dropDatabaseChanges } from '../../lib/mock-db'
-import { getRegistryInformation, getGalleryInformation } from '../registry-lookup'
+import { getGalleries, getGalleryInformation } from '../galleries'
 
 describe('Registry Controller', function () {
   let ctx: Context
@@ -17,7 +17,7 @@ describe('Registry Controller', function () {
       const g = new Gallery()
       g.galleryId = i
       g.galleryName = `Test gallery #${i}`
-      g.views = 0
+      g.views = 100 - i
       await getRepository(Gallery).insert(g)
     }
     const c = new Chapter()
@@ -40,27 +40,46 @@ describe('Registry Controller', function () {
   describe('GET /api/galleries', function () {
     it('responds with 400 given non-number', async function () {
       ctx.query.p = 'string'
-      await getRegistryInformation(ctx)
+      await getGalleries(ctx)
       expect(ctx.status).toEqual(400)
     })
 
     it('responds with 400 given negative number', async function () {
       ctx.query.p = '-1'
-      await getRegistryInformation(ctx)
+      await getGalleries(ctx)
       expect(ctx.status).toEqual(400)
     })
 
-    it('defaults to page 1 if page not specified', async function () {
-      await getRegistryInformation(ctx)
+    it('defaults to page 1, sort by id desc if page not specified', async function () {
+      await getGalleries(ctx)
       const firstEntry = ctx.body.data[0]
-      expect(firstEntry.id).toEqual(1)
+      expect(firstEntry.id).toEqual(50)
     })
 
     it('retrieves the specified page', async function () {
       ctx.query.p = '2'
-      await getRegistryInformation(ctx)
+      await getGalleries(ctx)
       const firstEntry = ctx.body.data[0]
-      expect(firstEntry.id).toEqual(26)
+      expect(firstEntry.id).toEqual(25)
+    })
+    it('sorts galleries by a given property', async function () {
+      ctx.query.sort_by = 'views'
+      await getGalleries(ctx)
+      const firstEntry = ctx.body.data[0]
+      expect(firstEntry.id).toEqual(1)
+    })
+
+    it('orders results by a given order', async function () {
+      ctx.query.order_by = 'asc'
+      await getGalleries(ctx)
+      const firstEntry = ctx.body.data[0]
+      expect(firstEntry.id).toEqual(1)
+    })
+
+    it('retrieves the specified number of galleries', async function () {
+      ctx.query.length = '35'
+      await getGalleries(ctx)
+      expect(ctx.body.data.length).toEqual(35)
     })
   })
 

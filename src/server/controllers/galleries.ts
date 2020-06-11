@@ -2,12 +2,12 @@ import { Context } from 'koa'
 import { getConnection, FindManyOptions } from 'typeorm'
 import { Gallery } from '../models/Gallery'
 
-async function getRegistryInformation (ctx: Context) {
+async function getGalleries (ctx: Context) {
   let {
     p: page = 1,
     length = 25,
     sort_by: sortBy = 'id',
-    order_by: orderBy = 'ASC'
+    order_by: orderBy = 'DESC'
   } = ctx.query
 
   if (!parseInt(page) || page < 1 || !parseInt(length) || length < 1) {
@@ -15,6 +15,8 @@ async function getRegistryInformation (ctx: Context) {
     return
   }
 
+  page = parseInt(page)
+  length = parseInt(length)
   orderBy = orderBy.toUpperCase()
   sortBy = sortBy.toLowerCase()
 
@@ -45,7 +47,7 @@ async function getRegistryInformation (ctx: Context) {
 
   ctx.body = {
     data,
-    totalSize: Math.ceil(count / length)
+    pages: Math.ceil(count / length)
   }
 }
 
@@ -83,6 +85,6 @@ async function getRandomGalleryId (ctx: Context) {
 
 export {
   getGalleryInformation,
-  getRegistryInformation,
+  getGalleries,
   getRandomGalleryId
 }

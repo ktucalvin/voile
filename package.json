@@ -21,6 +21,7 @@
   },
   "stylelint": {
     "extends": "stylelint-config-standard",
+    "ignoreFiles": ["**/*.js"],
     "rules": {
       "no-descending-specificity": null
     }
@@ -53,6 +54,7 @@
     "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
     "mysql2": "^2.1.0",
+    "qs": "^6.9.4",
     "react-hot-loader": "^4.12.21",
     "reflect-metadata": "^0.1.13",
     "sharp": "^0.25.2",

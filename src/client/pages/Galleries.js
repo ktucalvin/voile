@@ -1,37 +1,73 @@
 /* eslint-env browser */
 'use strict'
+import qs from 'qs'
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
 import FilterControls from '../components/FilterControls'
-const queryPageRegex = /[?&]p=(\d+)/
 
 class Galleries extends Component {
-  changePage (page, sortBy = 'id', orderBy = 'DESC') {
-    this.fetchController = new AbortController()
-    if (!page) {
-      const pg = queryPageRegex.exec(location.search)
-      page = (pg && parseInt(pg[1])) || 1
+  changeQuery (page, sort, order, length) {
+    page = page || this.state.query.page
+    sort = sort || this.state.query.sort
+    order = order || this.state.query.order
+    length = length || this.state.query.length
+    let parts = 0
+    let url = ''
+
+    // Avoid writing default values to URL querystring
+    if (page > 1) {
+      url += `?page=${page}`
+      parts++
     }
 
-    const endpoint = `/api/galleries?p=${page}&sort_by=${sortBy}&order_by=${orderBy}`
+    if (length !== 25) {
+      url += `${parts > 0 ? '&' : '?'}length=${length}`
+      parts++
+    }
+
+    if (sort !== 'id') {
+      url += `${parts > 0 ? '&' : '?'}sort_by=${sort}`
+      parts++
+    }
+
+    if (order !== 'desc') {
+      url += `${parts > 0 ? '&' : '?'}order_by=${order}`
+      parts++
+    }
+
+    this.props.history.push(url)
+  }
+
+  fetchGalleries () {
+    this.fetchController = new AbortController()
+    const rawQuery = qs.parse(location.search, { ignoreQueryPrefix: true })
+    const query = {
+      page: parseInt(rawQuery.page) || 1,
+      sort: rawQuery.sort_by || 'id',
+      order: rawQuery.order_by || 'desc',
+      length: parseInt(rawQuery.length) || 25
+    }
+
+    const endpoint = `/api/galleries?p=${query.page}&length=${query.length}&sort_by=${query.sort}&order_by=${query.order}`
 
     fetch(endpoint, { signal: this.fetchController.signal })
       .then(res => res.json())
-      .then(registry => this.setState({ page, registry }))
+      .then(registry => this.setState({ query, registry }))
       .catch(err => { if (err.name !== 'AbortError') console.error(err) })
   }
 
   render () {
     if (!this.state) return null
     const { registry } = this.state
+    const { page } = this.state.query
 
-    if (this.state.page > registry.totalSize && registry.totalSize != null) {
+    if (page > registry.pages && registry.pages != null) {
       return (
         <span className='error'>
           The requested page exceeds the number of galleries available.
-          {registry.totalSize === 1 ? ' There is only one page.' : ` Page must be between 1 and ${registry.totalSize}`}
+          {registry.pages === 1 ? ' There is only one page.' : ` Page must be between 1 and ${registry.pages}`}
         </span>
       )
     }
@@ -43,16 +79,14 @@ class Galleries extends Component {
 
     return (
       <>
-        <FilterControls onFilter={(sortBy, orderBy) => this.changePage(1, sortBy, orderBy)} />
+        <FilterControls onFilter={(sortBy, orderBy, length) => this.changeQuery(1, sortBy, orderBy, length)} />
         <div id='galleries'>
           {result}
         </div>
         <Paginator
-          page={this.state.page}
-          totalPages={registry.totalSize}
-          onPageChange={page => this.props.query
-            ? this.changePage(page)
-            : this.props.history.push(`?p=${page}`)}
+          page={page}
+          totalPages={registry.pages}
+          onPageChange={page => this.changeQuery(page)}
         />
       </>
     )
@@ -60,24 +94,19 @@ class Galleries extends Component {
 
   componentDidMount () {
     document.title = 'Voile'
-    this.changePage()
-    this.unlisten = this.props.history.listen(() => this.changePage())
-  }
-
-  componentDidUpdate (prevProps) {
-    if (prevProps.query !== this.props.query) {
-      this.props.query ? this.changePage(1) : this.changePage()
-    }
+    this.fetchGalleries()
+    this.unlisten = this.props.history.listen(() => this.fetchGalleries())
   }
 
   shouldComponentUpdate (nextProps) {
-    // !== implies only location has changed, not that changePage fetched new data
+    // !== implies only location has changed, not that new data was fetched
+    // this prevents double render when changing pages
     return nextProps.location === this.props.location
   }
 
   componentWillUnmount () {
-    this.unlisten()
     this.fetchController.abort()
+    this.unlisten()
   }
 }
 
