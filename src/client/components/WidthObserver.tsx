@@ -2,8 +2,16 @@
 'use strict'
 import React, { Component } from 'react'
 
-function withWidth (WrappedComponent, breakpoints) {
-  return class extends Component {
+interface WidthObservingComponentState {
+  width: number
+}
+
+export interface WidthObservingComponentProps {
+  width?: number
+}
+
+function withWidth<P extends object> (WrappedComponent, breakpoints) {
+  return class extends Component<P, WidthObservingComponentState> {
     constructor (props) {
       super(props)
       this.state = { width: window.innerWidth }

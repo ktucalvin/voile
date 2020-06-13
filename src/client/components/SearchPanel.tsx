@@ -2,7 +2,13 @@
 'use strict'
 import React, { Component } from 'react'
 
-class SearchPanel extends Component {
+export interface SearchPanelProps {
+  onSearch(query: string): void
+}
+
+class SearchPanel extends Component<SearchPanelProps> {
+  private searchBar: HTMLInputElement
+
   render () {
     return (
       <div id='search-panel'>

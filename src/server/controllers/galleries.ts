@@ -70,7 +70,7 @@ async function getGalleryInformation (ctx: Context) {
     .getRepository(Gallery)
     .increment({ galleryId: gallery.galleryId }, 'views', 1)
 
-  ctx.body = gallery.toPlainGallery()
+  ctx.body = gallery.toCommonGallery()
 }
 
 async function getRandomGalleryId (ctx: Context) {

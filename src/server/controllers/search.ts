@@ -2,7 +2,7 @@ import Fuse from 'fuse.js'
 import { Context } from 'koa'
 import { getConnection } from 'typeorm'
 import { Gallery } from '../models/Gallery'
-import { PlainGallery } from '../models/PlainGallery'
+import { Gallery as CommonGallery } from '../../common/types/app'
 
 const fuseOpts = {
   shouldSort: true,
@@ -23,7 +23,7 @@ const fuseOpts = {
   ]
 }
 
-let fuse: Fuse<PlainGallery, Object>
+let fuse: Fuse<CommonGallery, Object>
 
 async function initializeSearch () {
   console.log('Initializing search library...')
@@ -32,7 +32,7 @@ async function initializeSearch () {
     .getRepository(Gallery)
     .find({ relations: ['tags'] })
 
-  fuse = new Fuse(galleries.map(g => g.toPlainGallery()), fuseOpts)
+  fuse = new Fuse(galleries.map(g => g.toCommonGallery()), fuseOpts)
   console.log(`Search library initialized in ${Date.now() - start}ms`)
 }
 

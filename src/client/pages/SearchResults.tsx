@@ -2,13 +2,24 @@
 'use strict'
 import qs from 'qs'
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { UnregisterCallback } from 'history'
 import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
 import SearchPanel from '../components/SearchPanel'
 import FilterControls from '../components/FilterControls'
+import { SortOptions, RegistryData, RawUrlSortOptions } from '../../common/types/app'
 
-class SearchResults extends Component {
+interface SearchResultsState {
+  query: SortOptions,
+  registry: RegistryData
+}
+
+class SearchResults extends Component<RouteComponentProps, SearchResultsState> {
+  private searchTimeout: number
+  private fetchController: AbortController
+  private unlisten: UnregisterCallback
+
   constructor (props) {
     super(props)
     this.handleQueryChange = this.handleQueryChange.bind(this)
@@ -17,12 +28,12 @@ class SearchResults extends Component {
 
   handleQueryChange (search) {
     clearTimeout(this.searchTimeout)
-    this.searchTimeout = setTimeout(() => {
+    this.searchTimeout = window.setTimeout(() => {
       this.changeQuery(search)
     }, 250)
   }
 
-  changeQuery (search, page, sort, order, length) {
+  changeQuery (search?, page?, sort?, order?, length?) {
     search = search || this.state.query.search
     page = page || this.state.query.page
     sort = sort || this.state.query.sort
@@ -32,7 +43,7 @@ class SearchResults extends Component {
 
     // Avoid writing defaults to URL querystring
     if (page > 1) {
-      url += `&page=${page}`
+      url += `&p=${page}`
     }
 
     if (length !== 25) {
@@ -52,10 +63,10 @@ class SearchResults extends Component {
 
   fetchGalleries () {
     this.fetchController = new AbortController()
-    const rawQuery = qs.parse(location.search, { ignoreQueryPrefix: true })
+    const rawQuery: RawUrlSortOptions = qs.parse(location.search, { ignoreQueryPrefix: true })
     const query = {
       search: rawQuery.s || '',
-      page: parseInt(rawQuery.page) || 1,
+      page: parseInt(rawQuery.p) || 1,
       sort: rawQuery.sort_by || 'id',
       order: rawQuery.order_by || 'desc',
       length: parseInt(rawQuery.length) || 25
@@ -88,7 +99,7 @@ class SearchResults extends Component {
       )
     }
 
-    if (this.state.page > registry.pages && registry.pages != null) {
+    if (this.state.query.page > registry.pages && registry.pages != null) {
       return (
         <span className='error'>
           The requested page exceeds the number of galleries available.

@@ -2,16 +2,25 @@
 'use strict'
 import qs from 'qs'
 import React, { Component } from 'react'
+import { SortOptions, RawUrlSortOptions } from '../../common/types/app'
 
-export default class FilterControls extends Component {
+export interface FilterControlsProps {
+  onFilter(sort: string, order: string, length: number): void
+}
+
+interface FilterControlsState extends SortOptions {
+  fitContain: boolean
+}
+
+export default class FilterControls extends Component<FilterControlsProps, FilterControlsState> {
   constructor (props) {
     super(props)
-    const rawQuery = qs.parse(location.search, { ignoreQueryPrefix: true })
+    const rawQuery: RawUrlSortOptions = qs.parse(location.search, { ignoreQueryPrefix: true })
 
     this.state = {
       fitContain: false,
-      sortBy: rawQuery.sort_by || 'id',
-      orderBy: rawQuery.order_by || 'desc',
+      sort: rawQuery.sort_by || 'id',
+      order: rawQuery.order_by || 'desc',
       length: parseInt(rawQuery.length) || 25
     }
 
@@ -19,12 +28,12 @@ export default class FilterControls extends Component {
     this.handleImageFitChange = this.handleImageFitChange.bind(this)
   }
 
-  handleFilterChange (sortBy, orderBy, length) {
-    sortBy = sortBy || this.state.sortBy
-    orderBy = orderBy || this.state.orderBy
+  handleFilterChange (sort?, order?, length?) {
+    sort = sort || this.state.sort
+    order = order || this.state.order
     length = length || this.state.length
-    this.props.onFilter(sortBy, orderBy, length)
-    this.setState({ sortBy, orderBy, length: length })
+    this.props.onFilter(sort, order, length)
+    this.setState({ sort, order, length })
   }
 
   handleImageFitChange () {
@@ -44,15 +53,15 @@ export default class FilterControls extends Component {
         <div className='filter-section'>
           <div className='selector'>
           Sort By:
-            <select onChange={e => this.handleFilterChange(e.target.value)} defaultValue={this.state.sortBy}>
+            <select onChange={e => this.handleFilterChange(e.target.value)} defaultValue={this.state.sort}>
               <option value='id'>ID</option>
               <option value='views'>Views</option>
               <option value='name'>Names</option>
             </select>
             <span className='select-arrow'>▼</span>
           </div>
-          <button onClick={() => this.handleFilterChange(null, this.state.orderBy === 'asc' ? 'desc' : 'asc')}>
-            {this.state.orderBy === 'asc' ? 'Ascending\u00A0↑' : 'Descending\u00A0↓' /* \u00A0 is &nbsp; */}
+          <button onClick={() => this.handleFilterChange(null, this.state.order === 'asc' ? 'desc' : 'asc')}>
+            {this.state.order === 'asc' ? 'Ascending\u00A0↑' : 'Descending\u00A0↓' /* \u00A0 is &nbsp; */}
           </button>
         </div>
 

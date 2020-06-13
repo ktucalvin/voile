@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["DOM"],
+    "outDir": "../../dist/client",
+    "target": "ES6",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "sourceMap": true
+  },
+  "exclude": [
+    "**/*.test.ts"
+  ]
+}

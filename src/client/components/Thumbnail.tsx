@@ -2,7 +2,17 @@
 'use strict'
 import React, { Component } from 'react'
 
-class Thumbnail extends Component {
+export interface ThumbnailProps {
+  id: number,
+  chapter?: string,
+  page?: number,
+  width: number,
+  observer?: IntersectionObserver
+}
+
+class Thumbnail extends Component<ThumbnailProps> {
+  private ref: HTMLDivElement
+
   render () {
     const { width, id, chapter = 1, page = 1 } = this.props
     const pictureAttributes = {

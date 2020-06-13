@@ -3,8 +3,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Thumbnail from './Thumbnail'
+import { Gallery } from '../../common/types/app'
 
-class Preview extends Component {
+export interface PreviewProps {
+  gallery: Gallery
+}
+
+class Preview extends Component<PreviewProps> {
   render () {
     const { gallery } = this.props
     return (

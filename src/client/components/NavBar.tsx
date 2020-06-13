@@ -1,9 +1,11 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 
-class NavBar extends Component {
+class NavBar extends Component<RouteComponentProps> {
+  private search: HTMLInputElement
+
   gotoSearch () {
     if (this.search.value) {
       this.props.history.push(`/search?s=${this.search.value}`)

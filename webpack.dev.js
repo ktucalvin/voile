@@ -38,7 +38,7 @@ const serve = new WebpackPluginServe({
 
 module.exports = merge(common, {
   mode: 'development',
-  entry: ['./src/client/index.js', 'webpack-plugin-serve/client'],
+  entry: ['./src/client/index.tsx', 'webpack-plugin-serve/client'],
   devtool: 'inline-source-map',
   watch: true,
   module: {

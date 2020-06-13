@@ -2,13 +2,23 @@
 'use strict'
 import qs from 'qs'
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { UnregisterCallback } from 'history'
 import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
 import FilterControls from '../components/FilterControls'
+import { SortOptions, RawUrlSortOptions, RegistryData } from '../../common/types/app'
 
-class Galleries extends Component {
-  changeQuery (page, sort, order, length) {
+interface GalleriesState {
+  query: SortOptions,
+  registry: RegistryData
+}
+
+class Galleries extends Component<RouteComponentProps, GalleriesState> {
+  private fetchController: AbortController
+  private unlisten: UnregisterCallback
+
+  changeQuery (page?, sort?, order?, length?) {
     page = page || this.state.query.page
     sort = sort || this.state.query.sort
     order = order || this.state.query.order
@@ -18,7 +28,7 @@ class Galleries extends Component {
 
     // Avoid writing default values to URL querystring
     if (page > 1) {
-      url += `?page=${page}`
+      url += `?p=${page}`
       parts++
     }
 
@@ -42,9 +52,9 @@ class Galleries extends Component {
 
   fetchGalleries () {
     this.fetchController = new AbortController()
-    const rawQuery = qs.parse(location.search, { ignoreQueryPrefix: true })
+    const rawQuery: RawUrlSortOptions = qs.parse(location.search, { ignoreQueryPrefix: true })
     const query = {
-      page: parseInt(rawQuery.page) || 1,
+      page: parseInt(rawQuery.p) || 1,
       sort: rawQuery.sort_by || 'id',
       order: rawQuery.order_by || 'desc',
       length: parseInt(rawQuery.length) || 25
@@ -86,7 +96,7 @@ class Galleries extends Component {
         <Paginator
           page={page}
           totalPages={registry.pages}
-          onPageChange={page => this.changeQuery(page)}
+          onPageChange={(page: number) => this.changeQuery(page)}
         />
       </>
     )

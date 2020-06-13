@@ -4,7 +4,7 @@ import { getRepository } from 'typeorm'
 import { createMockContext } from '@shopify/jest-koa-mocks'
 import { Gallery } from '../../models/Gallery'
 import { Chapter } from '../../models/Chapter'
-import { PlainGallery } from '../../models/PlainGallery'
+import { Gallery as CommonGallery } from '../../../common/types/app'
 import { createTestDatabase, dropDatabaseChanges } from '../../lib/mock-db'
 import { getGalleries, getGalleryInformation } from '../galleries'
 
@@ -99,7 +99,7 @@ describe('Registry Controller', function () {
     it('retrieves gallery metadata', async function () {
       ctx.params.id = 23
       await getGalleryInformation(ctx)
-      const result: PlainGallery = ctx.body
+      const result: CommonGallery = ctx.body
       expect(result.id).toEqual(23)
       expect(result.chapters[1].name).toEqual('test chapter')
       expect(result.chapters[1].pages).toEqual(52)

@@ -1,16 +1,24 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
-import withWidth from './WidthObserver'
+import withWidth, { WidthObservingComponentProps } from './WidthObserver'
 
-class Paginator extends Component {
+export interface PaginatorProps extends WidthObservingComponentProps {
+  onPageChange(page: number): void,
+  page: number,
+  totalPages: number
+}
+
+class Paginator extends Component<PaginatorProps> {
   constructor (props) {
     super(props)
     this.goToPage = this.goToPage.bind(this)
   }
 
   goToPage (page) {
-    document.activeElement.blur()
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
     this.props.onPageChange(page)
   }
 
@@ -65,4 +73,4 @@ class Paginator extends Component {
   }
 }
 
-export default withWidth(Paginator, [400, 800])
+export default withWidth<PaginatorProps>(Paginator, [400, 800])

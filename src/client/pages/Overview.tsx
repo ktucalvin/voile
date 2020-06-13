@@ -1,18 +1,35 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import ThumbnailGrid from '../components/ThumbnailGrid'
 import Thumbnail from '../components/Thumbnail'
 import TagBox from '../components/TagBox'
 import ChapterSelector from '../components/ChapterSelector'
+import { Gallery } from '../../common/types/app'
+import { ChapterWithNumber } from '../types/app-client'
 
-class Overview extends Component {
+interface OverviewProps {
+  location: {
+    state: Gallery
+  },
+  match: {
+    params: {
+      id: number
+    }
+  }
+}
+
+interface OverviewState {
+  gallery?: Gallery,
+  chapterNumber: string
+}
+
+class Overview extends Component<OverviewProps & RouteComponentProps, OverviewState> {
   constructor (props) {
     super(props)
     this.state = {
-      maxThumbs: 35,
-      chapterNumber: 1
+      chapterNumber: '1'
     }
   }
 
@@ -34,8 +51,11 @@ class Overview extends Component {
     if (!this.state.gallery) return null
     const { gallery } = this.state
     const multiChapter = Object.keys(gallery.chapters).length > 1
-    const chapterData = gallery.chapters[this.state.chapterNumber]
-    chapterData.number = this.state.chapterNumber
+    const chapter = gallery.chapters[this.state.chapterNumber]
+    const chapterData: ChapterWithNumber = {
+      ...chapter,
+      number: this.state.chapterNumber
+    }
 
     return (
       <div id='overview'>

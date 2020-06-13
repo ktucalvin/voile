@@ -1,15 +1,27 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
+import { Chapter } from '../../common/types/app'
 
-class ChapterSelector extends Component {
+export interface ChapterSelectorProps {
+  changeChapter(chapter: string): void,
+  chapters: {
+    [key: string]: Chapter
+  }
+}
+
+interface ChapterSelectorState {
+  selected: string
+}
+
+class ChapterSelector extends Component<ChapterSelectorProps, ChapterSelectorState> {
   constructor (props) {
     super(props)
     this.state = { selected: '1' }
     this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick (chapter) {
+  handleClick (chapter: string) {
     this.props.changeChapter(chapter)
     this.setState({ selected: chapter })
   }

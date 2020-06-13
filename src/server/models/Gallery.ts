@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Chapter } from './Chapter'
 import { Tag } from './Tag'
-import { PlainGallery } from './PlainGallery'
+import { Gallery as CommonGallery } from '../../common/types/app'
 
 @Index('gallery_name', ['galleryName'], { unique: true })
 @Entity('galleries')
@@ -30,7 +30,7 @@ export class Gallery {
   })
   tags: Tag[]
 
-  toPlainGallery (): PlainGallery {
+  toCommonGallery (): CommonGallery {
     const retval = {
       id: this.galleryId,
       name: this.galleryName,

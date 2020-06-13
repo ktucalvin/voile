@@ -1,10 +1,28 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import Paginator from '../components/Paginator'
+import { Gallery } from '../../common/types/app'
 
-class Reader extends Component {
+interface ReaderState {
+  gallery: Gallery
+}
+
+interface ReaderProps {
+  match: {
+    params: {
+      id: string
+      page: string,
+      chapter: string
+    }
+  }
+  location: {
+    state: Gallery
+  }
+}
+
+class Reader extends Component<ReaderProps & RouteComponentProps, ReaderState> {
   constructor (props) {
     super(props)
     this.handleKeyUp = this.handleKeyUp.bind(this)
@@ -38,7 +56,7 @@ class Reader extends Component {
     const mid = document.querySelector('body').clientWidth / 2
     const chapterNumber = this.props.match.params.chapter
     const chapterData = gallery.chapters[this.props.match.params.chapter]
-    let page = this.props.match.params.page
+    let page = parseInt(this.props.match.params.page)
 
     // Return early for page turn
     if (e.clientX > mid && page < chapterData.pages) {
@@ -54,17 +72,18 @@ class Reader extends Component {
     // If page was not turned, then change chapters
     const [prevChapter, nextChapter] = this.getAdjacentChapters(chapterNumber)
 
-    if (prevChapter && page === '1') {
+    if (prevChapter && page === 1) {
       const lastPage = gallery.chapters[prevChapter].pages
       this.props.history.push(`/g/${gallery.id}/${prevChapter}/${lastPage}`)
       return
     }
 
-    if (nextChapter && page === chapterData.pages + '') {
+    if (nextChapter && page === chapterData.pages) {
       this.props.history.push(`/g/${gallery.id}/${nextChapter}/1`)
       return
     }
 
+    // End of gallery, back to overview
     this.props.history.push({ pathname: `/g/${gallery.id}`, state: gallery })
   }
 
