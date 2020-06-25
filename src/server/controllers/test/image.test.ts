@@ -3,9 +3,10 @@ import { promises as fsp } from 'fs'
 import { Context } from 'koa'
 import send from 'koa-send'
 import { createMockContext } from '@shopify/jest-koa-mocks'
-import dbConfig from '../../../../ormconfig'
+import { createTestDatabase } from '../../lib/mock-db'
 import { FsUtils } from '../../lib/fsutils'
-import { resizeImage } from '../image'
+import { resizeImage, setCacheSubDirectory } from '../image'
+
 jest.mock('koa-send')
 
 jest.mock('sharp', () => () => sharpMock)
@@ -20,6 +21,8 @@ const sharpMock = {
 
 let ctx: Context, validCtx: Context
 
+const dbName = 'test'
+
 async function expectStatusCode (code: number) {
   await resizeImage(ctx)
   expect(ctx.status).toEqual(code)
@@ -29,10 +32,6 @@ async function testSharpOutput (assertionFn: () => void) {
   // fake inability to serve cached file
   jest.spyOn(FsUtils, 'createReadStream')
     .mockImplementation(() => { throw new Error() })
-
-  // do not actually touch file system
-  jest.spyOn(FsUtils, 'ensureDir')
-    .mockImplementation(() => new Promise(resolve => resolve()))
 
   setReaddirReturn(['1.png'])
   await resizeImage(ctx)
@@ -45,6 +44,11 @@ function setReaddirReturn (retval: any[]) {
 }
 
 describe('GET /api/img/:gallery/:chapter/:page', function () {
+  beforeAll(async function () {
+    await createTestDatabase()
+    setCacheSubDirectory('test')
+  })
+
   beforeEach(function () {
     ctx = createMockContext({
       customProperties: {
@@ -64,6 +68,10 @@ describe('GET /api/img/:gallery/:chapter/:page', function () {
         set: jest.fn()
       }
     })
+
+    // do not actually touch file system
+    jest.spyOn(FsUtils, 'ensureDir')
+      .mockImplementation(() => new Promise(resolve => resolve()))
   })
 
   afterEach(function () {
@@ -199,17 +207,18 @@ describe('GET /api/img/:gallery/:chapter/:page', function () {
     Object.assign(ctx, validCtx)
     await resizeImage(ctx)
     expect(ctx.body).toEqual('test passed')
-    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${dbConfig.database}/TEST-C1P1-50.webp`)
+    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${dbName}/TEST-C1P1-50.webp`)
   })
 
   it('writes optional information in cached filename', async function () {
     setReaddirReturn(['1.png', '2.png'])
+    jest.spyOn(FsUtils, 'createReadStream')
     Object.assign(ctx, validCtx)
     ctx.request.query.h = '50'
     ctx.request.query.fit = 'fill'
     ctx.request.query.format = 'png'
     await resizeImage(ctx)
-    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${dbConfig.database}/TEST-C1P1-50x50-fill.png`)
+    expect(FsUtils.createReadStream).toBeCalledWith(`imgcache/${dbName}/TEST-C1P1-50x50-fill.png`)
   })
 
   it('resizes image given only width', async function () {

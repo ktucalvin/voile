@@ -2,12 +2,20 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
+    "moduleResolution": "node",
     "lib": ["es2018"],
     "outDir": "../../dist/server",
     "target": "es2018",
+    "sourceMap": true,
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "typeRoots": [
+      "../../node_modules/@types",
+      "../common/types",
+      "./types"
+    ]
   },
   "exclude": [
     "**/*.test.ts"

@@ -7,7 +7,7 @@ import { UnregisterCallback } from 'history'
 import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
 import FilterControls from '../components/FilterControls'
-import { SortOptions, RawUrlSortOptions, RegistryData } from '../../common/types/app'
+import type { SortOptions, RawUrlSortOptions, RegistryData } from '@common/types/app'
 
 interface GalleriesState {
   query: SortOptions,
@@ -15,8 +15,8 @@ interface GalleriesState {
 }
 
 class Galleries extends Component<RouteComponentProps, GalleriesState> {
-  private fetchController: AbortController
-  private unlisten: UnregisterCallback
+  private fetchController: AbortController | null = null
+  private unlisten: UnregisterCallback | null = null
 
   changeQuery (page?, sort?, order?, length?) {
     page = page || this.state.query.page
@@ -54,10 +54,10 @@ class Galleries extends Component<RouteComponentProps, GalleriesState> {
     this.fetchController = new AbortController()
     const rawQuery: RawUrlSortOptions = qs.parse(location.search, { ignoreQueryPrefix: true })
     const query = {
-      page: parseInt(rawQuery.p) || 1,
+      page: parseInt(rawQuery.p!) || 1,
       sort: rawQuery.sort_by || 'id',
       order: rawQuery.order_by || 'desc',
-      length: parseInt(rawQuery.length) || 25
+      length: parseInt(rawQuery.length!) || 25
     }
 
     const endpoint = `/api/galleries?p=${query.page}&length=${query.length}&sort_by=${query.sort}&order_by=${query.order}`
@@ -71,7 +71,7 @@ class Galleries extends Component<RouteComponentProps, GalleriesState> {
   render () {
     if (!this.state) return null
     const { registry } = this.state
-    const { page } = this.state.query
+    const { page = Infinity } = this.state.query
 
     if (page > registry.pages && registry.pages != null) {
       return (
@@ -82,16 +82,13 @@ class Galleries extends Component<RouteComponentProps, GalleriesState> {
       )
     }
 
-    const result = []
-    for (const gallery of registry.data) {
-      result.push(<Preview key={gallery.id} gallery={gallery} />)
-    }
-
     return (
       <>
         <FilterControls onFilter={(sortBy, orderBy, length) => this.changeQuery(1, sortBy, orderBy, length)} />
         <div id='galleries'>
-          {result}
+          {
+            registry.data.map(gallery => <Preview key={gallery.id} gallery={gallery} />)
+          }
         </div>
         <Paginator
           page={page}
@@ -115,8 +112,8 @@ class Galleries extends Component<RouteComponentProps, GalleriesState> {
   }
 
   componentWillUnmount () {
-    this.fetchController.abort()
-    this.unlisten()
+    this.fetchController && this.fetchController.abort()
+    this.unlisten && this.unlisten()
   }
 }
 

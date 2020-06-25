@@ -4,10 +4,10 @@ import React, { Component } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 
 class NavBar extends Component<RouteComponentProps> {
-  private search: HTMLInputElement
+  private search: HTMLInputElement | null = null
 
   gotoSearch () {
-    if (this.search.value) {
+    if (this.search && this.search.value) {
       this.props.history.push(`/search?s=${this.search.value}`)
       this.search.value = ''
     }

@@ -1,27 +1,18 @@
 /* eslint-env browser */
 'use strict'
-import React, { Component } from 'react'
+import React from 'react'
 
-export interface SearchPanelProps {
+interface SearchPanelProps {
   onSearch(query: string): void
 }
 
-class SearchPanel extends Component<SearchPanelProps> {
-  private searchBar: HTMLInputElement
-
-  render () {
-    return (
-      <div id='search-panel'>
-        <input
-          id='search-main'
-          type='search'
-          placeholder='Search...'
-          ref={r => (this.searchBar = r)}
-          onChange={() => this.props.onSearch(this.searchBar.value)}
-        />
-      </div>
-    )
-  }
-}
-
-export default SearchPanel
+export default (props: SearchPanelProps) => (
+  <div id='search-panel'>
+    <input
+      id='search-main'
+      type='search'
+      placeholder='Search...'
+      onChange={e => props.onSearch(e.target.value)}
+    />
+  </div>
+)

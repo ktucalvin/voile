@@ -25,7 +25,9 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Server",
-      "program": "${workspaceFolder}/server/index.js"
+      "preLaunchTask": "npm: build:server",
+      "outFiles": ["${workspaceFolder}/dist/server/**/*.js"],
+      "program": "${workspaceFolder}/src/server/index.ts"
     },
   ]
 }

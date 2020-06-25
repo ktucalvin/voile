@@ -12,13 +12,7 @@ export interface Gallery {
     [key: string]: Chapter
   },
   tags: {
-    language?: string[]
-    category?: string[]
-    group?: string[]
-    artist?: string[]
-    parody?: string[]
-    character?: string[]
-    content?: string[]
+    [key: string]: string[]
   }
 }
 

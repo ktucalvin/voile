@@ -13,9 +13,9 @@ export class FsUtils {
 
   static createReadStream (path: string): Promise<ReadStream> {
     return new Promise((resolve, reject) => {
-      const e = fs.createReadStream(path)
+      const stream: ReadStream = fs.createReadStream(path)
         .on('error', reject)
-        .on('ready', () => resolve(e))
+        .on('ready', () => resolve(stream))
     })
   }
 }

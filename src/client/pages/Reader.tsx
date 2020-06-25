@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import Paginator from '../components/Paginator'
-import { Gallery } from '../../common/types/app'
+import type { Gallery } from '@common/types/app'
 
 interface ReaderState {
   gallery: Gallery
@@ -23,14 +23,7 @@ interface ReaderProps {
 }
 
 class Reader extends Component<ReaderProps & RouteComponentProps, ReaderState> {
-  constructor (props) {
-    super(props)
-    this.handleKeyUp = this.handleKeyUp.bind(this)
-    this.handlePageChange = this.handlePageChange.bind(this)
-    this.getAdjacentChapters = this.getAdjacentChapters.bind(this)
-  }
-
-  getAdjacentChapters (chapterNumber) {
+  getAdjacentChapters = (chapterNumber) => {
     const chapters = Object.keys(this.state.gallery.chapters).map(parseFloat).sort((a, b) => a - b)
     const index = chapters.indexOf(parseFloat(chapterNumber))
     const nextChapter = chapters[index + 1]
@@ -38,7 +31,7 @@ class Reader extends Component<ReaderProps & RouteComponentProps, ReaderState> {
     return [prevChapter, nextChapter]
   }
 
-  handleKeyUp (e) {
+  handleKeyUp = (e) => {
     const $page = document.querySelector('#reader img')
     if (e.key === 'ArrowLeft') {
       this.handlePageChange({ clientX: 0 })
@@ -51,9 +44,9 @@ class Reader extends Component<ReaderProps & RouteComponentProps, ReaderState> {
     }
   }
 
-  handlePageChange (e) {
+  handlePageChange = (e) => {
     const { gallery } = this.state
-    const mid = document.querySelector('body').clientWidth / 2
+    const mid = document.querySelector('body')!.clientWidth / 2
     const chapterNumber = this.props.match.params.chapter
     const chapterData = gallery.chapters[this.props.match.params.chapter]
     let page = parseInt(this.props.match.params.page)

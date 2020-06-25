@@ -6,8 +6,8 @@ import ThumbnailGrid from '../components/ThumbnailGrid'
 import Thumbnail from '../components/Thumbnail'
 import TagBox from '../components/TagBox'
 import ChapterSelector from '../components/ChapterSelector'
-import { Gallery } from '../../common/types/app'
 import { ChapterWithNumber } from '../types/app-client'
+import type { Gallery } from '@common/types/app'
 
 interface OverviewProps {
   location: {

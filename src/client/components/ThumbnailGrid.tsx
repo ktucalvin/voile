@@ -1,12 +1,13 @@
 /* eslint-env browser */
 'use strict'
 import React, { Component } from 'react'
+import type { ReactElement } from 'react'
 import { Link } from 'react-router-dom'
 import Thumbnail from './Thumbnail'
-import { Gallery } from '../../common/types/app'
-import { ChapterWithNumber } from '../types/app-client'
+import type { Gallery } from '@common/types/app'
+import type { ChapterWithNumber } from '../types/app-client'
 
-export interface ThumbnailGridProps {
+interface ThumbnailGridProps {
   gallery: Gallery,
   chapter: ChapterWithNumber
 }
@@ -16,15 +17,12 @@ class ThumbnailGrid extends Component<ThumbnailGridProps> {
 
   constructor (props) {
     super(props)
-
-    this.lazyLoadThumbs = this.lazyLoadThumbs.bind(this)
-
     this.observer = new IntersectionObserver(this.lazyLoadThumbs, {
       rootMargin: '0px 0px 100px 0px'
     })
   }
 
-  lazyLoadThumbs (entries) {
+  lazyLoadThumbs = (entries) => {
     for (const entry of entries) {
       if (entry.isIntersecting) {
         const $images = entry.target.children[0].children
@@ -46,14 +44,14 @@ class ThumbnailGrid extends Component<ThumbnailGridProps> {
       id: gallery.id,
       chapter: chapter.number
     }
-    const thumbnails = []
+    const $thumbnails: ReactElement[] = []
     for (let i = 1; i <= chapter.pages; i++) {
       const destination = {
         pathname: `/g/${gallery.id}/${chapter.number}/${i}`,
         state: gallery
       }
 
-      thumbnails.push(
+      $thumbnails.push(
         <Link key={`${chapter.number}-${i}`} to={destination}>
           <Thumbnail page={i} {...thumbProps} observer={this.observer} />
         </Link>
@@ -62,7 +60,7 @@ class ThumbnailGrid extends Component<ThumbnailGridProps> {
 
     return (
       <div className='thumbnails'>
-        {thumbnails}
+        {$thumbnails}
       </div>
     )
   }

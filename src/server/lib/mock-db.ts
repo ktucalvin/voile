@@ -1,13 +1,12 @@
 import 'dotenv/config'
 import { createConnection, getConnection } from 'typeorm'
-import dbConfig from '../../../ormconfig'
 
 export async function createTestDatabase () {
   await createConnection({
     type: 'sqlite',
     database: ':memory:',
     dropSchema: true,
-    entities: dbConfig.entities,
+    entities: ['./src/server/models/*.ts'],
     synchronize: true,
     logging: false
   })

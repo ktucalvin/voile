@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
-    "module": "commonjs"
+    "module": "commonjs",
+    "strict": true,
+    "noImplicitAny": false,
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["src/common/*"],
+      "@server/*": ["src/server/*"],
+      "@client/*": ["src/client/*"]
+    }
   }
 }

@@ -1,6 +1,6 @@
 import KoaRouter from 'koa-router'
 import { getGalleryInformation, getGalleries, getRandomGalleryId } from './galleries'
-import { resizeImage } from './image'
+import { resizeImage, setCacheSubDirectory } from './image'
 import { initializeSearch, search } from './search'
 
 export async function getRoutes () {
@@ -14,6 +14,8 @@ export async function getRoutes () {
   router.get('/search', search)
 
   await initializeSearch()
+
+  setCacheSubDirectory(process.env.DB_NAME)
 
   return router.routes()
 }

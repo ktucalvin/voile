@@ -2,7 +2,7 @@ import Fuse from 'fuse.js'
 import { Context } from 'koa'
 import { getConnection } from 'typeorm'
 import { Gallery } from '../models/Gallery'
-import { Gallery as CommonGallery } from '../../common/types/app'
+import type { Gallery as CommonGallery } from '@common/types/app'
 
 const fuseOpts = {
   shouldSort: true,
@@ -75,7 +75,11 @@ function search (ctx: Context) {
     return
   }
 
-  ctx.body = { validResults: results.length, pages: Math.ceil(results.length / length), data: results.slice(offset, offset + length) }
+  ctx.body = {
+    validResults: results.length,
+    pages: Math.ceil(results.length / length),
+    data: results.slice(offset, offset + length)
+  }
 }
 
 export { initializeSearch, search }

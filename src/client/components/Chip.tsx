@@ -2,6 +2,11 @@
 'use strict'
 import React from 'react'
 
-export default ({ color, text }) => (
+interface ChipProps {
+  color: string,
+  text: string
+}
+
+export default ({ color, text }: ChipProps) => (
   <span className='chip' style={{ backgroundColor: color }}>{text}</span>
 )

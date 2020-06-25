@@ -11,7 +11,9 @@ export default ({ tags }) => (
       tagTypes
         .map((type, i) => {
           if (tags[type]) {
-            return tags[type].map((e: string) => <Chip key={`${type}-${e}`} text={e} color={tagColors[i]} />)
+            return tags[type].map((tagName: string) =>
+              <Chip key={`${type}-${tagName}`} text={tagName} color={tagColors[i]} />
+            )
           }
         })
         .reduce((s, i) => s.concat(i), [])

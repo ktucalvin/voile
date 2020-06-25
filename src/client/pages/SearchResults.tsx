@@ -8,7 +8,7 @@ import Preview from '../components/Preview'
 import Paginator from '../components/Paginator'
 import SearchPanel from '../components/SearchPanel'
 import FilterControls from '../components/FilterControls'
-import { SortOptions, RegistryData, RawUrlSortOptions } from '../../common/types/app'
+import type { SortOptions, RegistryData, RawUrlSortOptions } from '@common/types/app'
 
 interface SearchResultsState {
   query: SortOptions,
@@ -16,17 +16,11 @@ interface SearchResultsState {
 }
 
 class SearchResults extends Component<RouteComponentProps, SearchResultsState> {
-  private searchTimeout: number
-  private fetchController: AbortController
-  private unlisten: UnregisterCallback
+  private searchTimeout = 0
+  private fetchController: AbortController | null = null
+  private unlisten: UnregisterCallback | null = null
 
-  constructor (props) {
-    super(props)
-    this.handleQueryChange = this.handleQueryChange.bind(this)
-    this.searchTimeout = 0
-  }
-
-  handleQueryChange (search) {
+  handleQueryChange = (search: string) => {
     clearTimeout(this.searchTimeout)
     this.searchTimeout = window.setTimeout(() => {
       this.changeQuery(search)
@@ -66,10 +60,10 @@ class SearchResults extends Component<RouteComponentProps, SearchResultsState> {
     const rawQuery: RawUrlSortOptions = qs.parse(location.search, { ignoreQueryPrefix: true })
     const query = {
       search: rawQuery.s || '',
-      page: parseInt(rawQuery.p) || 1,
+      page: parseInt(rawQuery.p!) || 1,
       sort: rawQuery.sort_by || 'id',
       order: rawQuery.order_by || 'desc',
-      length: parseInt(rawQuery.length) || 25
+      length: parseInt(rawQuery.length!) || 25
     }
 
     const endpoint = `/api/search?s=${query.search}&p=${query.page}&length=${query.length}&sort_by=${query.sort}&order_by=${query.order}`
@@ -99,7 +93,7 @@ class SearchResults extends Component<RouteComponentProps, SearchResultsState> {
       )
     }
 
-    if (this.state.query.page > registry.pages && registry.pages != null) {
+    if (this.state.query.page && this.state.query.page > registry.pages && registry.pages != null) {
       return (
         <span className='error'>
           The requested page exceeds the number of galleries available.
@@ -108,21 +102,20 @@ class SearchResults extends Component<RouteComponentProps, SearchResultsState> {
       )
     }
 
-    const result = []
-    for (const gallery of registry.data) {
-      result.push(<Preview key={gallery.id} gallery={gallery} />)
-    }
-
     return (
       <>
         <FilterControls onFilter={(sortBy, orderBy, length) => this.changeQuery(null, 1, sortBy, orderBy, length)} />
         <SearchPanel onSearch={this.handleQueryChange} />
         <p className='search-results-header'>Search Results for: {this.state.query.search} ({registry.validResults})</p>
         <div id='galleries'>
-          {result}
+          {
+            registry.data.map(gallery => (
+              <Preview key={gallery.id} gallery={gallery} />
+            ))
+          }
         </div>
         <Paginator
-          page={this.state.query.page}
+          page={this.state.query.page || 1}
           totalPages={registry.pages}
           onPageChange={page => this.changeQuery(null, page)}
         />
@@ -143,8 +136,8 @@ class SearchResults extends Component<RouteComponentProps, SearchResultsState> {
   }
 
   componentWillUnmount () {
-    this.unlisten()
-    this.fetchController.abort()
+    this.fetchController && this.fetchController.abort()
+    this.unlisten && this.unlisten()
   }
 }
 

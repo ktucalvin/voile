@@ -3,9 +3,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Thumbnail from './Thumbnail'
-import { Gallery } from '../../common/types/app'
+import type { Gallery } from '@common/types/app'
 
-export interface PreviewProps {
+interface PreviewProps {
   gallery: Gallery
 }
 

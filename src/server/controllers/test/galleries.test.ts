@@ -4,7 +4,7 @@ import { getRepository } from 'typeorm'
 import { createMockContext } from '@shopify/jest-koa-mocks'
 import { Gallery } from '../../models/Gallery'
 import { Chapter } from '../../models/Chapter'
-import { Gallery as CommonGallery } from '../../../common/types/app'
+import type { Gallery as CommonGallery } from '@common/types/app'
 import { createTestDatabase, dropDatabaseChanges } from '../../lib/mock-db'
 import { getGalleries, getGalleryInformation } from '../galleries'
 

@@ -2,9 +2,9 @@
 'use strict'
 import qs from 'qs'
 import React, { Component } from 'react'
-import { SortOptions, RawUrlSortOptions } from '../../common/types/app'
+import type { SortOptions, RawUrlSortOptions } from '@common/types/app'
 
-export interface FilterControlsProps {
+interface FilterControlsProps {
   onFilter(sort: string, order: string, length: number): void
 }
 
@@ -21,14 +21,11 @@ export default class FilterControls extends Component<FilterControlsProps, Filte
       fitContain: false,
       sort: rawQuery.sort_by || 'id',
       order: rawQuery.order_by || 'desc',
-      length: parseInt(rawQuery.length) || 25
+      length: parseInt(rawQuery.length!) || 25
     }
-
-    this.handleFilterChange = this.handleFilterChange.bind(this)
-    this.handleImageFitChange = this.handleImageFitChange.bind(this)
   }
 
-  handleFilterChange (sort?, order?, length?) {
+  handleFilterChange = (sort?, order?, length?) => {
     sort = sort || this.state.sort
     order = order || this.state.order
     length = length || this.state.length
@@ -36,11 +33,11 @@ export default class FilterControls extends Component<FilterControlsProps, Filte
     this.setState({ sort, order, length })
   }
 
-  handleImageFitChange () {
+  handleImageFitChange = () => {
     if (!this.state.fitContain) {
-      document.querySelector('body').classList.add('fit-contain')
+      document.querySelector('body')!.classList.add('fit-contain')
     } else {
-      document.querySelector('body').classList.remove('fit-contain')
+      document.querySelector('body')!.classList.remove('fit-contain')
     }
     this.setState({
       fitContain: !this.state.fitContain

@@ -42,7 +42,7 @@ async function setupMiddleware () {
   app.use(etag())
 
   app.use(compress({
-    filter: type => !(/event-stream/i.test(type)) && compressible(type)
+    filter: type => !(/event-stream/i.test(type)) && !!compressible(type)
   }))
 
   app.use(routes)

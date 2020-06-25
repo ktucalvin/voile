@@ -7,18 +7,17 @@ interface WidthObservingComponentState {
 }
 
 export interface WidthObservingComponentProps {
-  width?: number
+  width: number
 }
 
-function withWidth<P extends object> (WrappedComponent, breakpoints) {
-  return class extends Component<P, WidthObservingComponentState> {
+function withWidth<P extends WidthObservingComponentProps> (WrappedComponent, breakpoints) {
+  return class extends Component<Omit<P, keyof WidthObservingComponentProps>, WidthObservingComponentState> {
     constructor (props) {
       super(props)
       this.state = { width: window.innerWidth }
-      this.updateWidth = this.updateWidth.bind(this)
     }
 
-    updateWidth () {
+    updateWidth = () => {
       for (const breakpoint of breakpoints) {
         // check if resize is on opposite sides of breakpoint
         if ((window.innerWidth <= breakpoint) === (this.state.width > breakpoint)) {

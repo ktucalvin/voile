@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Chapter } from './Chapter'
 import { Tag } from './Tag'
-import { Gallery as CommonGallery } from '../../common/types/app'
+import type { Gallery as CommonGallery } from '@common/types/app'
 
 @Index('gallery_name', ['galleryName'], { unique: true })
 @Entity('galleries')
