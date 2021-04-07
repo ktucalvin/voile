@@ -2,7 +2,8 @@ require('dotenv').config()
 
 const entities = (
   typeof process[Symbol.for('ts-node.register.instance')] === 'object' ||
-  process.env.NODE_ENV === 'test'
+  process.env.NODE_ENV === 'test' ||
+  process.env.NODE_ENV === 'development'
 )
   ? ['./src/server/models/*.ts']
   : ['./dist/server/models/*.js']

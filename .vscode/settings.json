@@ -1,10 +1,12 @@
 // Workspace settings
 {
   "files.exclude": {
-      ".nyc_output/": true,
-      "coverage/": true,
-      "dist/": true,
-      "node_modules/": true,
-      "imgcache/": true
+    ".nyc_output/": true,
+    "coverage/": true,
+    "dist/": true,
+    "node_modules/": true,
+    "imgcache/": true,
+    "archive/": true,
+    "galleries/": true
   }
 }

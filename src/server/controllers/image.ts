@@ -6,7 +6,12 @@ import send from 'koa-send'
 import { Context } from 'koa'
 import staticOpts from '../lib/static-options'
 import { FsUtils } from '../lib/fsutils'
+import { isString } from '@server/lib/utils'
 const isResizable = /(jpg|jpeg|png)$/
+
+function isSharpFitEnum (str: any): str is sharp.FitEnum {
+  return ['outside', 'inside', 'cover', 'contain', 'fill'].includes(str)
+}
 
 let subCacheName = 'default'
 
@@ -17,6 +22,12 @@ export function setCacheSubDirectory (dirname: string) {
 export async function resizeImage (ctx: Context) {
   const { gallery, chapter, page } = ctx.params
   let { w, h = 'auto', fit = 'cover', format = 'webp' } = ctx.request.query
+
+  if (!isString(w) || !isString(h) || !isString(fit) || !isString(format)) {
+    ctx.status = 400
+    return
+  }
+
   const width = parseInt(w)
   const height = parseInt(h)
   if (format === 'jpg') format = 'jpeg'
@@ -35,7 +46,7 @@ export async function resizeImage (ctx: Context) {
     return
   }
 
-  if (!['outside', 'inside', 'cover', 'contain', 'fill'].includes(fit)) {
+  if (!isSharpFitEnum(fit)) {
     ctx.status = 400
     return
   }
@@ -85,7 +96,7 @@ export async function resizeImage (ctx: Context) {
   // If it couldn't be served, then make a resized image file and serve that
   const result = sharp(path.join(folder, image))
   if (height) {
-    result.resize(width, height, { fit })
+    result.resize(width, height, { fit: fit as keyof sharp.FitEnum })
   } else {
     result.resize(width)
   }

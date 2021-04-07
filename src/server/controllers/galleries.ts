@@ -1,3 +1,4 @@
+import { isString } from '@server/lib/utils'
 import { Context } from 'koa'
 import { getConnection, FindManyOptions } from 'typeorm'
 import { Gallery } from '../models/Gallery'
@@ -10,15 +11,29 @@ async function getGalleries (ctx: Context) {
     order_by: orderBy = 'DESC'
   } = ctx.query
 
-  if (!parseInt(page) || page < 1 || !parseInt(length) || length < 1) {
+  if (!isString(page) || !parseInt(page) || parseInt(page) < 1 ||
+      !isString(length) || !parseInt(length) || parseInt(length) < 1) {
     ctx.status = 400
     return
+  }
+
+  if (!isString(orderBy)) {
+    orderBy = orderBy[0]
+  }
+
+  if (!isString(sortBy)) {
+    sortBy = sortBy[0]
   }
 
   page = parseInt(page)
   length = parseInt(length)
   orderBy = orderBy.toUpperCase()
   sortBy = sortBy.toLowerCase()
+
+  if (orderBy !== 'DESC' && orderBy !== 'ASC') {
+    ctx.status = 400
+    return
+  }
 
   const findOptions: FindManyOptions = {
     skip: (page - 1) * length,

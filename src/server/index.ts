@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import 'module-alias/register'
 import 'reflect-metadata'
 import https from 'https'
 import Koa from 'koa'
@@ -9,6 +10,7 @@ import conditional from 'koa-conditional-get'
 import etag from 'koa-etag'
 import compress from 'koa-compress'
 import compressible from 'compressible'
+import morgan from 'morgan'
 import { createConnection } from 'typeorm'
 import { getRoutes } from './controllers'
 import staticOpts from './lib/static-options'
@@ -32,8 +34,34 @@ async function initDatabase () {
 }
 
 async function setupMiddleware () {
+  const logger = morgan('common')
   const routes = await getRoutes()
-  app.use(helmet())
+  app.use(async (ctx, next) => {
+    logger(ctx.req, ctx.res, () => {})
+    await next()
+  })
+
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        fontSrc: ["'self'", 'https:', 'data:'],
+        frameAncestors: ["'self'"],
+        imgSrc: ["'self'", 'data:'],
+        objectSrc: ['none'],
+        scriptSrc: [
+          "'self'",
+          'https://unpkg.com/react@17/umd/react.production.min.js',
+          'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',
+          'https://unpkg.com/react-router-dom/umd/react-router-dom.min.js'
+        ],
+        styleSrc: ["'self'", 'https:', 'unsafe-inline']
+      }
+    })
+  )
+
+  app.use(helmet({ contentSecurityPolicy: false }))
 
   app.use(noExposeErrors())
 

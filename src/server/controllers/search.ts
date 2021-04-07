@@ -3,6 +3,7 @@ import { Context } from 'koa'
 import { getConnection } from 'typeorm'
 import { Gallery } from '../models/Gallery'
 import type { Gallery as CommonGallery } from '@common/types/app'
+import { isString } from '@server/lib/utils'
 
 const fuseOpts = {
   shouldSort: true,
@@ -23,7 +24,7 @@ const fuseOpts = {
   ]
 }
 
-let fuse: Fuse<CommonGallery, Object>
+let fuse: Fuse<CommonGallery>
 
 async function initializeSearch () {
   console.log('Initializing search library...')
@@ -49,7 +50,18 @@ function search (ctx: Context) {
     order_by: orderBy = 'DESC'
   } = ctx.query
 
-  if (!parseInt(page) || page < 1 || !parseInt(length) || length < 1) {
+  if (!isString(page) || !parseInt(page) || parseInt(page) < 1 ||
+      !isString(length) || !parseInt(length) || parseInt(length) < 1) {
+    ctx.status = 400
+    return
+  }
+
+  if (!isString(orderBy) || !isString(sortBy)) {
+    ctx.status = 400
+    return
+  }
+
+  if (!isString(ctx.query.s)) {
     ctx.status = 400
     return
   }

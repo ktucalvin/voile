@@ -1,4 +1,5 @@
 'use strict'
+const packageJson = require('./package.json')
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -14,15 +15,10 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: [
-          'babel-loader',
-          {
-            loader: 'ts-loader',
-            options: {
-              configFile: path.resolve('./src/client/tsconfig.json')
-            }
-          }
-        ]
+        loader: 'ts-loader',
+        options: {
+          configFile: path.resolve('./src/client/tsconfig.json')
+        }
       },
       {
         test: /\.html$/,
@@ -57,11 +53,14 @@ module.exports = {
         '!site.webmanifest'
       ]
     }),
-    new CopyWebpackPlugin([
-      { from: './src/client/favicon' }
-    ])
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './src/client/favicon' }
+      ]
+    })
   ],
   resolve: {
+    alias: packageJson._moduleAliases,
     extensions: ['.ts', '.tsx', '.js', '.json']
   }
 }
