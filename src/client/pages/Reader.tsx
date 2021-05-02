@@ -110,9 +110,13 @@ class Reader extends Component<ReaderProps & RouteComponentProps, ReaderState> {
     const src = `/i/${gallery.id}/${chapterNumber}/${page}`
     document.title = `${gallery.name} Ch.${chapterNumber} (${page}/${chapterData.pages})`
 
+    const pageAlt = `${gallery.name} Chapter ${chapterNumber} Page ${page} of ${chapterData.pages}`
+
     return (
-      <div id='reader'>
-        <img src={src} onClick={this.handlePageChange} />
+      // already handled by key listener on document
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+      <div id='reader' role='link' tabIndex={-1} onClick={this.handlePageChange}>
+        <img src={src} alt={pageAlt} />
         <Paginator
           page={page}
           totalPages={chapterData.pages}

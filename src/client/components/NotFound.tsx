@@ -2,7 +2,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default () => (
+const NotFound = () => (
   <>
     <p className='notfound'>
     404 - Page not found.
@@ -10,3 +10,7 @@ export default () => (
     <Link to='/'>Return to home.</Link>
   </>
 )
+
+NotFound.displayName = 'NotFound'
+
+export default NotFound

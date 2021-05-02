@@ -35,8 +35,8 @@ class ChapterSelector extends Component<ChapterSelectorProps, ChapterSelectorSta
             const selected = number === this.state.selected ? 'selected-chapter' : undefined
             const chapterName = this.props.chapters[number].name || `Chapter ${number}`
             return (
-              <li key={number} onClick={() => this.handleClick(number)} className={selected}>
-                <button>
+              <li key={number} className={selected}>
+                <button onClick={() => this.handleClick(number)}>
                   {chapterName}
                 </button>
               </li>

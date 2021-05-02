@@ -50,6 +50,7 @@ export default class FilterControls extends Component<FilterControlsProps, Filte
         <div className='filter-section'>
           <div className='selector'>
           Sort By:
+          {/* eslint-disable-next-line jsx-a11y/no-onchange */}
             <select onChange={e => this.handleFilterChange(e.target.value)} defaultValue={this.state.sort}>
               <option value='id'>ID</option>
               <option value='views'>Views</option>
@@ -65,6 +66,7 @@ export default class FilterControls extends Component<FilterControlsProps, Filte
         <div className='filter-section'>
           <div className='selector'>
             Items per page
+            {/* eslint-disable-next-line jsx-a11y/no-onchange */}
             <select onChange={e => this.handleFilterChange(null, null, e.target.value)} defaultValue={this.state.length}>
               <option value={1}>1</option>
               <option value={10}>10</option>

@@ -60,7 +60,7 @@ class Overview extends Component<OverviewProps & RouteComponentProps, OverviewSt
     return (
       <div id='overview'>
         <div className='info'>
-          <Thumbnail width={275} id={gallery.id} />
+          <Thumbnail width={275} id={gallery.id} name={gallery.name} />
           <div>
             <p><b>{gallery.name}</b></p>
             <TagBox tags={gallery.tags} />

@@ -41,7 +41,7 @@ export class Gallery {
     }
 
     if (this.chapters) {
-      this.chapters.map(c => {
+      this.chapters.forEach(c => {
         retval.chapters[c.chapterNumber] = { name: c.chapterName, pages: c.pages }
       })
     }

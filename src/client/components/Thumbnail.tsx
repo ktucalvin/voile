@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 
 interface ThumbnailProps {
   id: number,
+  name: string,
   chapter?: string,
   page?: number,
   width: number,
@@ -30,7 +31,7 @@ class Thumbnail extends Component<ThumbnailProps> {
       <div ref={ref => (this.ref = ref)}>
         <picture {...pictureAttributes}>
           <source {...webpAttributes} type='image/webp' />
-          <img {...fallbackAttributes} />
+          <img {...fallbackAttributes} alt={`${name} chapter ${chapter} page ${page}`}/>
         </picture>
         {!this.state && <i className='loader' />}
       </div>

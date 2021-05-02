@@ -42,6 +42,7 @@ class ThumbnailGrid extends Component<ThumbnailGridProps> {
     const thumbProps = {
       width: 300,
       id: gallery.id,
+      name: gallery.name,
       chapter: chapter.number
     }
     const $thumbnails: ReactElement[] = []

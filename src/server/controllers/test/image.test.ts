@@ -1,4 +1,4 @@
-/* eslint-env jest */
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "expectStatusCode"] }] */
 import { promises as fsp } from 'fs'
 import { Context } from 'koa'
 import send from 'koa-send'
@@ -7,9 +7,6 @@ import { createTestDatabase } from '../../lib/mock-db'
 import { FsUtils } from '../../lib/fsutils'
 import { resizeImage, setCacheSubDirectory } from '../image'
 
-jest.mock('koa-send')
-
-jest.mock('sharp', () => () => sharpMock)
 const sharpMock = {
   resize: jest.fn(() => sharpMock),
   clone: jest.fn(() => sharpMock),
@@ -18,6 +15,9 @@ const sharpMock = {
   webp: jest.fn(() => sharpMock),
   toFile: jest.fn(() => sharpMock)
 }
+
+jest.mock('koa-send')
+jest.mock('sharp', () => () => sharpMock)
 
 let ctx: Context, validCtx: Context
 
@@ -28,6 +28,11 @@ async function expectStatusCode (code: number) {
   expect(ctx.status).toEqual(code)
 }
 
+function setReaddirReturn (retval: any[]) {
+  jest.spyOn(fsp, 'readdir')
+    .mockImplementation(() => new Promise(resolve => resolve(retval)))
+}
+
 async function testSharpOutput (assertionFn: () => void) {
   // fake inability to serve cached file
   jest.spyOn(FsUtils, 'createReadStream')
@@ -36,11 +41,6 @@ async function testSharpOutput (assertionFn: () => void) {
   setReaddirReturn(['1.png'])
   await resizeImage(ctx)
   assertionFn()
-}
-
-function setReaddirReturn (retval: any[]) {
-  jest.spyOn(fsp, 'readdir')
-    .mockImplementation(() => new Promise(resolve => resolve(retval)))
 }
 
 describe('GET /api/img/:gallery/:chapter/:page', function () {
@@ -79,25 +79,25 @@ describe('GET /api/img/:gallery/:chapter/:page', function () {
   })
 
   describe('responds with 400 when', function () {
-    it('it does not receive gallery id', async function () {
+    it('does not receive gallery id', async function () {
       ctx.params.page = '1'
       ctx.params.chapter = '1'
       await expectStatusCode(400)
     })
 
-    it('it does not receive chapter number', async function () {
+    it('does not receive chapter number', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.page = '1'
       await expectStatusCode(400)
     })
 
-    it('it does not receive page number', async function () {
+    it('does not receive page number', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.chapter = '1'
       await expectStatusCode(400)
     })
 
-    it('it does not receive width', async function () {
+    it('does not receive width', async function () {
       ctx.params.gallery = 'TEST'
       ctx.params.chapter = '1'
       ctx.params.page = '1'

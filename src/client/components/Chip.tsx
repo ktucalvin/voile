@@ -7,6 +7,10 @@ interface ChipProps {
   text: string
 }
 
-export default ({ color, text }: ChipProps) => (
+const Chip = ({ color, text }: ChipProps) => (
   <span className='chip' style={{ backgroundColor: color }}>{text}</span>
 )
+
+Chip.displayName = 'chip'
+
+export default Chip

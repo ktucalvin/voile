@@ -6,7 +6,7 @@ interface SearchPanelProps {
   onSearch(query: string): void
 }
 
-export default (props: SearchPanelProps) => (
+const SearchPanel = (props: SearchPanelProps) => (
   <div id='search-panel'>
     <input
       id='search-main'
@@ -16,3 +16,7 @@ export default (props: SearchPanelProps) => (
     />
   </div>
 )
+
+SearchPanel.displayName = 'SearchPanel'
+
+export default SearchPanel

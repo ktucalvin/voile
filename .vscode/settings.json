@@ -8,5 +8,6 @@
     "imgcache/": true,
     "archive/": true,
     "galleries/": true
-  }
+  },
+  "standard.enable": false
 }

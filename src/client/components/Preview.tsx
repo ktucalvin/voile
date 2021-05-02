@@ -15,7 +15,7 @@ class Preview extends Component<PreviewProps> {
     return (
       <div className='preview'>
         <Link to={`/g/${gallery.id}`}>
-          <Thumbnail width={450} id={gallery.id} />
+          <Thumbnail width={450} id={gallery.id} name={gallery.name} />
           <span>{gallery.name}</span>
         </Link>
       </div>

@@ -12,6 +12,7 @@ export interface WidthObservingComponentProps {
 
 function withWidth<P extends WidthObservingComponentProps> (WrappedComponent, breakpoints) {
   return class extends Component<Omit<P, keyof WidthObservingComponentProps>, WidthObservingComponentState> {
+    displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component'
     constructor (props) {
       super(props)
       this.state = { width: window.innerWidth }
